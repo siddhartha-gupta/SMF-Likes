@@ -1,0 +1,131 @@
+<?php
+
+/**
+* @package manifest file for Like Posts
+* @version 1.0 Alpha
+* @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* @copyright Copyright (c) 2012, Siddhartha Gupta
+* @license http://www.mozilla.org/MPL/MPL-1.1.html
+*/
+
+/*
+* Version: MPL 1.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Initial Developer of the Original Code is
+*  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* Portions created by the Initial Developer are Copyright (C) 2012
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s):
+*
+*/
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+function LikePostsAdmin(&$admin_areas)
+{
+	global $txt, $modSettings, $context;
+
+	loadLanguage('LikePosts');
+	loadtemplate('LikePosts');
+
+	$admin_areas['config']['areas']['likeposts'] = array(
+		'label' => $txt['lp_menu'],
+		'file' => 'LikePosts.php',
+		'function' => 'ModifyLikePostSettings',
+		'icon' => 'administration.gif',
+		'subsections' => array(),
+	);
+}
+
+function ModifyLikePostSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $sourcedir;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+
+	require_once($sourcedir . '/Subs-RestrictPosts.php');
+	loadLanguage('RestrictPosts');
+	loadtemplate('RestrictPosts');
+
+	$context['page_title'] = $txt['lp_admin_panel'];
+	$default_action_func = 'basicRestrictPostsSettings';
+
+	// Load up the guns
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => $txt['lp_admin_panel'],
+		'tabs' => array(
+			'postsettings' => array(
+				'label' => $txt['lp_post_settings'],
+				'url' => 'postsettings',
+			),
+			'generalsettings' => array(
+				'label' => $txt['lp_general_settings'],
+				'url' => 'generalsettings',
+			),
+		),
+	);
+	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'postsettings';
+
+	$subActions = array(
+		'postsettings' => 'basicRestrictPostsSettings',
+		'savepostsettings' => 'saveRestrictPostsSettings',
+		'generalsettings' => 'generalRestrictPostsSettings',
+		'savegeneralsettings' => 'saveRestrictGeneralSettings',
+	);
+
+	//wakey wakey, call the func you lazy
+	foreach ($subActions as $key => $action)
+	{
+		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] === $key)
+		{
+			if (function_exists($subActions[$key]))
+			{
+				return $subActions[$key]();
+			}
+		}
+	}
+
+	// At this point we can just do our default.
+	$default_action_func();
+}
+
+/*
+ *default/basic function
+ */
+function basicRestrictPostsSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $sourcedir, $user_info;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+
+	loadLanguage('LikePosts');
+	loadtemplate('LikePosts');
+
+	$context['page_title'] = $txt['lp_admin_panel'];
+	$context['sub_template'] = 'lp_admin_post_setting_panel';
+	$context['restrict_posts']['tab_name'] = $txt['lp_post_settings'];
+	$context['restrict_posts']['tab_desc'] = $txt['lp_basic_post_settings_desc'];
+}
+
+function saveLikePostsSettings() {
+	global $context;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+}
+
+?>
