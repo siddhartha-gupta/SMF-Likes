@@ -33,24 +33,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function LikePostsAdmin(&$admin_areas)
-{
-	global $txt, $modSettings, $context;
-
-	loadLanguage('LikePosts');
-	loadtemplate('LikePosts');
-
-	$admin_areas['config']['areas']['likeposts'] = array(
-		'label' => $txt['lp_menu'],
-		'file' => 'LikePosts.php',
-		'function' => 'LP_modifySettings',
-		'icon' => 'administration.gif',
-		'subsections' => array(),
-	);
-}
-
-function LP_modifySettings($return_config = false)
-{
+function LP_modifySettings($return_config = false) {
 	global $txt, $scripturl, $context, $sourcedir;
 
 	/* I can has Adminz? */
@@ -98,8 +81,7 @@ function LP_modifySettings($return_config = false)
 /*
  *default/basic function
  */
-function LP_generalSettings($return_config = false)
-{
+function LP_generalSettings($return_config = false) {
 	global $txt, $scripturl, $context, $sourcedir, $user_info;
 
 	/* I can has Adminz? */
