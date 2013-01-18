@@ -35,7 +35,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
 // Hmm... no SSI.php and no SMF?
-elseif (!defined('DIALOGO'))
+elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot uninstall - please verify you put this in the same place as DIALOGO\'s index.php.');
 
 remove_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
