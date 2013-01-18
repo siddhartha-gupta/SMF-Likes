@@ -33,4 +33,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+function LP_mainIndex() {
+	global $context, $txt, $scripturl;
+	echo 'we in itzzz';
+}
+
 ?>
