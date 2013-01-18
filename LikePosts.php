@@ -43,47 +43,40 @@ function LikePostsAdmin(&$admin_areas)
 	$admin_areas['config']['areas']['likeposts'] = array(
 		'label' => $txt['lp_menu'],
 		'file' => 'LikePosts.php',
-		'function' => 'ModifyLikePostSettings',
+		'function' => 'LP_modifySettings',
 		'icon' => 'administration.gif',
 		'subsections' => array(),
 	);
 }
 
-function ModifyLikePostSettings($return_config = false)
+function LP_modifySettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
 
-	require_once($sourcedir . '/Subs-RestrictPosts.php');
-	loadLanguage('RestrictPosts');
-	loadtemplate('RestrictPosts');
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	loadLanguage('LikePosts');
 
 	$context['page_title'] = $txt['lp_admin_panel'];
-	$default_action_func = 'basicRestrictPostsSettings';
+	$default_action_func = 'LP_generalSettings';
 
 	// Load up the guns
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['lp_admin_panel'],
 		'tabs' => array(
-			'postsettings' => array(
-				'label' => $txt['lp_post_settings'],
-				'url' => 'postsettings',
-			),
 			'generalsettings' => array(
 				'label' => $txt['lp_general_settings'],
 				'url' => 'generalsettings',
 			),
 		),
 	);
-	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'postsettings';
+	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'generalsettings';
 
 	$subActions = array(
-		'postsettings' => 'basicRestrictPostsSettings',
-		'savepostsettings' => 'saveRestrictPostsSettings',
-		'generalsettings' => 'generalRestrictPostsSettings',
-		'savegeneralsettings' => 'saveRestrictGeneralSettings',
+		'generalsettings' => 'LP_generalSettings',
+		'savegeneralsettings' => 'LP_saveGeneralSettings',
 	);
 
 	//wakey wakey, call the func you lazy
@@ -105,7 +98,7 @@ function ModifyLikePostSettings($return_config = false)
 /*
  *default/basic function
  */
-function basicRestrictPostsSettings($return_config = false)
+function LP_generalSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $sourcedir, $user_info;
 
@@ -117,11 +110,11 @@ function basicRestrictPostsSettings($return_config = false)
 
 	$context['page_title'] = $txt['lp_admin_panel'];
 	$context['sub_template'] = 'lp_admin_post_setting_panel';
-	$context['restrict_posts']['tab_name'] = $txt['lp_post_settings'];
-	$context['restrict_posts']['tab_desc'] = $txt['lp_basic_post_settings_desc'];
+	$context['restrict_posts']['tab_name'] = $txt['lp_general_settings'];
+	$context['restrict_posts']['tab_desc'] = $txt['lp_general_settings_desc'];
 }
 
-function saveLikePostsSettings() {
+function LP_saveGeneralSettings() {
 	global $context;
 
 	/* I can has Adminz? */

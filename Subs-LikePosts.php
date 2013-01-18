@@ -30,7 +30,7 @@
 *
 */
 
-if (!defined('DIALOGO'))
+if (!defined('SMF'))
 	die('Hacking attempt...');
 
 ?>

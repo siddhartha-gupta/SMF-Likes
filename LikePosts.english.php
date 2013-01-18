@@ -32,4 +32,9 @@
 
 global $txt;
 
+$txt['lp_menu'] = 'Like Posts';
+$txt['lp_admin_panel'] = 'Like Posts admin panel';
+$txt['lp_general_settings'] = 'General Settings';
+$txt['lp_general_settings_desc'] = 'You can make all global settings for like posts from here.';
+
 ?>

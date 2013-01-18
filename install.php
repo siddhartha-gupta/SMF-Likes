@@ -33,7 +33,7 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-elseif (!defined('DIALOGO'))
+elseif (!defined('SMF'))
 	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as DIALOGO\'s index.php.');
 
 global $smcFunc, $sourcedir, $db_prefix;
@@ -55,6 +55,13 @@ $table = array(
 			'name' => 'id_topic',
 			'type' => 'mediumint',
 			'size' => 8,
+			'unsigned' => true,
+			'default' => '0',
+		),
+		array(
+			'name' => 'id_board',
+			'type' => 'smallint',
+			'size' => 5,
 			'unsigned' => true,
 			'default' => '0',
 		),
@@ -85,7 +92,7 @@ foreach ($general_settings as $key => $value) {
 add_integration_function('integrate_pre_include', $sourcedir . '/LikePosts.php', true);
 add_integration_function('integrate_admin_areas', 'LikePostsAdmin');
 
-if (DIALOGO == 'SSI')
+if (SMF == 'SSI')
 echo 'Database adaptation successful!';
 
 ?>
