@@ -109,9 +109,9 @@ function LP_generalSettings($return_config = false)
 	loadtemplate('LikePosts');
 
 	$context['page_title'] = $txt['lp_admin_panel'];
-	$context['sub_template'] = 'lp_admin_post_setting_panel';
-	$context['restrict_posts']['tab_name'] = $txt['lp_general_settings'];
-	$context['restrict_posts']['tab_desc'] = $txt['lp_general_settings_desc'];
+	$context['sub_template'] = 'lp_admin_general_settings';
+	$context['like_posts']['tab_name'] = $txt['lp_general_settings'];
+	$context['like_posts']['tab_desc'] = $txt['lp_general_settings_desc'];
 }
 
 function LP_saveGeneralSettings() {
