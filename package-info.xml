@@ -9,7 +9,9 @@
 	<install for="2.0 - 2.0.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<database>install.php</database>
-		<require-file name="LikePosts.php" destination="$sourcedir">Controller of modification</require-file>
+		<require-file name="LikePostsAdmin.php" destination="$sourcedir">Admin panel of mod</require-file>
+		<require-file name="LikePostsHooks.php" destination="$sourcedir">File to add all hooks</require-file>
+		<require-file name="LikePosts.php" destination="$sourcedir">Controller of user interface</require-file>
 		<require-file name="Subs-LikePosts.php" destination="$sourcedir">Database handler</require-file>
 		<require-file name="LikePosts.template.php" destination="$themedir">View of mod</require-file>
 		<require-file name="LikePosts.english.php" destination="$languagedir">All language Strings</require-file>
@@ -18,6 +20,8 @@
 
 	<uninstall for="2.0 - 2.0.99">
 	    <code>uninstall.php</code>
+		<remove-file name="$sourcedir/LikePostsAdmin.php" />
+		<remove-file name="$sourcedir/LikePostsHooks.php" />
 		<remove-file name="$sourcedir/LikePosts.php" />
 		<remove-file name="$sourcedir/Subs-LikePosts.php" />
 		<remove-file name="$themedir/LikePosts.template.php" />
