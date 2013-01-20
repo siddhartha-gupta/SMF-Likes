@@ -33,9 +33,54 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/*
+ *This function is accessible using ?action=likeposts
+ */
 function LP_mainIndex() {
 	global $context, $txt, $scripturl;
-	echo 'we in itzzz';
+
+	$default_action_func = 'LP_default_func';
+	$subActions = array(
+		// Main views.
+		'like_post' => 'LP_like_posts',
+		'unlike_post' => 'LP_unlike_posts',
+	);
+
+	//echo $_REQUEST['sa'];
+	foreach ($subActions as $key => $action) {
+		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] === $key) {
+			if (function_exists($subActions[$key])) {
+				return $subActions[$key]();
+			}
+		}
+	}
+
+	// At this point we can just do our default.
+	$default_action_func();
+}
+
+function LP_default_func() {
+	global $context, $txt, $scripturl;
+
+	echo 'we are in default func';
+}
+
+function LP_like_posts() {
+	global $context, $txt, $user_info, $sourcedir;
+
+	// Lets get and sanitize the data first
+	$board_id = isset($_REQUEST['board']) && !empty($_REQUEST['board']) ? (int) ($_REQUEST['board']) : 0;
+	$topic_id = isset($_REQUEST['topic']) && !empty($_REQUEST['topic']) ? (int) ($_REQUEST['topic']) : 0;
+	$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
+
+	if(empty($board_id) || empty($topic_id) || empty($msg_id)) {
+		fatal_lang_error('lp_cannot_like_posts');
+	}
+
+	//  All good lets proceed
+	require_once($sourcedir . '/Subs-LikePosts.php');
+
+	
 }
 
 ?>

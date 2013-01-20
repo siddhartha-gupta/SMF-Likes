@@ -1,0 +1,3 @@
+like_posts = function() {
+
+}

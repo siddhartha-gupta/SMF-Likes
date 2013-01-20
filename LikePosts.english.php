@@ -39,4 +39,7 @@ $txt['lp_general_settings_desc'] = 'You can make all global settings for like po
 
 $txt['lp_submit'] = 'Submit';
 
+// Error msgs
+$txt['lp_cannot_like_posts'] = 'You do not have the permissions to like posts.';
+
 ?>
