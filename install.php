@@ -89,7 +89,7 @@ foreach ($general_settings as $key => $value) {
     );
 }
 
-add_integration_function('integrate_pre_include', $sourcedir . '/LikePostsHooks.php', true);
+add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php', true);
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
 add_integration_function('integrate_actions', 'LP_addAction', true);
 
