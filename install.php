@@ -89,9 +89,8 @@ foreach ($general_settings as $key => $value) {
     );
 }
 
-add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php', true);
-add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
-add_integration_function('integrate_actions', 'LP_addAction', true);
+add_integration_function('integrate_admin_areas', 'LP_addAdminPanel:$sourcedir/LikePostsHooks.php');
+add_integration_function('integrate_actions', 'LP_addAction:$sourcedir/LikePostsHooks.php');
 
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';
