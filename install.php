@@ -39,7 +39,7 @@ elseif (!defined('SMF'))
 global $smcFunc, $sourcedir, $db_prefix;
 
 if (!array_key_exists('db_add_column', $smcFunc))
-db_extend('packages');
+	db_extend('packages');
 
 $table = array(
 	'table_name' => 'like_post',
@@ -82,9 +82,8 @@ $general_settings = array(
 	'like_post_enable' => 0, // Disable by default
 );
 
-foreach ($general_settings as $key => $value) {
+foreach ($general_settings as $key => $value)
     updateSettings(array($key => $value));
-}
 
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel:$sourcedir/LikePostsHooks.php');
 add_integration_function('integrate_actions', 'LP_addAction:$sourcedir/LikePostsHooks.php');
