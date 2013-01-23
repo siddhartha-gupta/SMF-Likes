@@ -46,14 +46,8 @@ function LP_mainIndex() {
 		'unlike_post' => 'LP_unlike_posts',
 	);
 
-	//echo $_REQUEST['sa'];
-	foreach ($subActions as $key => $action) {
-		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] === $key) {
-			if (function_exists($subActions[$key])) {
-				return $subActions[$key]();
-			}
-		}
-	}
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
+		return $subActions[$key]();
 
 	// At this point we can just do our default.
 	$default_action_func();
