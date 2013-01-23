@@ -83,10 +83,7 @@ $general_settings = array(
 );
 
 foreach ($general_settings as $key => $value) {
-    $smcFunc['db_insert']('ignore',
-        '{db_prefix}settings', array('variable' => 'string', 'value' => 'string'),
-        array($key, $value), ''
-    );
+    updateSettings(array($key => $value));
 }
 
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel:$sourcedir/LikePostsHooks.php');
