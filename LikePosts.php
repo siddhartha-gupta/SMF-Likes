@@ -47,7 +47,7 @@ function LP_mainIndex() {
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
-		return $subActions[$key]();
+		return $subActions[$_REQUEST['sa']]();
 
 	// At this point we can just do our default.
 	$default_action_func();
@@ -73,8 +73,6 @@ function LP_like_posts() {
 
 	//  All good lets proceed
 	require_once($sourcedir . '/Subs-LikePosts.php');
-
-	
 }
 
 ?>
