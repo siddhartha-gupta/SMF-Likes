@@ -33,4 +33,25 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+function LP_insertLikePost($data) {
+    global $smcFunc;
+
+    if(!is_array($data)) {
+        return false;
+    }
+
+    if($user_info['is_guest']) {
+		return false;
+	}
+
+	//$replaceArray[] = array($user_info['id'], $timezoneID);
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}live_clock_user_zone',
+		array('id_msg' => 'int', 'id_topic' => 'int', '	id_board' => 'int', 'id_member' => 'int'),
+		$data,
+		array()
+	);
+	return true;
+}
+
 ?>

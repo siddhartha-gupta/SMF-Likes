@@ -39,11 +39,11 @@ if (!defined('SMF'))
 function LP_mainIndex() {
 	global $context, $txt, $scripturl;
 
-	$default_action_func = 'LP_default_func';
+	$default_action_func = 'LP_defaultFunc';
 	$subActions = array(
 		// Main views.
-		'like_post' => 'LP_like_posts',
-		'unlike_post' => 'LP_unlike_posts',
+		'like_post' => 'LP_likePosts',
+		'unlike_post' => 'LP_unlikePosts',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -53,14 +53,14 @@ function LP_mainIndex() {
 	$default_action_func();
 }
 
-function LP_default_func() {
+function LP_defaultFunc() {
 	global $context, $txt, $scripturl;
 
 	echo 'we are in default func';
 }
 
-function LP_like_posts() {
-	global $context, $txt, $user_info, $sourcedir;
+function LP_likePosts() {
+	global $user_info, $sourcedir;
 
 	// Lets get and sanitize the data first
 	$board_id = isset($_REQUEST['board']) && !empty($_REQUEST['board']) ? (int) ($_REQUEST['board']) : 0;
@@ -69,11 +69,28 @@ function LP_like_posts() {
 
 	if(empty($board_id) || empty($topic_id) || empty($msg_id)) {
 		fatal_lang_error('lp_cannot_like_posts');
+	} elseif ($user_info['is_guest']) {
+		die();
 	}
 
 	//  All good lets proceed
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	echo $board_id . ' : ' . $topic_id . ' : ' . $msg_id;
+	//echo $board_id . ' : ' . $topic_id . ' : ' . $msg_id;
+	$data = array(
+		'board_id' => $board_id,
+		'topic_id' => $board_id,
+		'msg_id' => $board_id,
+		'id_member' => $user_info['id']
+		//'rating' => 1,
+	);
+
+	$result = LP_insertLikePost();
+	if($result) {
+		echo 'all done check DB';	
+	} else {
+		echo 'somwthing is wrong';
+	}
+	
 	die();
 }
 
