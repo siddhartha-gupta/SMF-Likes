@@ -1,0 +1,2 @@
+- Make like and counts using jquery
+- Remove all hardcoded text strings

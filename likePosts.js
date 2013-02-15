@@ -1,3 +1,0 @@
-like_posts = function() {
-
-}

@@ -36,12 +36,36 @@
 	<id>sid2varun:like_posts</id>
 	<version>1.0</version>
 
+	<!--very poorly written code :P-->
 	<file name="$themedir/Display.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
-			<add><![CDATA[echo '<li class="split_button"><a href="', $scripturl, '?action=likeposts;sa=like_post;msg=', $message['id'], ';topic=', $context['current_topic'], ';board=', $context['current_board'] , '">', $txt['lp_like'],'</a></li>';
-
-		]]></add>
+			<add><![CDATA[echo '
+		<script>
+			var head= document.getElementsByTagName("head")[0];
+			var script= document.createElement("script");
+			script.type= "text/javascript";
+			if(!window.jQuery) {
+				document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
+			}
+	</script>
+	<script type="text/javascript">likeUnlikePost = function () {
+			console.log("in it");
+			$.ajax({
+				type: "POST",
+				url: "' . $scripturl . '?action=likeposts;sa=like_post;xml",
+				data: {
+					msg: "', $message['id'],'",
+					topic: "', $context['current_topic'],'",
+					board: "', $context['current_board'],'"
+				},
+				context: document.body,
+				success: function(request){
+					console.log(request);
+				},
+			});
+		}</script>';
+		echo '<li class="split_button"><a href="javascript:void(0)" onclick="likeUnlikePost()">Like</a></li>';]]></add>
 		</operation>
 	</file>
 </modification>

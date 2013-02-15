@@ -73,6 +73,8 @@ function LP_like_posts() {
 
 	//  All good lets proceed
 	require_once($sourcedir . '/Subs-LikePosts.php');
+	echo $board_id . ' : ' . $topic_id . ' : ' . $msg_id;
+	die();
 }
 
 ?>
