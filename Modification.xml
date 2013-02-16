@@ -52,7 +52,7 @@
 			$string = $txt['lp_like'];
 		}
 		echo '
-		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', $context['like_posts']['msgs_liked_count'], $string ,'</a></li>';
+		<li class="split_button">', $context['like_posts']['msgs_liked_count'],'<a id="like_',$message['id'],'" href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],')">', $string,'</a></li>';
 
 		]]></add>
 		</operation>

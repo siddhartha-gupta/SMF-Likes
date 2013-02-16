@@ -1,12 +1,13 @@
 var likePosts = function() {
 }
 
-likePosts.prototype.likeUnlikePosts = function(msgId, topicId, boardId) {
+likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
     // Lets try JS validations
-    msgId = (msgId != undefined) ? parseInt(msgId) : 0;
-    topicId = (topicId != undefined) ? parseInt(topicId) : 0;
-    boardId = (boardId != undefined) ? parseInt(boardId) : 0;
-    
+    msgId = (mId != undefined) ? parseInt(mId) : 0;
+    topicId = (tId != undefined) ? parseInt(tId) : 0;
+    boardId = (bId != undefined) ? parseInt(bId) : 0;
+    var rating = ($('#like_16').text().toLowerCase() == 'like') ? 1 : 0;
+
     if(isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
         return false;
     }
@@ -21,13 +22,18 @@ likePosts.prototype.likeUnlikePosts = function(msgId, topicId, boardId) {
             msg: msgId,
             topic: topicId,
             board: boardId,
-            rating: 1,
+            rating: rating,
         },
         
         success: function(request){
-            console.log(request);
+            if(request.response) {
+                console.log('success');
+            } else {
+                console.log('error');
+            }
         },
     });
+    return true;
 }
 
 var lpObj = window.lpObj = new likePosts();
