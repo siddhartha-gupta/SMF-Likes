@@ -63,6 +63,19 @@ function LP_includeJSFiles() {
 	</script>';
 }
 
+function LP_isPostLiked($arr, $id) {
+	if(!is_array($arr) || empty($arr) || empty($id))
+		return false;
+
+	if (array_key_exists($id, $arr)) {
+		if(!empty($arr[$id]['rating']))
+		   return true;
+		else
+			return false;
+	}
+	return false;
+}
+
 function LP_mainIndex() {
 	global $context, $txt, $scripturl, $settings;
 

@@ -20,7 +20,8 @@ likePosts.prototype.likeUnlikePosts = function(msgId, topicId, boardId) {
         data: {
             msg: msgId,
             topic: topicId,
-            board: boardId
+            board: boardId,
+            rating: 1,
         },
         
         success: function(request){

@@ -40,8 +40,19 @@
 		<operation>
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
 			<add><![CDATA[LP_includeJSFiles();
+		loadlanguage('LikePosts');
+		if(!empty($context['like_posts']['msgs_liked_data'])) {
+			$result = LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
+			//echo $result;
+			if($result)
+				$string = $txt['lp_unlike'];
+			else
+				$string = $txt['lp_like'];
+		} else {
+			$string = $txt['lp_like'];
+		}
 		echo '
-		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', $context['like_posts']['msgs_liked_count'],' Like</a></li>';
+		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', $context['like_posts']['msgs_liked_count'], $string ,'</a></li>';
 
 		]]></add>
 		</operation>

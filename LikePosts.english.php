@@ -45,5 +45,6 @@ $txt['lp_cannot_like_posts'] = 'You do not have the permissions to like posts.';
 
 //Generic strings
 $txt['lp_like'] = 'Like';
+$txt['lp_unlike'] = 'Unlike';
 
 ?>
