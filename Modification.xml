@@ -41,7 +41,7 @@
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
 			<add><![CDATA[LP_includeJSFiles();
 		echo '
-		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', count($context['like_posts']['msgs_liked']),' Like</a></li>';
+		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', $context['like_posts']['msgs_liked_count'],' Like</a></li>';
 
 		]]></add>
 		</operation>
@@ -50,7 +50,9 @@
 		<operation>
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
 			<add><![CDATA[require_once($sourcedir . '/LikePosts.php');
-	$context['like_posts']['msgs_liked'] = LP_getTopicsInfo($messages);
+	$topic_liked_data = LP_getTopicsInfo($messages);
+	$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data['data']) ? $topic_liked_data['data'] : '';
+	$context['like_posts']['msgs_liked_count'] = isset($topic_liked_data['count']) ? $topic_liked_data['count'] : 0;
 
 	]]></add>
 		</operation>
