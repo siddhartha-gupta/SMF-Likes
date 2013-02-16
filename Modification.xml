@@ -40,19 +40,9 @@
 	<file name="$themedir/Display.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
-			<add><![CDATA[echo '
-		<script>
-			var head= document.getElementsByTagName("head")[0];
-			var script= document.createElement("script");
-			script.type= "text/javascript";
-			if(!window.jQuery) {
-				document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
-			}
-	</script>';
-	
+			<add><![CDATA[LP_includeJSFiles();
 		echo '
-		<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/likePosts.js"></script>
-		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],')">Like</a></li>';
+		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">Like</a></li>';
 
 		]]></add>
 		</operation>

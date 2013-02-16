@@ -14,8 +14,9 @@ likePosts.prototype.likeUnlikePosts = function(msgId, topicId, boardId) {
     //console.log(url);
     $.ajax({
         type: "POST",
-        url: smf_scripturl + '?action=likeposts;sa=like_post;xml',
+        url: smf_scripturl + '?action=likeposts;sa=like_post',
         context: document.body,
+        dataType : "json",
         data: {
             msg: msgId,
             topic: topicId,
@@ -28,4 +29,4 @@ likePosts.prototype.likeUnlikePosts = function(msgId, topicId, boardId) {
     });
 }
 
-var lpObj = new likePosts();
+var lpObj = window.lpObj = new likePosts();

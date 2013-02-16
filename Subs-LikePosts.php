@@ -34,15 +34,15 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_insertLikePost($data = array()) {
-    global $smcFunc, $user_info;
-
-    if(!is_array($data)) {
-        return false;
-    }
+	global $smcFunc, $user_info;
 
     if($user_info['is_guest']) {
 		return false;
 	}
+
+    if(!is_array($data)) {
+        return false;
+    }
 
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}like_post',
@@ -51,6 +51,16 @@ function LP_insertLikePost($data = array()) {
 		array()
 	);
 	return true;
+}
+
+function LP_getLikePostsInfo($topicId = '') {
+	global $smcFunc, $user_info;
+
+	if(!isset($topicId) || empty($topicId)) {
+		return false;
+	}
+
+	
 }
 
 ?>

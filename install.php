@@ -80,7 +80,12 @@ $table = array(
 			'default' => '0',
 		),
 	),
-	'indexes' => array(),
+	'indexes' => array(
+        array(
+            'type' => 'primary',
+            'columns' => array('id_msg', 'id_member'),
+        ),
+    ),
 );
 $smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
 

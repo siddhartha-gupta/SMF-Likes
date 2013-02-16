@@ -36,14 +36,47 @@ if (!defined('SMF'))
 /*
  *This function is accessible using ?action=likeposts
  */
-function LP_mainIndex() {
-	global $context, $txt, $scripturl;
 
+function LP_includeJSFiles() {
+	global $settings;
+
+	echo '
+	<script>
+		if(!window.jQuery) {
+			var head= document.getElementsByTagName("head")[0];
+			var script= document.createElement("script");
+			script.type= "text/javascript";
+			script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js";
+			head.appendChild(script);
+		}
+	</script>';
+	
+	echo '
+	<script>
+		if(!window.lpObj) {
+			var head= document.getElementsByTagName("head")[0];
+			var script= document.createElement("script");
+			script.type= "text/javascript";
+			script.src = "', $settings['default_theme_url'], '/scripts/likePosts.js";
+			head.appendChild(script);
+		}
+	</script>';
+}
+
+function LP_mainIndex() {
+	global $context, $txt, $scripturl, $settings;
+
+	ob_start();
+	LP_includeJSFiles();
+	ob_end_clean();
 	$default_action_func = 'LP_defaultFunc';
 	$subActions = array(
 		// Main views.
 		'like_post' => 'LP_likePosts',
 		'unlike_post' => 'LP_unlikePosts',
+		'get_like_post_info' => 'LP_getLikePostInfo',
+		'get_like_topic_info' => 'LP_getLikeTopicInfo',
+		'get_like_board_info' => 'LP_getLikeBoardInfo',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -60,16 +93,24 @@ function LP_defaultFunc() {
 }
 
 function LP_likePosts() {
-	global $user_info, $sourcedir;
+	global $user_info, $sourcedir, $txt;
+
+	loadlanguage('LikePosts');
+	if($user_info['is_guest']) {
+		$resp = array('response' => false, 'error' => $txt['lp_error_cannot_like_posts']);
+		echo json_encode($resp);
+		die();
+	}
 
 	// Lets get and sanitize the data first
 	$board_id = isset($_REQUEST['board']) && !empty($_REQUEST['board']) ? (int) ($_REQUEST['board']) : 0;
 	$topic_id = isset($_REQUEST['topic']) && !empty($_REQUEST['topic']) ? (int) ($_REQUEST['topic']) : 0;
 	$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
+	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 
 	if(empty($board_id) || empty($topic_id) || empty($msg_id)) {
-		fatal_lang_error('lp_cannot_like_posts');
-	} elseif ($user_info['is_guest']) {
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
+		echo json_encode($resp);
 		die();
 	}
 
@@ -80,17 +121,27 @@ function LP_likePosts() {
 		'id_topic' => $topic_id,
 		'id_board' => $board_id,
 		'id_member' => $user_info['id'],
-		'rating' => 1,
+		'rating' => $rating,
 	);
 
 	$result = LP_insertLikePost($data);
 	if($result) {
-		echo 'all done check DB';	
+		$resp = array('response' => true, 'msg' => $txt['lp_success']);
+		echo json_encode($resp);
+		die();
 	} else {
-		echo 'something is wrong';
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
+		echo json_encode($resp);
+		die();
 	}
-	
-	die();
+}
+
+function LP_getLikePostInfo($topicIds = array()) {
+	global $context;
+
+	if(!is_array($topicIds)) {
+		return false;
+	}
 }
 
 ?>
