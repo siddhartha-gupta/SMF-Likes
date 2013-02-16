@@ -36,15 +36,23 @@
 	<id>sid2varun:like_posts</id>
 	<version>1.0</version>
 
-	<!--very poorly written code :P-->
 	<file name="$themedir/Display.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
 			<add><![CDATA[LP_includeJSFiles();
 		echo '
-		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">Like</a></li>';
+		<li class="split_button"><a href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', 1)">', count($context['like_posts']['msgs_liked']),' Like</a></li>';
 
 		]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
+			<add><![CDATA[require_once($sourcedir . '/LikePosts.php');
+	$context['like_posts']['msgs_liked'] = LP_getTopicsInfo($messages);
+
+	]]></add>
 		</operation>
 	</file>
 </modification>

@@ -50,7 +50,7 @@ function LP_includeJSFiles() {
 			head.appendChild(script);
 		}
 	</script>';
-	
+
 	echo '
 	<script>
 		if(!window.lpObj) {
@@ -74,9 +74,9 @@ function LP_mainIndex() {
 		// Main views.
 		'like_post' => 'LP_likePosts',
 		'unlike_post' => 'LP_unlikePosts',
-		'get_like_post_info' => 'LP_getLikePostInfo',
-		'get_like_topic_info' => 'LP_getLikeTopicInfo',
-		'get_like_board_info' => 'LP_getLikeBoardInfo',
+		'get_posts_info' => 'LP_getPostsInfo',
+		'get_topics_info' => 'LP_getTopicsInfo',
+		'get_boards_info' => 'LP_getBoardsInfo',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -124,7 +124,7 @@ function LP_likePosts() {
 		'rating' => $rating,
 	);
 
-	$result = LP_insertLikePost($data);
+	$result = LP_DB_insertLikePost($data);
 	if($result) {
 		$resp = array('response' => true, 'msg' => $txt['lp_success']);
 		echo json_encode($resp);
@@ -136,12 +136,37 @@ function LP_likePosts() {
 	}
 }
 
-function LP_getLikePostInfo($topicIds = array()) {
-	global $context;
+/*
+ *this function is not utilized yet
+ */
+function LP_getPostsInfo($topicIds = array()) {
+	global $context, $sourcedir;
 
 	if(!is_array($topicIds)) {
 		return false;
 	}
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	LP_DB_getLikePostsInfo();
+}
+
+/*
+ *To get like posts data for topics, e.g. http://localhost/smf2/index.php?topic=14.0
+ */
+function LP_getTopicsInfo($msgsArr = array(), $boardId = '', $topicId = '') {
+	global $context, $sourcedir;
+
+	if(!is_array($msgsArr)) {
+		$msgsArr = array($msgsArr);
+	}
+	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
+	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
+
+	if(empty($boardId) || empty($topicId)) {
+		return false;
+	}
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$result = LP_DB_getLikeTopicsInfo($msgsArr, $boardId, $topicId);
+	return $result;
 }
 
 ?>
