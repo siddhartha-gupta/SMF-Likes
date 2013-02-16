@@ -72,6 +72,13 @@ $table = array(
 			'unsigned' => true,
 			'default' => '0',
 		),
+		array(
+			'name' => 'rating',
+			'type' => 'smallint',
+			'size' => 1,
+			'unsigned' => true,
+			'default' => '0',
+		),
 	),
 	'indexes' => array(),
 );

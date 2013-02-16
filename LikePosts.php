@@ -75,20 +75,19 @@ function LP_likePosts() {
 
 	//  All good lets proceed
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	//echo $board_id . ' : ' . $topic_id . ' : ' . $msg_id;
 	$data = array(
-		'board_id' => $board_id,
-		'topic_id' => $board_id,
-		'msg_id' => $board_id,
-		'id_member' => $user_info['id']
-		//'rating' => 1,
+		'id_msg' => $msg_id,
+		'id_topic' => $topic_id,
+		'id_board' => $board_id,
+		'id_member' => $user_info['id'],
+		'rating' => 1,
 	);
 
-	$result = LP_insertLikePost();
+	$result = LP_insertLikePost($data);
 	if($result) {
 		echo 'all done check DB';	
 	} else {
-		echo 'somwthing is wrong';
+		echo 'something is wrong';
 	}
 	
 	die();
