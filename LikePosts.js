@@ -8,7 +8,7 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
     boardId = (bId != undefined) ? parseInt(bId) : 0;
     var rating = ($('#like_16').text().toLowerCase() == 'like') ? 1 : 0;
 
-    if(isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
+    if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
         return false;
     }
 
@@ -26,7 +26,7 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
         },
         
         success: function(request){
-            if(request.response) {
+            if (request.response) {
                 console.log('success');
             } else {
                 console.log('error');

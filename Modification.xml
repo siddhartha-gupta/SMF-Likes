@@ -41,10 +41,10 @@
 			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
 			<add><![CDATA[LP_includeJSFiles();
 		loadlanguage('LikePosts');
-		if(!empty($context['like_posts']['msgs_liked_data'])) {
+		if (!empty($context['like_posts']['msgs_liked_data'])) {
 			$result = LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 			//echo $result;
-			if($result)
+			if ($result)
 				$string = $txt['lp_unlike'];
 			else
 				$string = $txt['lp_like'];

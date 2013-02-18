@@ -42,7 +42,7 @@ function LP_includeJSFiles() {
 
 	echo '
 	<script>
-		if(!window.jQuery) {
+		if (!window.jQuery) {
 			var head= document.getElementsByTagName("head")[0];
 			var script= document.createElement("script");
 			script.type= "text/javascript";
@@ -53,7 +53,7 @@ function LP_includeJSFiles() {
 
 	echo '
 	<script>
-		if(!window.lpObj) {
+		if (!window.lpObj) {
 			var head= document.getElementsByTagName("head")[0];
 			var script= document.createElement("script");
 			script.type= "text/javascript";
@@ -64,11 +64,11 @@ function LP_includeJSFiles() {
 }
 
 function LP_isPostLiked($arr, $id) {
-	if(!is_array($arr) || empty($arr) || empty($id))
+	if (!is_array($arr) || empty($arr) || empty($id))
 		return false;
 
 	if (array_key_exists($id, $arr)) {
-		if(!empty($arr[$id]['rating']))
+		if (!empty($arr[$id]['rating']))
 		   return true;
 		else
 			return false;
@@ -109,7 +109,7 @@ function LP_likePosts() {
 	global $user_info, $sourcedir, $txt;
 
 	loadlanguage('LikePosts');
-	if($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		$resp = array('response' => false, 'error' => $txt['lp_error_cannot_like_posts']);
 		echo json_encode($resp);
 		die();
@@ -121,7 +121,7 @@ function LP_likePosts() {
 	$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
 	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 
-	if(empty($board_id) || empty($topic_id) || empty($msg_id)) {
+	if (empty($board_id) || empty($topic_id) || empty($msg_id)) {
 		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
@@ -138,7 +138,7 @@ function LP_likePosts() {
 	);
 
 	$result = LP_DB_insertLikePost($data);
-	if($result) {
+	if ($result) {
 		$resp = array('response' => true, 'msg' => $txt['lp_success']);
 		echo json_encode($resp);
 		die();
@@ -155,7 +155,7 @@ function LP_likePosts() {
 function LP_getPostsInfo($topicIds = array()) {
 	global $context, $sourcedir;
 
-	if(!is_array($topicIds)) {
+	if (!is_array($topicIds)) {
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');
@@ -168,13 +168,13 @@ function LP_getPostsInfo($topicIds = array()) {
 function LP_getTopicsInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 	global $context, $sourcedir;
 
-	if(!is_array($msgsArr)) {
+	if (!is_array($msgsArr)) {
 		$msgsArr = array($msgsArr);
 	}
 	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
 	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
 
-	if(empty($boardId) || empty($topicId)) {
+	if (empty($boardId) || empty($topicId)) {
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');

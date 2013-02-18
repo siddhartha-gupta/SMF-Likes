@@ -36,11 +36,11 @@ if (!defined('SMF'))
 function LP_DB_insertLikePost($data = array()) {
 	global $smcFunc, $user_info;
 
-    if($user_info['is_guest']) {
+    if ($user_info['is_guest']) {
 		return false;
 	}
 
-    if(!is_array($data)) {
+    if (!is_array($data)) {
         return false;
     }
 
@@ -61,7 +61,7 @@ function LP_DB_getLikeTopicsInfo($msgsArr, $boardId = '', $topicId = '') {
 	global $smcFunc, $user_info;
 
 	$topicsLikeInfo = array();
-	if(count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {
+	if (count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {
 		$topicsLikeInfo = array(
 			'count' => 0,
 			'data' => ''
