@@ -41,6 +41,9 @@ function LP_includeJSFiles() {
 	global $settings;
 
 	echo '
+	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/jquery-latest.pack.js"></script>';
+
+	echo '
 	<script>
 		if (!window.jQuery) {
 			var head= document.getElementsByTagName("head")[0];
@@ -64,16 +67,33 @@ function LP_includeJSFiles() {
 }
 
 function LP_isPostLiked($arr, $id) {
+	global $context, $txt;
+
+	LP_includeJSFiles();
+	loadlanguage('LikePosts');
+
+	$context['like_posts']['single_msg_data'] = array(
+		'text' => $txt['lp_like'],
+		'count' => 0,
+	);
+
 	if (!is_array($arr) || empty($arr) || empty($id))
-		return false;
+		return $context['like_posts']['single_msg_data'];
 
 	if (array_key_exists($id, $arr)) {
-		if (!empty($arr[$id]['rating']))
-		   return true;
-		else
-			return false;
+		if (!empty($arr[$id]['rating'])) {
+			$context['like_posts']['single_msg_data'] = array(
+				'text' => $txt['lp_unlike'],
+				'count' => $arr[$id]['count'],
+			);
+		} else {
+			$context['like_posts']['single_msg_data'] = array(
+				'text' => $txt['lp_like'],
+				'count' => $arr[$id]['count'],
+			);
+		}
 	}
-	return false;
+	return $context['like_posts']['single_msg_data'];
 }
 
 function LP_mainIndex() {
@@ -137,9 +157,16 @@ function LP_likePosts() {
 		'rating' => $rating,
 	);
 
-	$result = LP_DB_insertLikePost($data);
+	if(empty($rating)) {
+		$result = LP_DB_deleteLikePost($data);
+	} else {
+		$result = LP_DB_insertLikePost($data);
+	}
+
 	if ($result) {
-		$resp = array('response' => true, 'msg' => $txt['lp_success']);
+		$count = LP_DB_getLikeTopicCount($board_id, $topic_id, $msg_id);
+		$new_text = !empty($rating) ? $txt['lp_unlike'] : $txt['lp_like'];
+		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count);
 		echo json_encode($resp);
 		die();
 	} else {

@@ -6,13 +6,12 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
     msgId = (mId != undefined) ? parseInt(mId) : 0;
     topicId = (tId != undefined) ? parseInt(tId) : 0;
     boardId = (bId != undefined) ? parseInt(bId) : 0;
-    var rating = ($('#like_16').text().toLowerCase() == 'like') ? 1 : 0;
+    var rating = ($('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
 
     if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
         return false;
     }
 
-    //console.log(url);
     $.ajax({
         type: "POST",
         url: smf_scripturl + '?action=likeposts;sa=like_post',
@@ -24,16 +23,35 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
             board: boardId,
             rating: rating,
         },
-        
-        success: function(request){
-            if (request.response) {
-                console.log('success');
+
+        success: function(resp) {
+            if (resp.response) {
+                var params = {
+                    msgId: msgId,
+                    count: (resp.count !== undefined) ? resp.count : '',
+                    newText: resp.newText
+                };
+                lpObj.onLikeSuccess(params);
             } else {
+                //NOTE: Make an error callback over here
                 console.log('error');
             }
         },
     });
     return true;
+}
+
+likePosts.prototype.onLikeSuccess = function(params) {
+    var count = parseInt(params.count);
+    if(isNaN(count)) return;
+
+    $('#like_count_' + params.msgId).text(count);
+    $('#like_' + params.msgId).text(params.newText);
+    return;
+}
+
+likePosts.showLikedInfo = function(data) {
+    
 }
 
 var lpObj = window.lpObj = new likePosts();
