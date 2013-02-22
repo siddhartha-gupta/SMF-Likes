@@ -67,7 +67,7 @@ function LP_includeJSFiles() {
 }
 
 function LP_isPostLiked($arr, $id) {
-	global $context, $txt;
+	global $context, $txt, $user_info;
 
 	LP_includeJSFiles();
 	loadlanguage('LikePosts');
@@ -75,22 +75,21 @@ function LP_isPostLiked($arr, $id) {
 	$context['like_posts']['single_msg_data'] = array(
 		'text' => $txt['lp_like'],
 		'count' => 0,
+		'members' => array(),
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
 		return $context['like_posts']['single_msg_data'];
 
 	if (array_key_exists($id, $arr)) {
-		if (!empty($arr[$id]['rating'])) {
-			$context['like_posts']['single_msg_data'] = array(
-				'text' => $txt['lp_unlike'],
-				'count' => $arr[$id]['count'],
-			);
+		$context['like_posts']['single_msg_data'] = array(
+			'members' => $arr[$id]['members'],
+			'count' => $arr[$id]['count'],
+		);
+		if (array_key_exists($user_info['id'], $arr[$id]['members'])){
+			$context['like_posts']['single_msg_data']['text'] = $txt['lp_unlike'];
 		} else {
-			$context['like_posts']['single_msg_data'] = array(
-				'text' => $txt['lp_like'],
-				'count' => $arr[$id]['count'],
-			);
+			$context['like_posts']['single_msg_data']['text'] = $txt['lp_like'];
 		}
 	}
 	return $context['like_posts']['single_msg_data'];

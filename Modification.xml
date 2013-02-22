@@ -51,7 +51,7 @@
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
 			<add><![CDATA[require_once($sourcedir . '/LikePosts.php');
 	$topic_liked_data = LP_getTopicsInfo($messages);
-	$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data['data']) ? $topic_liked_data['data'] : '';
+	$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : '';
 
 	]]></add>
 		</operation>

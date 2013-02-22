@@ -85,9 +85,6 @@ function LP_DB_getLikeTopicsInfo($msgsArr, $boardId = '', $topicId = '') {
 
 	$topicsLikeInfo = array();
 	if (count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {
-		$topicsLikeInfo = array(
-			'data' => ''
-		);
 		return $topicsLikeInfo;
 	}
 
@@ -106,29 +103,32 @@ function LP_DB_getLikeTopicsInfo($msgsArr, $boardId = '', $topicId = '') {
 		)
 	);
 	if ($smcFunc['db_num_rows']($request) == 0) {
-		$topicsLikeInfo = array(
-			'data' => ''
-		);
 		return $topicsLikeInfo;
 	}
 
+    $memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$topicsLikeInfo['data'][$row['id_msg']] = array(
+        $memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
+            'id' => $row['id_member'],
+            'name' => $row['real_name'],
+            'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+        );
+		$topicsLikeInfo[$row['id_msg']] = array(
 			'id_msg' => $row['id_msg'],
-			'id_member' => $row['id_member'],
 			'rating' => $row['rating'],
-			'real_name' => $row['real_name'],
-			'count' => isset($topicsLikeInfo['data'][$row['id_msg']]['count']) ? ++$topicsLikeInfo['data'][$row['id_msg']]['count'] : 1,
+			'count' => isset($topicsLikeInfo[$row['id_msg']]['count']) ? ++$topicsLikeInfo[$row['id_msg']]['count'] : 1,
 		);
-
-		/*$key = $row['id_msg'] . '_' . $row['id_member'];
-		$topicsLikeInfo['data'][$row['id_msg']]['members'][$key] = array(
-			'id' => $row['id_member'],
-			'name' => $row['real_name'],
-			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-		);*/
 	}
 	$smcFunc['db_free_result']($request);
+
+    foreach($topicsLikeInfo as $key => $val) {
+        foreach($memberData as $memKey => $memVal) {
+            $tempArray = explode('_', $memKey);
+            if($tempArray[0] == $key) {
+                $topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
+            }
+        }
+    }
 	return $topicsLikeInfo;
 }
 
