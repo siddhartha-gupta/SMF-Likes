@@ -38,10 +38,20 @@
 
 	<file name="$themedir/Display.template.php">
 		<operation>
-			<search position="after"><![CDATA[// Can they reply? Have they turned on quick reply?]]></search>
+			<search position="after"><![CDATA[// Show the member's signature?]]></search>
 			<add><![CDATA[LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
-		echo '
-									<li class="split_button"><span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count'],'</span><a id="like_',$message['id'],'" href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],')">', $context['like_posts']['single_msg_data']['text'],'</a></li>';
+		if(!$message['is_message_author']) {
+			echo '
+									<div class="floatleft"><a id="like_',$message['id'],'" href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],')">', $context['like_posts']['single_msg_data']['text'],'</a></div>';	
+		}
+
+		if(!empty($context['like_posts']['single_msg_data']['count']))
+			echo '
+							<span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count'],'</span>';
+
+		foreach($context['like_posts']['single_msg_data']['members'] as $data) {
+			echo '<a href="', $scripturl,'?action=profile;u=', $data['id'],'">', $data['name'],'</a>';
+		}
 
 		]]></add>
 		</operation>
@@ -51,7 +61,7 @@
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
 			<add><![CDATA[require_once($sourcedir . '/LikePosts.php');
 	$topic_liked_data = LP_getTopicsInfo($messages);
-	$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : '';
+	$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 
 	]]></add>
 		</operation>
