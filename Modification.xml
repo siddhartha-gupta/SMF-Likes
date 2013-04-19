@@ -42,16 +42,16 @@
 			<add><![CDATA[LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 		if(!$message['is_message_author']) {
 			echo '
-									<div class="floatleft"><a id="like_',$message['id'],'" href="javascript:void(0)" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],')">', $context['like_posts']['single_msg_data']['text'],'</a></div>';	
+									<div class="floatleft"><a id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a></div>';	
 		}
 
 		if(!empty($context['like_posts']['single_msg_data']['count']))
 			echo '
-							<span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count'],'</span>';
+							<a href="javascript:void(0)" onclick="lpObj.showLikedInfo(', htmlentities(json_encode($context['like_posts']['single_msg_data']['members'])), ')">(<span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count'],'</span>)</a>';
 
-		foreach($context['like_posts']['single_msg_data']['members'] as $data) {
+		/*foreach($context['like_posts']['single_msg_data']['members'] as $data) {
 			echo '<a href="', $scripturl,'?action=profile;u=', $data['id'],'">', $data['name'],'</a>';
-		}
+		}*/
 
 		]]></add>
 		</operation>

@@ -50,8 +50,14 @@ likePosts.prototype.onLikeSuccess = function(params) {
     return;
 }
 
-likePosts.showLikedInfo = function(data) {
-    
+likePosts.prototype.showLikedInfo = function(data) {
+    console.log(data);
+    var memberInfo = '';
+    for(i in data) {
+        memberInfo += '<div class="member_info">' + data[i].name + '</div>';
+    }
+    var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
+    $('body').append(completeString);
 }
 
 var lpObj = window.lpObj = new likePosts();
