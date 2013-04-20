@@ -14,6 +14,7 @@
 		<require-file name="LikePosts.php" destination="$sourcedir">Controller of user interface</require-file>
 		<require-file name="Subs-LikePosts.php" destination="$sourcedir">Database handler</require-file>
 		<require-file name="LikePosts.template.php" destination="$themedir">View of mod</require-file>
+		<require-file name="likeposts.css" destination="$themedir/css">CSS of mod</require-file>
 		<require-file name="LikePosts.js" destination="$themedir/scripts">JS file of mod</require-file>
 		<require-file name="LikePosts.english.php" destination="$languagedir">All language Strings</require-file>
 		<modification>Modification.xml</modification>
@@ -26,6 +27,7 @@
 		<remove-file name="$sourcedir/LikePosts.php" />
 		<remove-file name="$sourcedir/Subs-LikePosts.php" />
 		<remove-file name="$themedir/LikePosts.template.php" />
+		<remove-file name="$themedir/css/likeposts.css" />
 		<remove-file name="$themedir/scripts/LikePosts.js" />
 		<remove-file name="$languagedir/LikePosts.english.php" />
 		<modification reverse="true">Modification.xml</modification>

@@ -73,12 +73,16 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
                 $('body').append(completeString);
-                $('html').click(function() {
-                    $('.like_posts_overlay').remove();
-                });
-                
-                $('.member_info_box').click(function(event){
-                    event.stopPropagation();
+                var removeOverlay = function(e) {
+                    if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
+                        $('.like_posts_overlay').remove();
+                        $(document).unbind('click', removeOverlay);
+                        $(document).unbind('keyup', removeOverlay);
+                    }
+                }
+                $(document).one('click keyup', removeOverlay);
+                $('.member_info_box').click(function(e){
+                    e.stopPropagation();
                 });
             } else {
                 //NOTE: Make an error callback over here
