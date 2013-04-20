@@ -69,18 +69,21 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 var data = resp.data;
                 var memberInfo = '';
                 for(i in data) {
-                    memberInfo += '<div class="like_posts_member_info">' + data[i].name + '</div>';
+                    memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="'+ data[i].avatar.href +'" /><div class="like_posts_member_info_details"><a href="'+ data[i].href +'">' + data[i].name + '</a></div></div>';
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
                 $('body').append(completeString);
+
                 var removeOverlay = function(e) {
                     if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
                         $('.like_posts_overlay').remove();
                         $(document).unbind('click', removeOverlay);
                         $(document).unbind('keyup', removeOverlay);
+                        $('.like_posts_member_info_box').unbind('click');
                     }
                 }
                 $(document).one('click keyup', removeOverlay);
+
                 $('.like_posts_member_info_box').click(function(e){
                     e.stopPropagation();
                 });

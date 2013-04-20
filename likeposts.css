@@ -27,4 +27,18 @@
     padding: 5px 10px;
     border-top: 1px solid rgba(255,255,255,0.5);
     border-bottom: 1px solid rgba(255,255,255,0.5);
+    overflow: hidden;
+}
+
+.like_posts_member_info img.avatar{
+    width: 30px;
+    box-shadow: 1px 1px 5px #000;
+    float: left;
+    position: relative;
+}
+
+.like_posts_member_info .like_posts_member_info_details {
+    float: left;
+    position: relative;
+    padding-left: 10px;
 }

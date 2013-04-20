@@ -159,20 +159,23 @@ function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
 }
 
 function LP_DB_getMessageLikeInfo($msg_id = 0) {
-	global $smcFunc, $user_info;
+	global $smcFunc, $user_info, $scripturl, $settings, $modSettings;
 
 	if (empty($msg_id)) {
 		return false;
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		SELECT lp.id_msg, lp.id_member, lp.rating, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
+			mem.gender, mem.avatar, mem.member_name, mem.real_name, mem.icq, mem.aim, mem.yim, mem.msn, mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member)
 		WHERE lp.id_msg = {int:id_msg}
 		ORDER BY lp.id_member',
 		array(
-			'id_msg' => $msg_id
+			'id_msg' => $msg_id,
+			'blank_string' => ''
 		)
 	);
 
@@ -182,6 +185,9 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
             'id' => $row['id_member'],
             'name' => $row['real_name'],
             'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+			'avatar' => array(
+				'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+			),
         );
 	}
 	$smcFunc['db_free_result']($request);
