@@ -29,7 +29,8 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
                 var params = {
                     msgId: msgId,
                     count: (resp.count !== undefined) ? resp.count : '',
-                    newText: resp.newText
+                    newText: resp.newText,
+                    likeText: resp.likeText
                 };
                 lpObj.onLikeSuccess(params);
             } else {
@@ -42,11 +43,12 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
 
 likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
-    if(isNaN(count)) return;
+    if(isNaN(count)) return false;
 
-    $('#like_count_' + params.msgId).text(count);
     $('#like_' + params.msgId).text(params.newText);
-    return;
+    $('#like_count_' + params.msgId).text(params.likeText.replace(/&amp;/g, '&'));
+    
+    //return;
 }
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {

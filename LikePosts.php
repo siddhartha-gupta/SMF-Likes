@@ -72,10 +72,15 @@ function LP_isPostLiked($arr, $id) {
 			'members' => $arr[$id]['members'],
 			'count' => $arr[$id]['count'],
 		);
-		if (array_key_exists($user_info['id'], $arr[$id]['members'])){
+
+		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
 			$context['like_posts']['single_msg_data']['text'] = $txt['lp_unlike'];
+
+			$remaining_likes = (int) ($context['like_posts']['single_msg_data']['count'] - 1);
+			$context['like_posts']['single_msg_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
 			$context['like_posts']['single_msg_data']['text'] = $txt['lp_like'];
+			$context['like_posts']['single_msg_data']['count_text'] = $context['like_posts']['single_msg_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
 		}
 	}
 	return $context['like_posts']['single_msg_data'];
@@ -91,7 +96,7 @@ function LP_mainIndex() {
 	$subActions = array(
 		// Main views.
 		'like_post' => 'LP_likePosts',
-		'unlike_post' => 'LP_unlikePosts',
+		//'unlike_post' => 'LP_unlikePosts',
 		'get_message_like_info' => 'LP_getMessageLikeInfo',
 		'get_topics_info' => 'LP_getTopicsInfo',
 		//'get_boards_info' => 'LP_getBoardsInfo',
@@ -151,7 +156,15 @@ function LP_likePosts() {
 	if ($result) {
 		$count = LP_DB_getLikeTopicCount($board_id, $topic_id, $msg_id);
 		$new_text = !empty($rating) ? $txt['lp_unlike'] : $txt['lp_like'];
-		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count);
+
+		$remaining_likes = (int) ($count - 1);
+		if(!empty($rating)) {
+			$liked_text = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and']. ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+		} else {
+			$liked_text = $count . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+		}
+
+		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);
 		echo json_encode($resp);
 		die();
 	} else {

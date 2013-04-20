@@ -47,7 +47,7 @@
 
 		if(!empty($context['like_posts']['single_msg_data']['count']))
 			echo '
-							<a href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $message['id'], ')">(<span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count'],'</span>)</a>';
+							<a href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $message['id'], ')">(<span id="like_count_'. $message['id'] .'">', $context['like_posts']['single_msg_data']['count_text'],'</span>)</a>';
 
 		/*foreach($context['like_posts']['single_msg_data']['members'] as $data) {
 			echo '<a href="', $scripturl,'?action=profile;u=', $data['id'],'">', $data['name'],'</a>';

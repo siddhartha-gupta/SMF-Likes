@@ -36,6 +36,12 @@ $txt['lp_menu'] = 'Like Posts';
 $txt['lp_admin_panel'] = 'Like Posts admin panel';
 $txt['lp_general_settings'] = 'General Settings';
 $txt['lp_general_settings_desc'] = 'You can make all global settings for like posts from here.';
+$txt['like_post_string_you'] = 'You';
+$txt['like_post_string_other'] = 'other';
+$txt['like_post_string_s'] = 's';
+$txt['like_post_string_people'] = 'people';
+$txt['like_post_string_part_common'] = 'liked this';
+$txt['like_post_string_part_and'] = '&amp;';
 
 $txt['lp_submit'] = 'Submit';
 $txt['lp_success'] = 'Success';
