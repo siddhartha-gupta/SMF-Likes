@@ -106,9 +106,9 @@ function LP_mainIndex() {
 		// Main views.
 		'like_post' => 'LP_likePosts',
 		'unlike_post' => 'LP_unlikePosts',
-		'get_posts_info' => 'LP_getPostsInfo',
+		'get_message_like_info' => 'LP_getMessageLikeInfo',
 		'get_topics_info' => 'LP_getTopicsInfo',
-		'get_boards_info' => 'LP_getBoardsInfo',
+		//'get_boards_info' => 'LP_getBoardsInfo',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -176,16 +176,22 @@ function LP_likePosts() {
 }
 
 /*
- *this function is not utilized yet
+ *To get the info of members who liked the post
  */
-function LP_getPostsInfo($topicIds = array()) {
+function LP_getMessageLikeInfo() {
 	global $context, $sourcedir;
 
-	if (!is_array($topicIds)) {
-		return false;
+	if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
+		$resp = array('response' => false);
 	}
+	$msg_id = (int) $_REQUEST['msg_id'];
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	LP_DB_getLikePostsInfo();
+
+	$result = LP_DB_getMessageLikeInfo($msg_id);
+	$resp = array('response' => true, 'data' => $result);
+
+	echo json_encode($resp);
+	die();
 }
 
 /*

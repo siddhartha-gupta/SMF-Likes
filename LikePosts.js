@@ -50,14 +50,48 @@ likePosts.prototype.onLikeSuccess = function(params) {
     return;
 }
 
-likePosts.prototype.showLikedInfo = function(data) {
-    console.log(data);
-    var memberInfo = '';
-    for(i in data) {
-        memberInfo += '<div class="member_info">' + data[i].name + '</div>';
-    }
-    var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
-    $('body').append(completeString);
+likePosts.prototype.showMessageLikedInfo = function(messageId) {
+    //How about we make a DB call ;)
+    console.log(messageId);
+    if(isNaN(messageId)) return false;
+
+    $.ajax({
+        type: "GET",
+        url: smf_scripturl + '?action=likeposts;sa=get_message_like_info',
+        context: document.body,
+        dataType : "json",
+        data: {
+            msg_id: messageId,
+        },
+
+        success: function(resp) {
+            if (resp.response) {
+                console.log(resp.response);
+                if(resp.data.length <= 0) return false;
+
+                var data = resp.data;
+                var memberInfo = '';
+                for(i in data) {
+                    memberInfo += '<div class="member_info">' + data[i].name + '</div>';
+                }
+                var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
+                $('body').append(completeString);
+                $('html').click(function() {
+                    console.log('removed');
+                    $('.like_posts_overlay').remove();
+                });
+                
+                $('.member_info_box').click(function(event){
+                    console.log('overlay clicked');
+                    event.stopPropagation();
+                });
+            } else {
+                //NOTE: Make an error callback over here
+                console.log('error');
+                return false;
+            }
+        },
+    });
 }
 
 var lpObj = window.lpObj = new likePosts();

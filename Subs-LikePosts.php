@@ -158,4 +158,34 @@ function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
 	return $count;
 }
 
+function LP_DB_getMessageLikeInfo($msg_id = 0) {
+	global $smcFunc, $user_info;
+
+	if (empty($msg_id)) {
+		return false;
+	}
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		WHERE lp.id_msg = {int:id_msg}
+		ORDER BY lp.id_member',
+		array(
+			'id_msg' => $msg_id
+		)
+	);
+
+	$memberData = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+        $memberData[] = array(
+            'id' => $row['id_member'],
+            'name' => $row['real_name'],
+            'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+        );
+	}
+	$smcFunc['db_free_result']($request);
+	return $memberData;
+}
+
 ?>
