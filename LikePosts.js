@@ -69,9 +69,9 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 var data = resp.data;
                 var memberInfo = '';
                 for(i in data) {
-                    memberInfo += '<div class="member_info">' + data[i].name + '</div>';
+                    memberInfo += '<div class="like_posts_member_info">' + data[i].name + '</div>';
                 }
-                var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
+                var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
                 $('body').append(completeString);
                 var removeOverlay = function(e) {
                     if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
@@ -81,7 +81,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                     }
                 }
                 $(document).one('click keyup', removeOverlay);
-                $('.member_info_box').click(function(e){
+                $('.like_posts_member_info_box').click(function(e){
                     e.stopPropagation();
                 });
             } else {

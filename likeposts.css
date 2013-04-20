@@ -8,7 +8,7 @@
     z-index: 101 !important;
 }
 
-.member_info_box {
+.like_posts_member_info_box {
     position: relative;
     width: 50%;
     line-height: 15px;
@@ -19,7 +19,12 @@
     border: 2px solid #ECEDED;
     color: #fff;
     background: #e0eaf1;
-    /*color: rgb(0, 119, 204);*/
     color: #4a6b82;
     margin: 100px auto 0;
+}
+
+.like_posts_member_info {
+    padding: 5px 10px;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
 }
