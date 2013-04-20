@@ -34,7 +34,6 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
                 lpObj.onLikeSuccess(params);
             } else {
                 //NOTE: Make an error callback over here
-                console.log('error');
             }
         },
     });
@@ -52,7 +51,6 @@ likePosts.prototype.onLikeSuccess = function(params) {
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
     //How about we make a DB call ;)
-    console.log(messageId);
     if(isNaN(messageId)) return false;
 
     $.ajax({
@@ -66,7 +64,6 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 
         success: function(resp) {
             if (resp.response) {
-                console.log(resp.response);
                 if(resp.data.length <= 0) return false;
 
                 var data = resp.data;
@@ -77,17 +74,14 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 var completeString = '<div class="like_posts_overlay"><div class="member_info_box">' + memberInfo + '</div></div>';
                 $('body').append(completeString);
                 $('html').click(function() {
-                    console.log('removed');
                     $('.like_posts_overlay').remove();
                 });
                 
                 $('.member_info_box').click(function(event){
-                    console.log('overlay clicked');
                     event.stopPropagation();
                 });
             } else {
                 //NOTE: Make an error callback over here
-                console.log('error');
                 return false;
             }
         },

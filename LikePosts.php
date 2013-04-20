@@ -38,32 +38,18 @@ if (!defined('SMF'))
  */
 
 function LP_includeJSFiles() {
-	global $settings;
+	global $settings, $context;
 
-	echo '
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/jquery-latest.pack.js"></script>';
-
-	echo '
-	<script>
+	$context['insert_after_template'] .= '
+	<script type="text/javascript"><!-- // --><![CDATA[
 		if (!window.jQuery) {
-			var head= document.getElementsByTagName("head")[0];
-			var script= document.createElement("script");
-			script.type= "text/javascript";
-			script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js";
-			head.appendChild(script);
+			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
 		}
-	</script>';
-
-	echo '
-	<script>
 		if (!window.lpObj) {
-			var head= document.getElementsByTagName("head")[0];
-			var script= document.createElement("script");
-			script.type= "text/javascript";
-			script.src = "', $settings['default_theme_url'], '/scripts/likePosts.js";
-			head.appendChild(script);
+			document.write(\'<script src="' . $settings['default_theme_url'] . '/scripts/likePosts.js"><\/script>\');
 		}
-	</script>';
+	// ]]></script>
+	<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 }
 
 function LP_isPostLiked($arr, $id) {
