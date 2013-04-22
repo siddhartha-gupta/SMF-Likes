@@ -96,10 +96,9 @@ function LP_mainIndex() {
 	$subActions = array(
 		// Main views.
 		'like_post' => 'LP_likePosts',
-		//'unlike_post' => 'LP_unlikePosts',
 		'get_message_like_info' => 'LP_getMessageLikeInfo',
-		'get_topics_info' => 'LP_getTopicsInfo',
-		//'get_boards_info' => 'LP_getBoardsInfo',
+		'get_all_messages_info' => 'LP_getAllMessagesInfo',
+		'get_all_topics_info' => 'LP_getAllTopicsInfo',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -196,7 +195,7 @@ function LP_getMessageLikeInfo() {
 /*
  *To get like posts data for topics, e.g. http://localhost/smf2/index.php?topic=14.0
  */
-function LP_getTopicsInfo($msgsArr = array(), $boardId = '', $topicId = '') {
+function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 	global $context, $sourcedir;
 
 	if (!is_array($msgsArr)) {
@@ -209,8 +208,58 @@ function LP_getTopicsInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	$result = LP_DB_getLikeTopicsInfo($msgsArr, $boardId, $topicId);
+	$result = LP_DB_getAllMessagesInfo($msgsArr, $boardId, $topicId);
 	return $result;
+}
+
+function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
+	global $context, $sourcedir;
+
+	if (!is_array($topicsArr)) {
+		$topicsArr = array($topicsArr);
+	}
+	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
+
+	if (empty($boardId)) {
+		return false;
+	}
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$result = LP_DB_getAllTopicsInfo($topicsArr, $boardId);
+	return $result;
+}
+
+function LP_isTopicLiked($arr, $id) {
+	global $context, $txt, $user_info;
+
+	LP_includeJSFiles();
+	loadlanguage('LikePosts');
+
+	$context['like_posts']['single_topic_data'] = array(
+		'text' => $txt['lp_like'],
+		'count' => 0,
+		'members' => array(),
+	);
+
+	if (!is_array($arr) || empty($arr) || empty($id))
+		return $context['like_posts']['single_topic_data'];
+
+	if (array_key_exists($id, $arr)) {
+		$context['like_posts']['single_topic_data'] = array(
+			'members' => $arr[$id]['members'],
+			'count' => $arr[$id]['count'],
+		);
+
+		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
+			$context['like_posts']['single_topic_data']['text'] = $txt['lp_unlike'];
+
+			$remaining_likes = (int) ($context['like_posts']['single_topic_data']['count'] - 1);
+			$context['like_posts']['single_topic_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+		} else {
+			$context['like_posts']['single_topic_data']['text'] = $txt['lp_like'];
+			$context['like_posts']['single_topic_data']['count_text'] = $context['like_posts']['single_topic_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+		}
+	}
+	return $context['like_posts']['single_topic_data'];
 }
 
 ?>

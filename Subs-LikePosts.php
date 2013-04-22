@@ -80,7 +80,7 @@ function LP_DB_deleteLikePost($data = array()) {
 	return true;
 }
 
-function LP_DB_getLikeTopicsInfo($msgsArr, $boardId = '', $topicId = '') {
+function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 	global $smcFunc, $user_info, $scripturl;
 
 	$topicsLikeInfo = array();
@@ -94,7 +94,7 @@ function LP_DB_getLikeTopicsInfo($msgsArr, $boardId = '', $topicId = '') {
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
 		WHERE lp.id_board = {int:id_board}
 		AND lp.id_topic = {int:id_topic}
-		AND id_msg IN ({array_int:message_list})
+		AND lp.id_msg IN ({array_int:message_list})
 		ORDER BY lp.id_msg',
 		array(
 			'id_board' => $boardId,
@@ -192,6 +192,55 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	}
 	$smcFunc['db_free_result']($request);
 	return $memberData;
+}
+
+function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
+	global $smcFunc, $user_info, $scripturl;
+
+	$topicsLikeInfo = array();
+	if (count($topicsArr) == 0 || empty($boardId)) {
+		return $topicsLikeInfo;
+	}
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
+		WHERE lp.id_board = {int:id_board}
+		AND lp.id_topic IN ({array_int:topics_list})
+		ORDER BY lp.id_msg',
+		array(
+			'id_board' => $boardId,
+			'topics_list' => $topicsArr,
+		)
+	);
+	if ($smcFunc['db_num_rows']($request) == 0) {
+		return $topicsLikeInfo;
+	}
+
+	$memberData = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
+            'id' => $row['id_member']
+        );
+		$topicsLikeInfo[$row['id_msg']] = array(
+			'id_msg' => $row['id_msg'],
+			'rating' => $row['rating'],
+			'count' => isset($topicsLikeInfo[$row['id_msg']]['count']) ? ++$topicsLikeInfo[$row['id_msg']]['count'] : 1,
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+    foreach($topicsLikeInfo as $key => $val) {
+        foreach($memberData as $memKey => $memVal) {
+            $tempArray = explode('_', $memKey);
+            if($tempArray[0] == $key) {
+                $topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
+            }
+        }
+    }
+	return $topicsLikeInfo;
 }
 
 ?>
