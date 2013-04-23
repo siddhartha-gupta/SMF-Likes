@@ -34,9 +34,8 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*
- *This function is accessible using ?action=likeposts
- */
-
+ * A generic function to load JS and css related to mod
+*/
 function LP_includeJSFiles() {
 	global $settings, $context;
 
@@ -52,40 +51,9 @@ function LP_includeJSFiles() {
 	<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 }
 
-function LP_isPostLiked($arr, $id) {
-	global $context, $txt, $user_info;
-
-	LP_includeJSFiles();
-	loadlanguage('LikePosts');
-
-	$context['like_posts']['single_msg_data'] = array(
-		'text' => $txt['lp_like'],
-		'count' => 0,
-		'members' => array(),
-	);
-
-	if (!is_array($arr) || empty($arr) || empty($id))
-		return $context['like_posts']['single_msg_data'];
-
-	if (array_key_exists($id, $arr)) {
-		$context['like_posts']['single_msg_data'] = array(
-			'members' => $arr[$id]['members'],
-			'count' => $arr[$id]['count'],
-		);
-
-		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
-			$context['like_posts']['single_msg_data']['text'] = $txt['lp_unlike'];
-
-			$remaining_likes = (int) ($context['like_posts']['single_msg_data']['count'] - 1);
-			$context['like_posts']['single_msg_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
-		} else {
-			$context['like_posts']['single_msg_data']['text'] = $txt['lp_like'];
-			$context['like_posts']['single_msg_data']['count_text'] = $context['like_posts']['single_msg_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
-		}
-	}
-	return $context['like_posts']['single_msg_data'];
-}
-
+/*
+ * Our main function which decides which sub-function will be utilized
+*/
 function LP_mainIndex() {
 	global $context, $txt, $scripturl, $settings;
 
@@ -108,12 +76,16 @@ function LP_mainIndex() {
 	$default_action_func();
 }
 
+/*
+ * Still not sure how we can utilize default function
+*/
 function LP_defaultFunc() {
 	global $context, $txt, $scripturl;
-
-	echo 'we are in default func';
 }
 
+/*
+ * Our darling thinggy to like/dislike posts
+*/
 function LP_likePosts() {
 	global $user_info, $sourcedir, $txt;
 
@@ -174,7 +146,65 @@ function LP_likePosts() {
 }
 
 /*
- *To get the info of members who liked the post
+ * To get like like data for all messages of a topic
+*/
+function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
+	global $context, $sourcedir;
+
+	if (!is_array($msgsArr)) {
+		$msgsArr = array($msgsArr);
+	}
+	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
+	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
+
+	if (empty($boardId) || empty($topicId)) {
+		return false;
+	}
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$result = LP_DB_getAllMessagesInfo($msgsArr, $boardId, $topicId);
+	return $result;
+}
+
+/*
+ * To check whether a specific message is liked or not
+ * Used in Display template
+*/
+function LP_isPostLiked($arr, $id) {
+	global $context, $txt, $user_info;
+
+	LP_includeJSFiles();
+	loadlanguage('LikePosts');
+
+	$context['like_posts']['single_msg_data'] = array(
+		'text' => $txt['lp_like'],
+		'count' => 0,
+		'members' => array(),
+	);
+
+	if (!is_array($arr) || empty($arr) || empty($id))
+		return $context['like_posts']['single_msg_data'];
+
+	if (array_key_exists($id, $arr)) {
+		$context['like_posts']['single_msg_data'] = array(
+			'members' => $arr[$id]['members'],
+			'count' => $arr[$id]['count'],
+		);
+
+		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
+			$context['like_posts']['single_msg_data']['text'] = $txt['lp_unlike'];
+
+			$remaining_likes = (int) ($context['like_posts']['single_msg_data']['count'] - 1);
+			$context['like_posts']['single_msg_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+		} else {
+			$context['like_posts']['single_msg_data']['text'] = $txt['lp_like'];
+			$context['like_posts']['single_msg_data']['count_text'] = $context['like_posts']['single_msg_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+		}
+	}
+	return $context['like_posts']['single_msg_data'];
+}
+
+/*
+ * To get the info of members who liked the post
  */
 function LP_getMessageLikeInfo() {
 	global $context, $sourcedir;
@@ -193,25 +223,9 @@ function LP_getMessageLikeInfo() {
 }
 
 /*
- *To get like posts data for topics, e.g. http://localhost/smf2/index.php?topic=14.0
- */
-function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
-	global $context, $sourcedir;
-
-	if (!is_array($msgsArr)) {
-		$msgsArr = array($msgsArr);
-	}
-	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
-	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
-
-	if (empty($boardId) || empty($topicId)) {
-		return false;
-	}
-	require_once($sourcedir . '/Subs-LikePosts.php');
-	$result = LP_DB_getAllMessagesInfo($msgsArr, $boardId, $topicId);
-	return $result;
-}
-
+ * Get all like info concered to topics
+ * Used on message index
+*/
 function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 	global $context, $sourcedir;
 
@@ -228,6 +242,10 @@ function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 	return $result;
 }
 
+/*
+ * To check whether a specific topic is liked or not
+ * Used in MessageIndex template
+*/
 function LP_isTopicLiked($arr, $id) {
 	global $context, $txt, $user_info;
 

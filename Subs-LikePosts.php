@@ -33,6 +33,9 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/*
+ * To insert new likes in DB
+*/
 function LP_DB_insertLikePost($data = array()) {
 	global $smcFunc, $user_info;
 
@@ -53,6 +56,9 @@ function LP_DB_insertLikePost($data = array()) {
 	return true;
 }
 
+/*
+ * Used when a topic is unliked
+*/
 function LP_DB_deleteLikePost($data = array()) {
 	global $smcFunc, $user_info;
 
@@ -80,6 +86,9 @@ function LP_DB_deleteLikePost($data = array()) {
 	return true;
 }
 
+/*
+ * Underlying DB implementation of LP_getAllMessagesInfo
+*/
 function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 	global $smcFunc, $user_info, $scripturl;
 
@@ -132,6 +141,10 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 	return $topicsLikeInfo;
 }
 
+/*
+ * To count number of like posts
+ * Update UI accordingly
+*/
 function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
 	global $smcFunc, $user_info;
 
@@ -158,6 +171,9 @@ function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
 	return $count;
 }
 
+/*
+ * Underlying DB implementation of LP_getMessageLikeInfo
+*/
 function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	global $smcFunc, $user_info, $scripturl, $settings, $modSettings;
 
@@ -194,6 +210,9 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	return $memberData;
 }
 
+/*
+ * Underlying DB implementation of LP_getAllTopicsInfo
+*/
 function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	global $smcFunc, $user_info, $scripturl;
 
