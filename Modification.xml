@@ -55,11 +55,10 @@
 
 	<file name="$themedir/MessageIndex.template.php">
 		<operation>
-			<search position="before"><![CDATA[							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';
+			<search position="before"><![CDATA[							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';]]></search>
+			<add><![CDATA[
 
-			
-]]></search>
-			<add><![CDATA[LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
+			LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 			echo '
 				<div class="floatright">';
 
@@ -92,12 +91,13 @@
 
 	<file name="$sourcedir/MessageIndex.php">
 		<operation>
-			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
-			<add><![CDATA[require_once($sourcedir . '/LikePosts.php');
+			<search position="after"><![CDATA[
+	$context['jump_to'] = array(]]></search>
+			<add><![CDATA[
+	require_once($sourcedir . '/LikePosts.php');
 	$topic_liked_data = LP_getAllTopicsInfo($topic_ids, $board);
 	$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
-
-	]]></add>
+]]></add>
 		</operation>
 	</file>
 </modification>
