@@ -36,7 +36,7 @@ function template_lp_admin_info() {
 	echo '
 	<div class="cat_bar">
 		<h3 class="catbg">
-			<span class="ie6_header floatleft">', $txt['rp_admin_panel'] ,'</span>
+			<span class="ie6_header floatleft">', $txt['like_post_admin_panel'] ,'</span>
 		</h3>
 	</div>
 	<p class="windowbg description">', isset($context['like_posts']['tab_desc']) ? $context['like_posts']['tab_desc'] : $txt['rp_general_desc'] ,'</p>';
@@ -81,7 +81,24 @@ function template_lp_admin_general_settings()
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
 					<div class="content">';
-	
+
+					foreach ($context['config_vars'] as $config_var) {
+						echo '
+						<dl class="settings">
+							<dt>
+								<span>'. $txt[$config_var['name']] .'</span>';
+								if (isset($config_var['subtext']) && !empty($config_var['subtext'])) {
+									echo '
+									<br /><span class="smalltext">', $config_var['subtext'] ,'</span>';
+								}
+							echo '
+							</dt>
+							<dd>
+								<input type="checkbox" name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />
+							</dd>
+						</dl>';
+					}
+
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';

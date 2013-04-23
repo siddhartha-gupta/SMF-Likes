@@ -34,7 +34,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_modifySettings($return_config = false) {
-	global $txt, $scripturl, $context, $sourcedir;
+	global $txt, $context;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
@@ -64,8 +64,8 @@ function LP_modifySettings($return_config = false) {
 	);
 
 	//wakey wakey, call the func you lazy
-	if (isset($_REQUEST['sa']) && isset($_REQUEST['sa']) && function_exists($subActions[$_REQUEST['sa']]))
-		return $subActions[$key]();
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
+		return $subActions[$_REQUEST['sa']]();
 
 	// At this point we can just do our default.
 	$default_action_func();
@@ -75,7 +75,7 @@ function LP_modifySettings($return_config = false) {
  *default/basic function
  */
 function LP_generalSettings($return_config = false) {
-	global $txt, $scripturl, $context, $sourcedir, $user_info;
+	global $txt, $context, $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
@@ -93,10 +93,22 @@ function LP_generalSettings($return_config = false) {
 }
 
 function LP_saveGeneralSettings() {
-	global $context;
+	global $sourcedir;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
+
+	if (isset($_POST['submit'])) {
+		checkSession();
+
+		$general_settings = array(
+			array('check', 'like_post_enable'),
+		);
+
+		require_once($sourcedir . '/ManageServer.php');
+		saveDBSettings($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=generalsettings');
+	}
 }
 
 ?>
