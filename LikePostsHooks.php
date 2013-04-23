@@ -40,7 +40,7 @@ function LP_addAdminPanel(&$admin_areas) {
 	loadtemplate('LikePosts');
 
 	$admin_areas['config']['areas']['likeposts'] = array(
-		'label' => $txt['lp_menu'],
+		'label' => $txt['like_post_menu'],
 		'file' => 'LikePostsAdmin.php',
 		'function' => 'LP_modifySettings',
 		'icon' => 'administration.gif',

@@ -39,18 +39,19 @@ function LP_modifySettings($return_config = false) {
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
 
-	require_once($sourcedir . '/Subs-LikePosts.php');
+	//require_once($sourcedir . '/Subs-LikePosts.php');
 	loadLanguage('LikePosts');
+	loadtemplate('LikePosts');
 
-	$context['page_title'] = $txt['lp_admin_panel'];
+	$context['page_title'] = $txt['like_post_admin_panel'];
 	$default_action_func = 'LP_generalSettings';
 
 	// Load up the guns
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['lp_admin_panel'],
+		'title' => $txt['like_post_admin_panel'],
 		'tabs' => array(
 			'generalsettings' => array(
-				'label' => $txt['lp_general_settings'],
+				'label' => $txt['like_post_general_settings'],
 				'url' => 'generalsettings',
 			),
 		),
@@ -78,14 +79,17 @@ function LP_generalSettings($return_config = false) {
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
+	require_once($sourcedir . '/ManageServer.php');
 
-	loadLanguage('LikePosts');
-	loadtemplate('LikePosts');
+	$general_settings = array(
+		array('check', 'like_post_enable', 'subtext' => $txt['like_post_enable_desc']),
+	);
 
-	$context['page_title'] = $txt['lp_admin_panel'];
+	$context['page_title'] = $txt['like_post_admin_panel'];
 	$context['sub_template'] = 'lp_admin_general_settings';
-	$context['like_posts']['tab_name'] = $txt['lp_general_settings'];
-	$context['like_posts']['tab_desc'] = $txt['lp_general_settings_desc'];
+	$context['like_posts']['tab_name'] = $txt['like_post_general_settings'];
+	$context['like_posts']['tab_desc'] = $txt['like_post_general_settings_desc'];
+	prepareDBSettingContext($general_settings);
 }
 
 function LP_saveGeneralSettings() {
