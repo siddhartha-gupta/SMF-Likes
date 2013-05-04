@@ -69,8 +69,7 @@ function template_lp_admin_info() {
 	</div>';
 }
 
-function template_lp_admin_general_settings()
-{
+function template_lp_admin_general_settings() {
 	global $context, $txt, $scripturl;
 
 	template_lp_admin_info();
@@ -97,6 +96,45 @@ function template_lp_admin_general_settings()
 								<input type="checkbox" name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />
 							</dd>
 						</dl>';
+					}
+
+					echo '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+		
+					echo '
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+	
+		</form>
+	</div>
+	<br class="clear">';
+}
+
+function template_lp_admin_permission_settings() {
+	global $context, $txt, $scripturl, $modSettings;
+
+	template_lp_admin_info();
+
+	echo '
+	<div id="admincenter">
+		<form action="'. $scripturl .'?action=admin;area=likeposts;sa=savepermissionsettings" method="post" accept-charset="UTF-8">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">';
+
+					foreach ($context['like_posts']['permission_settings'] as $perm) {
+						$permVals = isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? (explode(',', $modSettings[$perm])) : '';
+
+						echo ' <fieldset>';
+						echo '<legend>' . $txt['like_post_perm_' . $perm] . '</legend>';
+					
+						foreach ($context['like_posts']['groups'] as $group) {
+							echo '
+								<input' . (is_array($permVals) && in_array($group['id_group'], $permVals) ? ' checked="checked"' : '') . ' id="' . $group['id_group'] . '" type="checkbox" name="' . $perm . '[]" value="' . $group['id_group'] . '" /> <label for="' . $group['id_group'] . '">' . $group['group_name'] . '</label><br />';
+						}
+						echo ' </fieldset>';
 					}
 
 					echo '

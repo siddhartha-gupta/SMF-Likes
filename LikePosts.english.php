@@ -51,8 +51,13 @@ $txt['like_post_menu'] = 'Like Posts';
 $txt['like_post_admin_panel'] = 'Like Posts admin panel';
 $txt['like_post_general_settings'] = 'General Settings';
 $txt['like_post_general_settings_desc'] = 'You can make all global settings for like posts from here.';
+$txt['like_post_permission_settings'] = 'Permission Settings';
+$txt['like_post_permission_settings_desc'] = 'You can make all group based permission settings for like posts from here.';
 $txt['like_post_enable'] = 'Enable Like Post mod';
 $txt['like_post_enable_desc'] = 'Global permission to enable/disable mod';
+$txt['like_post_regular_members'] = 'Regular Members';
+$txt['like_post_perm_can_like_posts'] = 'Can like posts';
+$txt['like_post_perm_can_view_likes'] = 'Can view likes';
 
 $txt['lp_submit'] = 'Submit';
 

@@ -46,6 +46,11 @@ function LP_modifySettings($return_config = false) {
 	$context['page_title'] = $txt['like_post_admin_panel'];
 	$default_action_func = 'LP_generalSettings';
 
+	$context['like_posts']['permission_settings'] = array(
+		'can_like_posts',
+		'can_view_likes'
+	);
+
 	// Load up the guns
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['like_post_admin_panel'],
@@ -54,6 +59,10 @@ function LP_modifySettings($return_config = false) {
 				'label' => $txt['like_post_general_settings'],
 				'url' => 'generalsettings',
 			),
+			'permissions' => array(
+				'label' => $txt['like_post_permission_settings'],
+				'url' => 'permissionsettings',
+			),
 		),
 	);
 	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'generalsettings';
@@ -61,6 +70,8 @@ function LP_modifySettings($return_config = false) {
 	$subActions = array(
 		'generalsettings' => 'LP_generalSettings',
 		'savegeneralsettings' => 'LP_saveGeneralSettings',
+		'permissionsettings' => 'LP_permissionSettings',
+		'savepermissionsettings' => 'LP_savePermissionsettings',
 	);
 
 	//wakey wakey, call the func you lazy
@@ -108,6 +119,65 @@ function LP_saveGeneralSettings() {
 		require_once($sourcedir . '/ManageServer.php');
 		saveDBSettings($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=generalsettings');
+	}
+}
+
+function LP_permissionSettings() {
+	global $txt, $context, $sourcedir;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+	require_once($sourcedir . '/ManageServer.php');
+
+	require_once($sourcedir . '/Subs-Membergroups.php');
+	$context['like_posts']['groups'][-1] = array(
+		'id_group' => -1,
+		'group_name' => $txt['guests'],
+	);
+	$context['like_posts']['groups'][0] = array(
+		'id_group' => 0,
+		'group_name' => $txt['like_post_regular_members'],
+	);
+	$context['like_posts']['groups'] += list_getMembergroups(null, null, 'id_group', 'regular');
+	unset($context['like_posts']['groups'][3]);
+	unset($context['like_posts']['groups'][1]);
+
+	$context['page_title'] = $txt['like_post_admin_panel'];
+	$context['sub_template'] = 'lp_admin_permission_settings';
+	$context['like_posts']['tab_name'] = $txt['like_post_permission_settings'];
+	$context['like_posts']['tab_desc'] = $txt['like_post_permission_settings_desc'];
+}
+
+function LP_savePermissionsettings() {
+	global $context, $sourcedir;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+
+	if (isset($_POST['submit'])) {
+		checkSession();
+
+		unset($_POST['submit']);
+
+		$general_settings = array();
+		foreach($_POST as $key => $val) {
+			if(in_array($key, $context['like_posts']['permission_settings'])) {
+				if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
+					//$dbVal = implode(',', $_POST[$key]);
+					$_POST[$key] = implode(',', $_POST[$key]);
+					//echo $key;
+					$general_settings[] = array(
+						'text', $key
+					);
+				}
+			}
+		}
+
+		//print_r($general_settings);
+
+		require_once($sourcedir . '/ManageServer.php');
+		saveDBSettings($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 	}
 }
 
