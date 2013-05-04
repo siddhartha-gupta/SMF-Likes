@@ -156,24 +156,17 @@ function LP_savePermissionsettings() {
 
 	if (isset($_POST['submit'])) {
 		checkSession();
-
 		unset($_POST['submit']);
 
 		$general_settings = array();
 		foreach($_POST as $key => $val) {
 			if(in_array($key, $context['like_posts']['permission_settings'])) {
 				if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
-					//$dbVal = implode(',', $_POST[$key]);
 					$_POST[$key] = implode(',', $_POST[$key]);
-					//echo $key;
-					$general_settings[] = array(
-						'text', $key
-					);
+					$general_settings[] = array('text', $key);
 				}
 			}
 		}
-
-		//print_r($general_settings);
 
 		require_once($sourcedir . '/ManageServer.php');
 		saveDBSettings($general_settings);
