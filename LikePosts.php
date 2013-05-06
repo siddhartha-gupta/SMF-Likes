@@ -280,4 +280,19 @@ function LP_isTopicLiked($arr, $id) {
 	return $context['like_posts']['single_topic_data'];
 }
 
+/* global function for like post to check for permissions
+ * just send the permission name to it
+*/
+function LP_isAllowedTo($permission) {
+	global $modSettings, $user_info;
+
+	if($user_info['is_admin']) return true;
+
+	$allowed = explode(',', $modSettings[$permission]);
+	$common = array_intersect($allowed, $user_info['groups']);
+
+	if(!empty($common)) return true;
+	else return false;
+}
+
 ?>
