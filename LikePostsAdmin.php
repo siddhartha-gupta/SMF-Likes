@@ -130,10 +130,6 @@ function LP_permissionSettings() {
 	require_once($sourcedir . '/ManageServer.php');
 
 	require_once($sourcedir . '/Subs-Membergroups.php');
-	$context['like_posts']['groups'][-1] = array(
-		'id_group' => -1,
-		'group_name' => $txt['guests'],
-	);
 	$context['like_posts']['groups'][0] = array(
 		'id_group' => 0,
 		'group_name' => $txt['like_post_regular_members'],

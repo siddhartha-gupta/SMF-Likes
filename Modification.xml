@@ -39,7 +39,7 @@
 	<file name="$themedir/Display.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Show the member's signature?]]></search>
-			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && (LP_isAllowedTo('can_like_posts') || LP_isAllowedTo('can_view_likes'))) {
+			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
@@ -61,7 +61,7 @@
 			<search position="before"><![CDATA[							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';]]></search>
 			<add><![CDATA[
 
-			if(!empty($modSettings['like_post_enable']) && (LP_isAllowedTo('can_like_posts') || LP_isAllowedTo('can_view_likes'))) {
+			if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 				LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 				echo '
 					<div class="floatright">';
@@ -88,7 +88,7 @@
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
 			<add><![CDATA[if(!empty($modSettings['like_post_enable'])) {
 		require_once($sourcedir . '/LikePosts.php');
-		if(LP_isAllowedTo('can_view_likes') || LP_isAllowedTo('can_like_posts')) {
+		if(LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			$topic_liked_data = LP_getAllMessagesInfo($messages);
 			$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 		}
@@ -105,7 +105,7 @@
 			<add><![CDATA[
 	if(!empty($modSettings['like_post_enable'])) {
 		require_once($sourcedir . '/LikePosts.php');
-		if(LP_isAllowedTo('can_view_likes') || LP_isAllowedTo('can_like_posts')) {
+		if(LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			$topic_liked_data = LP_getAllTopicsInfo($topic_ids, $board);
 			$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 		}
