@@ -41,7 +41,6 @@ $txt['like_post_string_part_common'] = 'liked this';
 $txt['like_post_string_part_and'] = '&amp;';
 $txt['lp_like'] = 'Like';
 $txt['lp_unlike'] = 'Unlike';
-//$txt['lp_success'] = 'Success';
 
 // Error msgs
 $txt['lp_cannot_like_posts'] = 'You do not have the permissions to like posts.';

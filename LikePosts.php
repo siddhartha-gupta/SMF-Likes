@@ -132,7 +132,7 @@ function LP_likePosts() {
 		if(!empty($rating)) {
 			$liked_text = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and']. ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
-			$liked_text = $count . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+			$liked_text = !empty($count) ? $count . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'] : '';
 		}
 
 		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);

@@ -48,7 +48,7 @@
 
 			if(LP_isAllowedTo('can_view_likes')) {
 				echo '
-							<a href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $message['id'], ')">', !empty($context['like_posts']['single_msg_data']['count']) ? '(<span id="like_count_'. $message['id'] .'">'. $context['like_posts']['single_msg_data']['count_text'] .'</span>)' : '', '</a>';
+							<a id="like_post_info_'. $message['id'] .'" href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $message['id'], ')">', !empty($context['like_posts']['single_msg_data']['count']) ? '<span id="like_count_'. $message['id'] .'">('. $context['like_posts']['single_msg_data']['count_text'] .')</span>' : '', '</a>';
 			}
 		}
 
@@ -73,7 +73,7 @@
 		
 				if(LP_isAllowedTo('can_view_likes'))
 					echo '
-								<a href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '(<span id="like_count_'. $topic['first_post']['id'] .'">'. $context['like_posts']['single_topic_data']['count_text'] .'</span>)' : '', '</a>';
+								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
 
 				echo '
 					</div>';

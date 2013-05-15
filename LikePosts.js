@@ -45,10 +45,19 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
     if(isNaN(count)) return false;
 
+    var likeText = params.likeText.replace(/&amp;/g, '&');
     $('#like_' + params.msgId).text(params.newText);
-    $('#like_count_' + params.msgId).text(params.likeText.replace(/&amp;/g, '&'));
+
+    if($('#like_count_' + params.msgId).length) {
+        if(likeText === '') {
+            $('#like_count_' + params.msgId).remove();
+        } else {
+            $('#like_count_' + params.msgId).text('(' + likeText + ')');
+        }
+    } else {
+        $('#like_post_info_' + params.msgId).append('<span id="like_count_' + params.msgId +'">('+ likeText + ')</span>');
+    }
     
-    //return;
 }
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
