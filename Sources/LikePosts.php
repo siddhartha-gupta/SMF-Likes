@@ -77,8 +77,8 @@ function LP_likePosts() {
 	global $user_info, $sourcedir, $txt;
 
 	loadlanguage('LikePosts');
-	if ($user_info['is_guest']) {
-		$resp = array('response' => false, 'error' => $txt['lp_error_cannot_like_posts']);
+	if ($user_info['is_guest'] || !(LP_isAllowedTo('can_like_posts'))) {
+		$resp = array('response' => false, 'error' => $txt['like_post_cannot_like_posts']);
 		echo json_encode($resp);
 		die();
 	}
@@ -136,7 +136,11 @@ function LP_likePosts() {
  * To get like like data for all messages of a topic
 */
 function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $user_info;
+
+	if($user_info['is_guest']) {
+		return false;
+	}
 
 	if (!is_array($msgsArr)) {
 		$msgsArr = array($msgsArr);
@@ -194,7 +198,11 @@ function LP_isPostLiked($arr, $id) {
  * To get the info of members who liked the post
  */
 function LP_getMessageLikeInfo() {
-	global $sourcedir;
+	global $sourcedir, $user_info;
+
+	if(!(LP_isAllowedTo('can_view_likes')) || $user_info['is_guest']) {
+		return false;
+	}
 
 	if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
 		$resp = array('response' => false);
@@ -214,7 +222,11 @@ function LP_getMessageLikeInfo() {
  * Used on message index
 */
 function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $user_info;
+
+	if($user_info['is_guest']) {
+		return false;
+	}
 
 	if (!is_array($topicsArr)) {
 		$topicsArr = array($topicsArr);
