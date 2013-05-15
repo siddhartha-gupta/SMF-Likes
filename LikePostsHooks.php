@@ -34,7 +34,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_addAdminPanel(&$admin_areas) {
-	global $txt, $modSettings, $context;
+	global $txt;
 
 	loadLanguage('LikePosts');
 	loadtemplate('LikePosts');

@@ -146,7 +146,7 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
  * Update UI accordingly
 */
 function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
-	global $smcFunc, $user_info;
+	global $smcFunc;
 
 	$count = 0;
 	if (empty($boardId) || empty($topicId) || empty($msg_id)) {
@@ -175,7 +175,7 @@ function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
  * Underlying DB implementation of LP_getMessageLikeInfo
 */
 function LP_DB_getMessageLikeInfo($msg_id = 0) {
-	global $smcFunc, $user_info, $scripturl, $settings, $modSettings;
+	global $smcFunc, $scripturl, $settings, $modSettings;
 
 	if (empty($msg_id)) {
 		return false;
@@ -214,7 +214,7 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
  * Underlying DB implementation of LP_getAllTopicsInfo
 */
 function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
-	global $smcFunc, $user_info, $scripturl;
+	global $smcFunc, $scripturl;
 
 	$topicsLikeInfo = array();
 	if (count($topicsArr) == 0 || empty($boardId)) {

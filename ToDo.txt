@@ -1,4 +1,0 @@
-- Make like and counts using jquery
-- Remove all hardcoded text strings
-- Try to implement template codes from a generic function
-- Make as much less edits in core files as possible

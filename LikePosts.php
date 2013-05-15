@@ -36,7 +36,7 @@ if (!defined('SMF'))
 /*
  * A generic function to load JS and css related to mod
 */
-function LP_includeJSFiles() {
+function LP_includeAssets() {
 	global $settings, $context;
 
 	$context['insert_after_template'] .= '
@@ -55,12 +55,9 @@ function LP_includeJSFiles() {
  * Our main function which decides which sub-function will be utilized
 */
 function LP_mainIndex() {
-	global $context, $txt, $scripturl, $settings;
 
-	ob_start();
-	LP_includeJSFiles();
-	ob_end_clean();
-	$default_action_func = 'LP_defaultFunc';
+	// No globals :D
+	LP_includeAssets();
 	$subActions = array(
 		// Main views.
 		'like_post' => 'LP_likePosts',
@@ -71,16 +68,6 @@ function LP_mainIndex() {
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
 		return $subActions[$_REQUEST['sa']]();
-
-	// At this point we can just do our default.
-	$default_action_func();
-}
-
-/*
- * Still not sure how we can utilize default function
-*/
-function LP_defaultFunc() {
-	global $context, $txt, $scripturl;
 }
 
 /*
@@ -172,7 +159,7 @@ function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '')
 function LP_isPostLiked($arr, $id) {
 	global $context, $txt, $user_info;
 
-	LP_includeJSFiles();
+	LP_includeAssets();
 	loadlanguage('LikePosts');
 
 	$context['like_posts']['single_msg_data'] = array(
@@ -207,7 +194,7 @@ function LP_isPostLiked($arr, $id) {
  * To get the info of members who liked the post
  */
 function LP_getMessageLikeInfo() {
-	global $context, $sourcedir;
+	global $sourcedir;
 
 	if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
 		$resp = array('response' => false);
@@ -249,7 +236,7 @@ function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 function LP_isTopicLiked($arr, $id) {
 	global $context, $txt, $user_info;
 
-	LP_includeJSFiles();
+	LP_includeAssets();
 	loadlanguage('LikePosts');
 
 	$context['like_posts']['single_topic_data'] = array(
