@@ -100,7 +100,7 @@ function template_lp_admin_general_settings() {
 
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+					<input type="submit" name="submit" value="', $txt['like_post_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 		
 					echo '
 					</div>
@@ -139,7 +139,7 @@ function template_lp_admin_permission_settings() {
 
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+					<input type="submit" name="submit" value="', $txt['like_post_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 		
 					echo '
 					</div>

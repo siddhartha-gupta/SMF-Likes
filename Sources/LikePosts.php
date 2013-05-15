@@ -113,7 +113,7 @@ function LP_likePosts() {
 
 	if ($result) {
 		$count = LP_DB_getLikeTopicCount($board_id, $topic_id, $msg_id);
-		$new_text = !empty($rating) ? $txt['lp_unlike'] : $txt['lp_like'];
+		$new_text = !empty($rating) ? $txt['like_post_unlike'] : $txt['like_post_like'];
 
 		$remaining_likes = (int) ($count - 1);
 		if(!empty($rating)) {
@@ -163,7 +163,7 @@ function LP_isPostLiked($arr, $id) {
 	loadlanguage('LikePosts');
 
 	$data = array(
-		'text' => $txt['lp_like'],
+		'text' => $txt['like_post_like'],
 		'count' => 0,
 		'members' => array(),
 	);
@@ -178,12 +178,12 @@ function LP_isPostLiked($arr, $id) {
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
-			$data['text'] = $txt['lp_unlike'];
+			$data['text'] = $txt['like_post_unlike'];
 
 			$remaining_likes = (int) ($data['count'] - 1);
 			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
-			$data['text'] = $txt['lp_like'];
+			$data['text'] = $txt['like_post_like'];
 			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
 		}
 	}
@@ -240,7 +240,7 @@ function LP_isTopicLiked($arr, $id) {
 	loadlanguage('LikePosts');
 
 	$data = array(
-		'text' => $txt['lp_like'],
+		'text' => $txt['like_post_like'],
 		'count' => 0,
 		'members' => array(),
 	);
@@ -255,12 +255,12 @@ function LP_isTopicLiked($arr, $id) {
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
-			$data['text'] = $txt['lp_unlike'];
+			$data['text'] = $txt['like_post_unlike'];
 
 			$remaining_likes = (int) ($data['count'] - 1);
 			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
-			$data['text'] = $txt['lp_like'];
+			$data['text'] = $txt['like_post_like'];
 			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
 		}
 	}

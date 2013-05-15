@@ -39,11 +39,11 @@ $txt['like_post_string_s'] = 's';
 $txt['like_post_string_people'] = 'people';
 $txt['like_post_string_part_common'] = 'liked this';
 $txt['like_post_string_part_and'] = '&amp;';
-$txt['lp_like'] = 'Like';
-$txt['lp_unlike'] = 'Unlike';
+$txt['like_post_like'] = 'Like';
+$txt['like_post_unlike'] = 'Unlike';
 
 // Error msgs
-$txt['lp_cannot_like_posts'] = 'You do not have the permissions to like posts.';
+$txt['like_post_cannot_like_posts'] = 'You do not have the permissions to like posts.';
 
 //Admin panel strings
 $txt['like_post_menu'] = 'Like Posts';
@@ -58,6 +58,6 @@ $txt['like_post_regular_members'] = 'Regular Members';
 $txt['like_post_perm_can_like_posts'] = 'Can like posts';
 $txt['like_post_perm_can_view_likes'] = 'Can view likes';
 
-$txt['lp_submit'] = 'Submit';
+$txt['like_post_submit'] = 'Submit';
 
 ?>
