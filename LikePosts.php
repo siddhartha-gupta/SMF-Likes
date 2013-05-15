@@ -162,32 +162,32 @@ function LP_isPostLiked($arr, $id) {
 	LP_includeAssets();
 	loadlanguage('LikePosts');
 
-	$context['like_posts']['single_msg_data'] = array(
+	$data = array(
 		'text' => $txt['lp_like'],
 		'count' => 0,
 		'members' => array(),
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
-		return $context['like_posts']['single_msg_data'];
+		return $data;
 
 	if (array_key_exists($id, $arr)) {
-		$context['like_posts']['single_msg_data'] = array(
+		$data = array(
 			'members' => $arr[$id]['members'],
 			'count' => $arr[$id]['count'],
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
-			$context['like_posts']['single_msg_data']['text'] = $txt['lp_unlike'];
+			$data['text'] = $txt['lp_unlike'];
 
-			$remaining_likes = (int) ($context['like_posts']['single_msg_data']['count'] - 1);
-			$context['like_posts']['single_msg_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+			$remaining_likes = (int) ($data['count'] - 1);
+			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
-			$context['like_posts']['single_msg_data']['text'] = $txt['lp_like'];
-			$context['like_posts']['single_msg_data']['count_text'] = $context['like_posts']['single_msg_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+			$data['text'] = $txt['lp_like'];
+			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
 		}
 	}
-	return $context['like_posts']['single_msg_data'];
+	return $data;
 }
 
 /*
@@ -239,32 +239,32 @@ function LP_isTopicLiked($arr, $id) {
 	LP_includeAssets();
 	loadlanguage('LikePosts');
 
-	$context['like_posts']['single_topic_data'] = array(
+	$data = array(
 		'text' => $txt['lp_like'],
 		'count' => 0,
 		'members' => array(),
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
-		return $context['like_posts']['single_topic_data'];
+		return $data;
 
 	if (array_key_exists($id, $arr)) {
-		$context['like_posts']['single_topic_data'] = array(
+		$data = array(
 			'members' => $arr[$id]['members'],
 			'count' => $arr[$id]['count'],
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
-			$context['like_posts']['single_topic_data']['text'] = $txt['lp_unlike'];
+			$data['text'] = $txt['lp_unlike'];
 
-			$remaining_likes = (int) ($context['like_posts']['single_topic_data']['count'] - 1);
-			$context['like_posts']['single_topic_data']['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+			$remaining_likes = (int) ($data['count'] - 1);
+			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
 		} else {
-			$context['like_posts']['single_topic_data']['text'] = $txt['lp_like'];
-			$context['like_posts']['single_topic_data']['count_text'] = $context['like_posts']['single_topic_data']['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+			$data['text'] = $txt['lp_like'];
+			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
 		}
 	}
-	return $context['like_posts']['single_topic_data'];
+	return $data;
 }
 
 /* global function for like post to check for permissions

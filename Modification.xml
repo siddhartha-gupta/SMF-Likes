@@ -40,7 +40,7 @@
 		<operation>
 			<search position="after"><![CDATA[// Show the member's signature?]]></search>
 			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
-			LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
+			$context['like_posts']['single_msg_data'] = LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
 							<div class="floatleft"><a id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a></div>';	
@@ -62,7 +62,7 @@
 			<add><![CDATA[
 
 			if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
-				LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
+				$context['like_posts']['single_topic_data'] = LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 				echo '
 					<div class="floatright">';
 
@@ -77,9 +77,7 @@
 
 				echo '
 					</div>';
-			}
-
-		]]></add>
+			}]]></add>
 		</operation>
 	</file>
 
