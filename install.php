@@ -97,10 +97,6 @@ add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
 add_integration_function('integrate_actions', 'LP_addAction', true);
 
-//For 2.1
-//add_integration_function('integrate_admin_areas', 'LP_addAdminPanel:$sourcedir/LikePostsHooks.php');
-//add_integration_function('integrate_actions', 'LP_addAction:$sourcedir/LikePostsHooks.php');
-
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';
 
