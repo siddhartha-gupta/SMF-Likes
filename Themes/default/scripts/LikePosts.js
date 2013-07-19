@@ -29,6 +29,7 @@
 */
 
 var likePosts = function() {
+    this.timeoutTimer = null
 }
 
 likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
@@ -60,7 +61,8 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
                     msgId: msgId,
                     count: (resp.count !== undefined) ? resp.count : '',
                     newText: resp.newText,
-                    likeText: resp.likeText
+                    likeText: resp.likeText,
+                    image_path: resp.image_path
                 };
                 lpObj.onLikeSuccess(params);
             } else {
@@ -75,6 +77,15 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
     if(isNaN(count)) return false;
 
+    var completeString = '\
+        <div class="like_posts_overlay">\
+            <img class="like_image" style="display:none" src="' + params.image_path + '" />\
+        </div>';
+
+    $('body').append(completeString);
+    $('.like_image').fadeIn(1000);
+    $(document).one('click keyup', lpObj.removeOverlay);
+
     var likeText = params.likeText.replace(/&amp;/g, '&');
     $('#like_' + params.msgId).text(params.newText);
 
@@ -87,11 +98,13 @@ likePosts.prototype.onLikeSuccess = function(params) {
     } else {
         $('#like_post_info_' + params.msgId).append('<span id="like_count_' + params.msgId +'">('+ likeText + ')</span>');
     }
-    
+
+    this.timeoutTimer = setTimeout(function() {
+        lpObj.removeOverlay();
+    }, 3000);
 }
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
-    //How about we make a DB call ;)
     if(isNaN(messageId)) return false;
 
     $.ajax({
@@ -114,16 +127,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
                 $('body').append(completeString);
-
-                var removeOverlay = function(e) {
-                    if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
-                        $('.like_posts_overlay').remove();
-                        $(document).unbind('click', removeOverlay);
-                        $(document).unbind('keyup', removeOverlay);
-                        $('.like_posts_member_info_box').unbind('click');
-                    }
-                }
-                $(document).one('click keyup', removeOverlay);
+                $(document).one('click keyup', lpObj.removeOverlay);
 
                 $('.like_posts_member_info_box').click(function(e){
                     e.stopPropagation();
@@ -134,6 +138,19 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
             }
         },
     });
+}
+
+likePosts.prototype.removeOverlay = function (e) {
+    var _this = this;
+    if(typeof(e) === undefined && this.timeoutTimer === null) return false;
+    else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
+        clearTimeout(_this.timeoutTimer);
+        _this.timeoutTimer = null;
+        $('.like_posts_overlay').remove();
+        $('.like_posts_overlay').unbind('click');
+        $(document).unbind('click', lpObj.removeOverlay);
+        $(document).unbind('keyup', lpObj.removeOverlay);
+    }
 }
 
 var lpObj = window.lpObj = new likePosts();

@@ -42,3 +42,13 @@
     position: relative;
     padding-left: 10px;
 }
+
+.like_post_box {
+    line-height: 22px;
+    float: left;
+    position: relative;
+}
+
+.like_post_image {
+    width: 15px;
+}
