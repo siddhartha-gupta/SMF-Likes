@@ -47,8 +47,7 @@ function LP_includeAssets() {
 		if (!window.lpObj) {
 			document.write(\'<script src="' . $settings['default_theme_url'] . '/scripts/likePosts.js"><\/script>\');
 		}
-	// ]]></script>
-	<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
+	// ]]></script>';
 }
 
 /*
@@ -118,15 +117,11 @@ function LP_likePosts() {
 		$remaining_likes = (int) ($count - 1);
 		if(!empty($rating)) {
 			$liked_text = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and']. ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
-			$image_path = $settings['default_theme_url'] . '/images/like_posts/heart.png';
 		} else {
 			$liked_text = !empty($count) ? $count . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'] : '';
-
-			//Sow broken heart over here
-			$image_path = $settings['default_theme_url'] . '/images/like_posts/heart.png';
 		}
 
-		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text, 'image_path' => $image_path);
+		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);
 		echo json_encode($resp);
 		die();
 	} else {

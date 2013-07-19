@@ -45,11 +45,7 @@
 			echo '<div class="like_post_box">';
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
-								<img class="like_post_image" src="', $settings['default_theme_url'], '/images/like_posts/heart.png" style="width: 15px;" />
-								<a id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">
-									', $context['like_posts']['single_msg_data']['text'],'
-								</a>
-							';
+								<a class="like_unlike_link" id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
 			}
 
 			if(LP_isAllowedTo('can_view_likes')) {

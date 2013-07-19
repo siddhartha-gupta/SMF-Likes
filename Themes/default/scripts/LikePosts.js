@@ -77,17 +77,20 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
     if(isNaN(count)) return false;
 
-    var completeString = '\
-        <div class="like_posts_overlay">\
-            <img class="like_image" style="display:none" src="' + params.image_path + '" />\
-        </div>';
+    var buttonRef = $('#like_' + params.msgId),
+        likeText = params.likeText.replace(/&amp;/g, '&');
 
-    $('body').append(completeString);
-    $('.like_image').fadeIn(1000);
-    $(document).one('click keyup', lpObj.removeOverlay);
+    $(buttonRef).animate({
+        left: '-140px',
+        opacity: 'toggle'
+    }, 1000, '', function() {
+        $(buttonRef).text(params.newText);
 
-    var likeText = params.likeText.replace(/&amp;/g, '&');
-    $('#like_' + params.msgId).text(params.newText);
+        $(buttonRef).animate({
+            left: '0px',
+            opacity: 'toggle'
+        }, 1000);
+    });
 
     if($('#like_count_' + params.msgId).length) {
         if(likeText === '') {

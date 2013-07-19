@@ -49,6 +49,9 @@
     position: relative;
 }
 
-.like_post_image {
-    width: 15px;
+.like_unlike_link {
+    background: #C44E19;
+    padding: 1px 5px;
+    color: #fff !important;
+    position: relative;
 }
