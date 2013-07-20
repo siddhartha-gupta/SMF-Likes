@@ -262,25 +262,11 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	return $topicsLikeInfo;
 }
 
-//To show posts user has liked
-/*
-select DISTINCT(m.id_msg) from smf_like_post as lp
-INNER JOIN smf_messages as m ON (m.id_msg = lp.id_msg)
-where lp.id_member = '1'
-*/
-
-//To show likes user has obtained
-/*
-select m.id_msg from smf_like_post as lp
-INNER JOIN smf_messages as m ON (m.id_msg = lp.id_msg)
-where m.id_member = '1'
-*/
-
 /*
  * To get posts liked by user
  * add permissions to this
 */
-function LP_DB_getUserLikedMessages($user_id = 0) {
+function LP_DB_getUserLikedMessages($user_id = 0, $start_limit = 0) {
 	global $smcFunc, $scripturl;
 
 	if (empty($user_id)) {
@@ -295,6 +281,7 @@ function LP_DB_getUserLikedMessages($user_id = 0) {
 		ORDER BY m.id_msg',
 		array(
 			'id_member' => $user_id,
+			//'start_limit' => $start_limit
 		)
 	);
 
@@ -306,7 +293,6 @@ function LP_DB_getUserLikedMessages($user_id = 0) {
 			$likedData[$row['id_msg']] = array(
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',
 				'subject' => $row['subject'],
 				'body' => $row['body'],
 				'time' => timeformat($row['poster_time']),
@@ -323,8 +309,8 @@ function LP_DB_getUserLikedMessages($user_id = 0) {
  * To get posts of a user liked by other
  * add permissions to this
 */
-function LP_DB_getLikedUserMessages($user_id = 0) {
-	global $smcFunc, $user_info;
+function LP_DB_getLikedUserMessages($user_id = 0, $start_limit = 0) {
+	global $smcFunc, $scripturl;
 
 	if (empty($user_id)) {
 		return false;
@@ -338,6 +324,7 @@ function LP_DB_getLikedUserMessages($user_id = 0) {
 		ORDER BY m.id_msg',
 		array(
 			'id_member' => $user_id,
+			//'start_limit' => $start_limit
 		)
 	);
 
@@ -349,7 +336,6 @@ function LP_DB_getLikedUserMessages($user_id = 0) {
 			$likedData[$row['id_msg']] = array(
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '" rel="nofollow">' . $row['subject'] . '</a>',
 				'subject' => $row['subject'],
 				'body' => $row['body'],
 				'time' => timeformat($row['poster_time']),
@@ -359,6 +345,25 @@ function LP_DB_getLikedUserMessages($user_id = 0) {
 	}
 	$smcFunc['db_free_result']($request);
 	return $likedData;
+}
+
+function LP_DB_getTotalResults($select, $where) {
+	global $context, $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT '. $select .' as total_results
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		WHERE ' . $where
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0)
+		return 'nothing found';
+
+	list ($total_results) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	return $total_results;
 }
 
 ?>

@@ -80,6 +80,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var buttonRef = $('#like_' + params.msgId),
         likeText = params.likeText.replace(/&amp;/g, '&');
 
+    //lpObj.bouncEffect($(buttonRef), 'lr', 3, '240px', 100);
     $(buttonRef).animate({
         left: '-40px',
         opacity: 'toggle'
@@ -141,6 +142,36 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
             }
         },
     });
+}
+
+likePosts.prototype.bouncEffect = function (element, direction, times, distance, speed) {
+    var dir = 'marginLeft';
+
+    switch(direction) {
+        case 'rl':
+            dir = 'marginRight';
+            break;
+
+        case 'tb':
+            dir = 'marginTop';
+            break;
+
+        case 'bt':
+            dir = 'marginBottom';
+            break;
+
+        default:
+            break;
+    }
+
+    for(var i = 0; i < times; i++) {
+        console.log(dir);
+        element.animate({
+            dir: '-=' + distance
+        }, speed).animate({
+            dir: '+=' + distance
+        }, speed)
+    }
 }
 
 likePosts.prototype.removeOverlay = function (e) {

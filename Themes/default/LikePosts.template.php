@@ -170,6 +170,11 @@ function template_lp_show_own_likes() {
 			</thead>
 			<tbody>';
 
+	echo '
+		<div class="pagesection" style="margin-bottom: 0;">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
+
 		foreach ($context['like_post']['own_like_data'] as $key => $data) {
 			echo '
 				<tr>
@@ -228,6 +233,11 @@ function template_lp_show_others_likes() {
 				</tr>
 			</thead>
 			<tbody>';
+
+		echo '
+		<div class="pagesection" style="margin-bottom: 0;">
+			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
+		</div>';
 
 		foreach ($context['like_post']['others_like_data'] as $key => $data) {
 			echo '

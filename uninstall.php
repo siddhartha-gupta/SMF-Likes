@@ -51,6 +51,7 @@ $smcFunc['db_query']('', '
 remove_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php', true);
 remove_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php', true);
 remove_integration_function('integrate_admin_areas', 'LP_addAdminPanel', true);
+remove_integration_function('integrate_profile_areas', 'LP_addProfilePanel', true);
 remove_integration_function('integrate_actions', 'LP_addAction', true);
 
 ?>

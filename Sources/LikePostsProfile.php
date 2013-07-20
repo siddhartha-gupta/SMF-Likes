@@ -73,17 +73,39 @@ function LP_showLikeProfile($memID) {
 }
 
 function LP_seeOwnLikes($memID) {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $scripturl;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	$context['like_post']['own_like_data'] = LP_DB_getUserLikedMessages($memID);
+	$select = 'COUNT(*)';
+	$where = 'lp.id_member = ' . $memID;
+	$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LP_DB_getTotalResults($select, $where);
+
+	$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
+	$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
+
+	// Give admin options for these
+	$context['likes_per_page'] = 1;
+
+	$context['like_post']['own_like_data'] = LP_DB_getUserLikedMessages($memID, $context['start']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 }
 
 function LP_seeOthersLikes($memID) {
-	global $context, $sourcedir;
+	global $context, $sourcedir, $scripturl;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	$context['like_post']['others_like_data'] = LP_DB_getLikedUserMessages($memID);
+	$select = 'COUNT(DISTINCT(lp.id_msg))';
+	$where = 'm.id_member = ' . $memID;
+	$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LP_DB_getTotalResults($select, $where);
+
+	$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
+	$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
+
+	// Give admin options for these
+	$context['likes_per_page'] = 1;
+
+	$context['like_post']['others_like_data'] = LP_DB_getLikedUserMessages($memID, $context['start']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 }
 
 ?>
