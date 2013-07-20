@@ -157,15 +157,15 @@ function template_lp_show_own_likes() {
 	echo '
 	<div class="tborder">
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
+			<h3 class="catbg">', $txt['like_post_like_you_gave'], '</h3>
 		</div>';
 
 		echo '
 		<table class="table_grid" width="100%" cellspacing="0">
 			<thead>
 				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">info</th>
-					<th class="lefttext last_th" scope="col" width="20%">no of likes</th>
+					<th class="lefttext first_th" scope="col" width="80%">', $txt['like_post_post_info'], '</th>
+					<th class="lefttext last_th" scope="col" width="20%">', $txt['like_post_no_of_likes'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -221,15 +221,15 @@ function template_lp_show_others_likes() {
 	echo '
 	<div class="tborder">
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
+			<h3 class="catbg">', $txt['like_post_like_you_obtained'], '</h3>
 		</div>';
 
 		echo '
 		<table class="table_grid" width="100%" cellspacing="0">
 			<thead>
 				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">info</th>
-					<th class="lefttext last_th" scope="col" width="20%">no of likes</th>
+					<th class="lefttext first_th" scope="col" width="80%">', $txt['like_post_post_info'], '</th>
+					<th class="lefttext last_th" scope="col" width="20%">', $txt['like_post_no_of_likes'], '</th>
 				</tr>
 			</thead>
 			<tbody>';

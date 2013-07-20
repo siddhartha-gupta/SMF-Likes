@@ -60,4 +60,12 @@ $txt['like_post_perm_can_view_likes'] = 'Can view likes';
 
 $txt['like_post_submit'] = 'Submit';
 
+// Profile area strings
+$txt['like_post_you_liked'] = 'Liked by you';
+$txt['like_post_liked_by_others'] = 'Liked by others';
+$txt['like_post_like_you_gave'] = 'Posts you liked';
+$txt['like_post_like_you_obtained'] = 'Your posts liked by others';
+$txt['like_post_post_info']  = 'Post info';
+$txt['like_post_no_of_likes'] = 'No. of Likes';
+
 ?>

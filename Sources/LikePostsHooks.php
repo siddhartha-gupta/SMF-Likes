@@ -59,8 +59,8 @@ function LP_addProfilePanel(&$profile_areas) {
 		'file' => 'LikePostsProfile.php',
 		'function' => 'LP_showLikeProfile',
 		'subsections' => array(
-			'seeownlikes' => array('see own likes'),
-			'seeotherslikes' => array('see others likes'),
+			'seeownlikes' => array($txt['like_post_you_liked']),
+			'seeotherslikes' => array($txt['like_post_liked_by_others']),
 		),
 		'permission' => array(
 			'own' => 'profile_view_own',
