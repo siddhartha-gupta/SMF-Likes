@@ -10,6 +10,7 @@
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<require-file name="Sources/LikePostsHooks.php" destination="$sourcedir">File to add all hooks</require-file>
 		<require-file name="Sources/LikePostsAdmin.php" destination="$sourcedir">Admin panel of mod</require-file>
+		<require-file name="Sources/LikePostsProfile.php" destination="$sourcedir">Profile panel of mod</require-file>
 		<require-file name="Sources/LikePosts.php" destination="$sourcedir">Controller of user interface</require-file>
 		<require-file name="Sources/Subs-LikePosts.php" destination="$sourcedir">Database handler</require-file>
 		<require-file name="Themes/default/LikePosts.template.php" destination="$themedir">View of mod</require-file>
@@ -26,6 +27,7 @@
 	    <code>uninstall.php</code>
 		<remove-file name="$sourcedir/LikePostsHooks.php" />
 		<remove-file name="$sourcedir/LikePostsAdmin.php" />
+		<remove-file name="$sourcedir/LikePostsProfile.php" />
 		<remove-file name="$sourcedir/LikePosts.php" />
 		<remove-file name="$sourcedir/Subs-LikePosts.php" />
 		<remove-file name="$themedir/LikePosts.template.php" />

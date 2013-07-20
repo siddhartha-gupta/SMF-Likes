@@ -48,8 +48,28 @@ function LP_addAdminPanel(&$admin_areas) {
 	);
 }
 
-function LP_addAction(&$actionArray)
-{
+function LP_addProfilePanel(&$profile_areas) {
+	global $txt;
+
+	loadLanguage('LikePosts');
+	loadtemplate('LikePosts');
+
+	$profile_areas['info']['areas']['likeposts'] = array(
+		'label' => $txt['like_post_menu'],
+		'file' => 'LikePostsProfile.php',
+		'function' => 'LP_showLikeProfile',
+		'subsections' => array(
+			'seeownlikes' => array('see own likes'),
+			'seeotherslikes' => array('see others likes'),
+		),
+		'permission' => array(
+			'own' => 'profile_view_own',
+			'any' => 'profile_view_any',
+		),
+	);
+}
+
+function LP_addAction(&$actionArray) {
 	$actionArray['likeposts'] = array('LikePosts.php', 'LP_mainIndex');
 }
 

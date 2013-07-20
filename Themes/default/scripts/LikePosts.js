@@ -81,7 +81,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
         likeText = params.likeText.replace(/&amp;/g, '&');
 
     $(buttonRef).animate({
-        left: '-140px',
+        left: '-40px',
         opacity: 'toggle'
     }, 1000, '', function() {
         $(buttonRef).text(params.newText);

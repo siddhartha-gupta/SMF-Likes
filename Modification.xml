@@ -42,7 +42,7 @@
 			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			$context['like_posts']['single_msg_data'] = LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 
-			echo '<div class="like_post_box">';
+			echo '<div class="like_post_box floatleft">';
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
 								<a class="like_unlike_link" id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
@@ -69,11 +69,11 @@
 			if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 				$context['like_posts']['single_topic_data'] = LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 				echo '
-					<div class="floatright">';
+					<div class="like_post_box floatright">';
 
 				if($context['user']['id'] !== $topic['first_post']['member']['id'] && LP_isAllowedTo('can_like_posts')) {
 					echo '
-								<div class="floatleft"><a id="like_',$topic['first_post']['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a></div>';	
+								<a class="like_unlike_link" id="like_',$topic['first_post']['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';	
 				}
 		
 				if(LP_isAllowedTo('can_view_likes'))
