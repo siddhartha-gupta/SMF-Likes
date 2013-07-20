@@ -274,7 +274,7 @@ function LP_DB_getUserLikedMessages($user_id = 0, $start_limit = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body
+		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE lp.id_member = {int:id_member}
