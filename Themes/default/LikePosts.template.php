@@ -181,10 +181,10 @@ function template_lp_show_own_likes() {
 					<td class="windowbg" title="', $data['id'], '">
 						<a class="some_data" href="', $data['href'] ,'">
 							', $data['subject'],'
-							<span class="detail" style="display:none">
-								', $data['body'],'
-							</span>
 						</a>
+						<div class="subject_details" style="display:none">
+							', $data['body'],'
+						</div>
 						<br />
 						<span class="smalltext">
 							', $data['time'],'
@@ -212,7 +212,6 @@ function template_lp_show_own_likes() {
 			console.log($(this).find(".detail").html().trim());
 		});
 	</script>';
-
 }
 
 function template_lp_show_others_likes() {
@@ -245,14 +244,12 @@ function template_lp_show_others_likes() {
 					<td class="windowbg" title="', $data['id'], '">
 						<a class="some_data" href="', $data['href'] ,'">
 							', $data['subject'],'
-							<span class="detail" style="display:none">
-								', $data['body'],'
-							</span>
 						</a>
+						<div class="subject_details" style="display:none">
+							', $data['body'],'
+						</div>
 						<br />
-						<span class="smalltext">
-							', $data['time'],'
-						</span>
+						<span class="smalltext">', $data['time'], '</span>
 					</td>
 					<td class="windowbg2 smalltext">';
 
@@ -268,15 +265,6 @@ function template_lp_show_others_likes() {
 			</tbody>
 		</table>
 	</div>';
-
-	echo '
-	
-	<script type="text/javascript">
-		$(".some_data").hover(function() {
-			console.log($(this).find(".detail").html().trim());
-		});
-	</script>';
-
 }
 
 ?>

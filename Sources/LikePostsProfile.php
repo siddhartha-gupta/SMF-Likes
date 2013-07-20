@@ -88,6 +88,18 @@ function LP_seeOwnLikes($memID) {
 
 	$context['like_post']['own_like_data'] = LP_DB_getUserLikedMessages($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
+
+	$context['insert_after_template'] .= '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		$(".some_data").hover(function(e) {
+			e.preventDefault();
+			//debugger;
+			//console.log($(this).find(".detail").html().trim());
+			if($(this).next().hasClass("subject_details")) {
+				console.log($(this).next().text().trim());
+			}
+		});
+	// ]]></script>';
 }
 
 function LP_seeOthersLikes($memID) {
@@ -106,6 +118,18 @@ function LP_seeOthersLikes($memID) {
 
 	$context['like_post']['others_like_data'] = LP_DB_getLikedUserMessages($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
+
+	$context['insert_after_template'] .= '
+	<script type="text/javascript"><!-- // --><![CDATA[
+		$(".some_data").hover(function(e) {
+			e.preventDefault();
+			//debugger;
+			//console.log($(this).find(".detail").html().trim());
+			if($(this).next().hasClass("subject_details")) {
+				console.log($(this).next().text().trim());
+			}
+		});
+	// ]]></script>';
 }
 
 ?>

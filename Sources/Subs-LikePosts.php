@@ -294,7 +294,7 @@ function LP_DB_getUserLikedMessages($user_id = 0, $start_limit = 0) {
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'subject' => $row['subject'],
-				'body' => $row['body'],
+				'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 				'time' => timeformat($row['poster_time']),
 				'total_likes' => 1
 			);
@@ -317,7 +317,7 @@ function LP_DB_getLikedUserMessages($user_id = 0, $start_limit = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, lp.id_member
+		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, lp.id_member
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE m.id_member = {int:id_member}
@@ -337,7 +337,7 @@ function LP_DB_getLikedUserMessages($user_id = 0, $start_limit = 0) {
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'subject' => $row['subject'],
-				'body' => $row['body'],
+				'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 				'time' => timeformat($row['poster_time']),
 				'total_likes' => 1
 			);
