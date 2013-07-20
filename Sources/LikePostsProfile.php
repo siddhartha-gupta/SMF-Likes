@@ -62,9 +62,10 @@ function LP_showLikeProfile($memID) {
 
 	$context['like_active_area_func'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']][0]) ? $subActions[$_REQUEST['sa']][0] : $default_action_func;
 
-	$context['like_active_area_temp'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']][1]) ? $subActions[$_REQUEST['sa']][1] : $default_template_func;
+	$context['like_active_area_temp'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $subActions[$_REQUEST['sa']][1] : $default_template_func;
 
 	$context['like_active_area_title'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $subActions[$_REQUEST['sa']][2] : $default_title;
+
 
 	$context['sub_template'] = $context['like_active_area_temp'];
 	$context['page_title'] = $context['like_active_area_title'];
@@ -76,6 +77,13 @@ function LP_seeOwnLikes($memID) {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$context['like_post']['own_like_data'] = LP_DB_getUserLikedMessages($memID);
+}
+
+function LP_seeOthersLikes($memID) {
+	global $context, $sourcedir;
+
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$context['like_post']['others_like_data'] = LP_DB_getLikedUserMessages($memID);
 }
 
 ?>

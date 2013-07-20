@@ -210,4 +210,63 @@ function template_lp_show_own_likes() {
 
 }
 
+function template_lp_show_others_likes() {
+	global $context, $settings, $options, $scripturl, $txt;
+
+	echo '
+	<div class="tborder">
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['showPermissions_general'], '</h3>
+		</div>';
+
+		echo '
+		<table class="table_grid" width="100%" cellspacing="0">
+			<thead>
+				<tr class="titlebg">
+					<th class="lefttext first_th" scope="col" width="80%">info</th>
+					<th class="lefttext last_th" scope="col" width="20%">no of likes</th>
+				</tr>
+			</thead>
+			<tbody>';
+
+		foreach ($context['like_post']['others_like_data'] as $key => $data) {
+			echo '
+				<tr>
+					<td class="windowbg" title="', $data['id'], '">
+						<a class="some_data" href="', $data['href'] ,'">
+							', $data['subject'],'
+							<span class="detail" style="display:none">
+								', $data['body'],'
+							</span>
+						</a>
+						<br />
+						<span class="smalltext">
+							', $data['time'],'
+						</span>
+					</td>
+					<td class="windowbg2 smalltext">';
+
+				echo '
+						<span>', $data['total_likes'],'</span>';
+
+				echo '
+					</td>
+				</tr>';
+		}
+
+		echo '
+			</tbody>
+		</table>
+	</div>';
+
+	echo '
+	
+	<script type="text/javascript">
+		$(".some_data").hover(function() {
+			console.log($(this).find(".detail").html().trim());
+		});
+	</script>';
+
+}
+
 ?>
