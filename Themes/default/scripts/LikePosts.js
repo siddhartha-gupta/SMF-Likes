@@ -77,17 +77,16 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
     if(isNaN(count)) return false;
 
-    var buttonRef = $('#like_' + params.msgId),
+    var likeButtonRef = $('#like_' + params.msgId),
         likeText = params.likeText.replace(/&amp;/g, '&');
 
-    //lpObj.bouncEffect($(buttonRef), 'lr', 3, '240px', 100);
-    $(buttonRef).animate({
+    $(likeButtonRef).animate({
         left: '-40px',
         opacity: 'toggle'
     }, 1000, '', function() {
-        $(buttonRef).text(params.newText);
+        $(likeButtonRef).text(params.newText);
 
-        $(buttonRef).animate({
+        $(likeButtonRef).animate({
             left: '0px',
             opacity: 'toggle'
         }, 1000);
@@ -95,12 +94,14 @@ likePosts.prototype.onLikeSuccess = function(params) {
 
     if($('#like_count_' + params.msgId).length) {
         if(likeText === '') {
-            $('#like_count_' + params.msgId).remove();
+            $('#like_count_' + params.msgId).fadeOut(2000).remove();
         } else {
-            $('#like_count_' + params.msgId).text('(' + likeText + ')');
+            $('#like_count_' + params.msgId).fadeOut(1000, function() {
+                $(this).text('(' + likeText + ')').fadeIn(1000);
+            });
         }
     } else {
-        $('#like_post_info_' + params.msgId).append('<span id="like_count_' + params.msgId +'">('+ likeText + ')</span>');
+        $('<span id="like_count_' + params.msgId +'">('+ likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
     }
 
     this.timeoutTimer = setTimeout(function() {
@@ -130,6 +131,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                     memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="'+ data[i].avatar.href +'" /><div class="like_posts_member_info_details"><a href="'+ data[i].href +'">' + data[i].name + '</a></div></div>';
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
+                console.log(completeString);
                 $('body').append(completeString);
                 $(document).one('click keyup', lpObj.removeOverlay);
 
@@ -147,7 +149,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 likePosts.prototype.bouncEffect = function (element, direction, times, distance, speed) {
     var dir = 'marginLeft';
 
-    switch(direction) {
+    switch (direction) {
         case 'rl':
             dir = 'marginRight';
             break;
@@ -163,14 +165,14 @@ likePosts.prototype.bouncEffect = function (element, direction, times, distance,
         default:
             break;
     }
+    var anim1 = {};
+    anim1[dir] = '+=' + distance;
 
-    for(var i = 0; i < times; i++) {
-        console.log(dir);
-        element.animate({
-            dir: '-=' + distance
-        }, speed).animate({
-            dir: '+=' + distance
-        }, speed)
+    var anim2 = {};
+    anim2[dir] = '-=' + distance;
+
+    for (var i = 0; i < times; i++) {
+        element.animate(anim1, speed).animate(anim2, speed);
     }
 }
 

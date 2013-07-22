@@ -251,12 +251,10 @@ function template_lp_show_others_likes() {
 						<br />
 						<span class="smalltext">', $data['time'], '</span>
 					</td>
-					<td class="windowbg2 smalltext">';
-
-				echo '
-						<span>', $data['total_likes'],'</span>';
-
-				echo '
+					<td class="windowbg2 smalltext" onclick="lpObj.showMessageLikedInfo(', $data['id'], ');">
+						<span>
+							', $data['total_likes'], '
+						</span>
 					</td>
 				</tr>';
 		}

@@ -278,10 +278,11 @@ function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE lp.id_member = {int:id_member}
-		ORDER BY m.id_msg',
+		ORDER BY m.id_msg
+		LIMIT {int:start_limit}, 1',
 		array(
 			'id_member' => $user_id,
-			//'start_limit' => $start_limit
+			'start_limit' => $start_limit
 		)
 	);
 

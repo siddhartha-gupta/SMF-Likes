@@ -34,11 +34,12 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_showLikeProfile($memID) {
-	global $context, $txt, $sourcedir;
+	global $context, $txt, $sourcedir, $settings;
 
 	require_once($sourcedir . '/LikePosts.php');
 	LP_includeAssets();
 
+	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$default_action_func = 'LP_getOwnLikes';
 	$default_template_func = 'lp_show_own_likes';
 	$default_title = 'See own likes details';
