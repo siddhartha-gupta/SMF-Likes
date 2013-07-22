@@ -39,15 +39,15 @@ function LP_showLikeProfile($memID) {
 	require_once($sourcedir . '/LikePosts.php');
 	LP_includeAssets();
 
-	$default_action_func = 'LP_seeOwnLikes';
+	$default_action_func = 'LP_getOwnLikes';
 	$default_template_func = 'lp_show_own_likes';
 	$default_title = 'See own likes details';
 
 	// array is defined as follow
 	// source func, template func name
 	$subActions = array(
-		'seeownlikes' => array('LP_seeOwnLikes', 'lp_show_own_likes', 'See own likes details'),
-		'seeotherslikes' => array('LP_seeOthersLikes', 'lp_show_others_likes', 'See other likes details'),
+		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', 'See own likes details'),
+		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', 'See other likes details'),
 	);
 
 	$context[$context['profile_menu_name']]['tab_data'] = array(
@@ -72,7 +72,7 @@ function LP_showLikeProfile($memID) {
 	$context['like_active_area_func']($memID);
 }
 
-function LP_seeOwnLikes($memID) {
+function LP_getOwnLikes($memID) {
 	global $context, $sourcedir, $scripturl;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
@@ -86,7 +86,7 @@ function LP_seeOwnLikes($memID) {
 	// Give admin options for these
 	$context['likes_per_page'] = 1;
 
-	$context['like_post']['own_like_data'] = LP_DB_getUserLikedMessages($memID, $context['start']);
+	$context['like_post']['own_like_data'] = LP_DB_getOwnLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 
 	$context['insert_after_template'] .= '
@@ -102,7 +102,7 @@ function LP_seeOwnLikes($memID) {
 	// ]]></script>';
 }
 
-function LP_seeOthersLikes($memID) {
+function LP_getOthersLikes($memID) {
 	global $context, $sourcedir, $scripturl;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
@@ -116,7 +116,7 @@ function LP_seeOthersLikes($memID) {
 	// Give admin options for these
 	$context['likes_per_page'] = 1;
 
-	$context['like_post']['others_like_data'] = LP_DB_getLikedUserMessages($memID, $context['start']);
+	$context['like_post']['others_like_data'] = LP_DB_getOthersLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 
 	$context['insert_after_template'] .= '

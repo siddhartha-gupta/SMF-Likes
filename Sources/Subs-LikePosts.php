@@ -266,7 +266,7 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
  * To get posts liked by user
  * add permissions to this
 */
-function LP_DB_getUserLikedMessages($user_id = 0, $start_limit = 0) {
+function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
 	global $smcFunc, $scripturl;
 
 	if (empty($user_id)) {
@@ -309,7 +309,7 @@ function LP_DB_getUserLikedMessages($user_id = 0, $start_limit = 0) {
  * To get posts of a user liked by other
  * add permissions to this
 */
-function LP_DB_getLikedUserMessages($user_id = 0, $start_limit = 0) {
+function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
 	global $smcFunc, $scripturl;
 
 	if (empty($user_id)) {
@@ -317,31 +317,30 @@ function LP_DB_getLikedUserMessages($user_id = 0, $start_limit = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, lp.id_member
+		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member, CHAR(8)) SEPARATOR ",") AS member_count
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE m.id_member = {int:id_member}
-		ORDER BY m.id_msg',
+		GROUP BY m.id_msg
+		ORDER BY m.id_msg
+		LIMIT {int:start_limit}, 1',
 		array(
 			'id_member' => $user_id,
-			//'start_limit' => $start_limit
+			'start_limit' => $start_limit
 		)
 	);
 
 	$likedData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(isset($likedData[$row['id_msg']])) {
-			$likedData[$row['id_msg']]['total_likes']++;
-		} else {
-			$likedData[$row['id_msg']] = array(
-				'id' => $row['id_msg'],
-				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-				'subject' => $row['subject'],
-				'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
-				'time' => timeformat($row['poster_time']),
-				'total_likes' => 1
-			);
-		}
+		$total_likes = explode(',' , $row['member_count']);
+		$likedData[$row['id_msg']] = array(
+			'id' => $row['id_msg'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+			'subject' => $row['subject'],
+			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
+			'time' => timeformat($row['poster_time']),
+			'total_likes' => count($total_likes)
+		);
 	}
 	$smcFunc['db_free_result']($request);
 	return $likedData;
