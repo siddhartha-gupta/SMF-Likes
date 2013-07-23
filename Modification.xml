@@ -121,7 +121,7 @@
 		<operation>
 			<search position="after"><![CDATA[$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
 			<add><![CDATA[if (isset($_GET['board']) || isset($_GET['topic'])) {
-        $context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
+        $context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/css/LikePosts.css" />';
     }
 
 	]]></add>

@@ -45,7 +45,7 @@ function LP_includeAssets() {
 			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
 		}
 		if (!window.lpObj) {
-			document.write(\'<script src="' . $settings['default_theme_url'] . '/scripts/likePosts.js"><\/script>\');
+			document.write(\'<script src="' . $settings['default_theme_url'] . '/scripts/LikePosts.js"><\/script>\');
 		}
 	// ]]></script>';
 }
