@@ -131,7 +131,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                     memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="'+ data[i].avatar.href +'" /><div class="like_posts_member_info_details"><a href="'+ data[i].href +'">' + data[i].name + '</a></div></div>';
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
-                console.log(completeString);
+
                 $('body').append(completeString);
                 $(document).one('click keyup', lpObj.removeOverlay);
 
@@ -190,3 +190,28 @@ likePosts.prototype.removeOverlay = function (e) {
 }
 
 var lpObj = window.lpObj = new likePosts();
+
+(function() {
+    $(document).ready(function() {
+        $(".some_data").hover(function(e) {
+            e.preventDefault();
+            var currText = $(this).next().html();
+
+            $("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+        }).mouseout(function(){
+            $(".subject_details").fadeOut("slow");
+            $(".subject_details").remove();
+        }).mousemove(function(e) {
+            var mousex = e.pageX + 20,
+                mousey = e.pageY + 10,
+                width = $("#wrapper").width() - mousex - 50;
+
+
+            $(".subject_details").css({
+                top: mousey,
+                left: mousex,
+                width: width + "px"
+            })
+        });
+    })
+})();

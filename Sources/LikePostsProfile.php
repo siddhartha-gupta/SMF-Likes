@@ -42,13 +42,13 @@ function LP_showLikeProfile($memID) {
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$default_action_func = 'LP_getOwnLikes';
 	$default_template_func = 'lp_show_own_likes';
-	$default_title = 'See own likes details';
+	$default_title = $txt['like_post_you_liked'];
 
 	// array is defined as follow
 	// source func, template func name
 	$subActions = array(
-		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', 'See own likes details'),
-		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', 'See other likes details'),
+		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', $txt['like_post_you_liked']),
+		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', $txt['like_post_liked_by_others']),
 	);
 
 	$context[$context['profile_menu_name']]['tab_data'] = array(
@@ -89,18 +89,6 @@ function LP_getOwnLikes($memID) {
 
 	$context['like_post']['own_like_data'] = LP_DB_getOwnLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
-
-	$context['insert_after_template'] .= '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		$(".some_data").hover(function(e) {
-			e.preventDefault();
-			//debugger;
-			//console.log($(this).find(".detail").html().trim());
-			if($(this).next().hasClass("subject_details")) {
-				console.log($(this).next().text().trim());
-			}
-		});
-	// ]]></script>';
 }
 
 function LP_getOthersLikes($memID) {
@@ -119,18 +107,6 @@ function LP_getOthersLikes($memID) {
 
 	$context['like_post']['others_like_data'] = LP_DB_getOthersLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
-
-	$context['insert_after_template'] .= '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		$(".some_data").hover(function(e) {
-			e.preventDefault();
-			//debugger;
-			//console.log($(this).find(".detail").html().trim());
-			if($(this).next().hasClass("subject_details")) {
-				console.log($(this).next().text().trim());
-			}
-		});
-	// ]]></script>';
 }
 
 ?>

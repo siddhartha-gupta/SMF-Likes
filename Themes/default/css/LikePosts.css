@@ -54,3 +54,13 @@
     color: #fff !important;
     position: relative;
 }
+
+.subject_details {
+    background-color: #e7eaef;
+    color: #000;
+    display: none;
+    position: absolute;
+    padding: 10px;
+    border: 1px solid #C9C9C9;
+    border-radius: 5px;
+}
