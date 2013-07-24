@@ -57,11 +57,12 @@ $txt['like_post_enable_desc'] = 'Global permission to enable/disable mod';
 $txt['like_post_regular_members'] = 'Regular Members';
 $txt['like_post_perm_can_like_posts'] = 'Can like posts';
 $txt['like_post_perm_can_view_likes'] = 'Can view likes';
+$txt['like_post_perm_can_view_others_likes_profile'] = 'Can view likes of other users in their profiles';
 
 $txt['like_post_submit'] = 'Submit';
 
 // Profile area strings
-$txt['like_post_you_liked'] = 'Liked by you';
+$txt['like_post_you_liked'] = 'Liked by user';
 $txt['like_post_liked_by_others'] = 'Liked by others';
 $txt['like_post_like_you_gave'] = 'Posts you liked';
 $txt['like_post_like_you_obtained'] = 'Your posts liked by others';

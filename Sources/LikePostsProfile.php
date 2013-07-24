@@ -34,9 +34,12 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_showLikeProfile($memID) {
-	global $context, $txt, $sourcedir, $settings;
+	global $context, $txt, $sourcedir, $settings, $user_info;
 
 	require_once($sourcedir . '/LikePosts.php');
+	if($user_info['is_guest'])
+		return false;
+
 	LP_includeAssets();
 
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';

@@ -49,7 +49,16 @@ function LP_addAdminPanel(&$admin_areas) {
 }
 
 function LP_addProfilePanel(&$profile_areas) {
-	global $txt;
+	global $txt, $user_info;
+
+	if($user_info['is_guest']) return false;
+
+	if(isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) {
+		if($user_info['id'] !== $_REQUEST['u']) {
+			if (!(LP_isAllowedTo('can_view_others_likes_profile')))
+				return false;
+		}
+	}
 
 	loadLanguage('LikePosts');
 	loadtemplate('LikePosts');

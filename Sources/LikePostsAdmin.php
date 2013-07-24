@@ -39,7 +39,6 @@ function LP_modifySettings($return_config = false) {
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
 
-	//require_once($sourcedir . '/Subs-LikePosts.php');
 	loadLanguage('LikePosts');
 	loadtemplate('LikePosts');
 
@@ -48,7 +47,8 @@ function LP_modifySettings($return_config = false) {
 
 	$context['like_posts']['permission_settings'] = array(
 		'can_like_posts',
-		'can_view_likes'
+		'can_view_likes',
+		'can_view_others_likes_profile'
 	);
 
 	// Load up the guns
@@ -153,19 +153,35 @@ function LP_savePermissionsettings() {
 	if (isset($_POST['submit'])) {
 		checkSession();
 		unset($_POST['submit']);
+		//unset($_POST[$context['session_var']]);
+
+		$permissionKeys = array(
+			'can_like_posts',
+			'can_view_likes',
+			'can_view_others_likes_profile'
+		);
 
 		$general_settings = array();
 		foreach($_POST as $key => $val) {
 			if(in_array($key, $context['like_posts']['permission_settings'])) {
 				if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
+					if(($key1 = array_search($key, $permissionKeys)) !== false) {
+						unset($permissionKeys[$key1]);
+					}
 					$_POST[$key] = implode(',', $_POST[$key]);
-					$general_settings[] = array('text', $key);
+					$general_settings[] = array($key, $_POST[$key]);
 				}
 			}
 		}
 
-		require_once($sourcedir . '/ManageServer.php');
-		saveDBSettings($general_settings);
+		if(!empty($permissionKeys)) {
+			foreach ($permissionKeys as $value) {
+				$general_settings[] = array($value, '');
+			}
+		}
+
+		require_once($sourcedir . '/Subs-LikePosts.php');
+		LP_DB_updatePermissions($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 	}
 }

@@ -125,7 +125,7 @@ function template_lp_admin_permission_settings() {
 					<div class="content">';
 
 					foreach ($context['like_posts']['permission_settings'] as $perm) {
-						$permVals = isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? (explode(',', $modSettings[$perm])) : '';
+						$permVals = isset($modSettings[$perm]) && strlen($modSettings[$perm]) > 0 ? (explode(',', $modSettings[$perm])) : '';
 
 						echo ' <fieldset>';
 						echo '<legend>' . $txt['like_post_perm_' . $perm] . '</legend>';

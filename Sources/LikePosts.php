@@ -291,12 +291,16 @@ function LP_isAllowedTo($permissions) {
 
 	$flag = true;
 	foreach($permissions as $permission) {
-		$allowedGroups = explode(',', $modSettings[$permission]);
-		$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
-
-		if(empty($groupsPassed)) {
+		if(!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
 			$flag = false;
-			break;
+		} else {
+			$allowedGroups = explode(',', $modSettings[$permission]);
+			$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+
+			if(empty($groupsPassed)) {
+				$flag = false;
+				break;
+			}
 		}
 	}
 	return $flag;

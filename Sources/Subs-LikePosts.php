@@ -366,4 +366,17 @@ function LP_DB_getTotalResults($select, $where) {
 	return $total_results;
 }
 
+function LP_DB_updatePermissions($replaceArray) {
+	global $smcFunc;
+
+	$smcFunc['db_insert']('replace',
+		'{db_prefix}settings',
+		array('variable' => 'string-255', 'value' => 'string-65534'),
+		$replaceArray,
+		array('variable')
+	);
+
+	cache_put_data('modSettings', null, 90);
+}
+
 ?>
