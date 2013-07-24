@@ -267,11 +267,13 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
  * add permissions to this
 */
 function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
-	global $smcFunc, $scripturl;
+	global $smcFunc, $scripturl, $modSettings;
 
 	if (empty($user_id)) {
 		return false;
 	}
+
+	$end_limit = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled
@@ -279,10 +281,11 @@ function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE lp.id_member = {int:id_member}
 		ORDER BY m.id_msg
-		LIMIT {int:start_limit}, 1',
+		LIMIT {int:start_limit}, {int:end_limit}',
 		array(
 			'id_member' => $user_id,
-			'start_limit' => $start_limit
+			'start_limit' => $start_limit,
+			'end_limit' => $end_limit
 		)
 	);
 
@@ -311,11 +314,13 @@ function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
  * add permissions to this
 */
 function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
-	global $smcFunc, $scripturl;
+	global $smcFunc, $scripturl, $modSettings;
 
 	if (empty($user_id)) {
 		return false;
 	}
+
+	$end_limit = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
 
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member, CHAR(8)) SEPARATOR ",") AS member_count
@@ -324,10 +329,11 @@ function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
 		WHERE m.id_member = {int:id_member}
 		GROUP BY m.id_msg
 		ORDER BY m.id_msg
-		LIMIT {int:start_limit}, 1',
+		LIMIT {int:start_limit}, {int:end_limit}',
 		array(
 			'id_member' => $user_id,
-			'start_limit' => $start_limit
+			'start_limit' => $start_limit,
+			'end_limit' => $end_limit
 		)
 	);
 

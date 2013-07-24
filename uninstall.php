@@ -40,11 +40,16 @@ elseif (!defined('SMF'))
 
 global $sourcedir, $smcFunc;
 
+$like_post_permissions = array(
+	'like_post_enable',
+	'like_per_profile_page'
+);
+
 $smcFunc['db_query']('', '
     DELETE FROM {db_prefix}settings
-    WHERE variable = {string:lpe}',
+    WHERE variable IN ({array_string:like_post_permissions})',
     array(
-        'lpe' => 'like_post_enable',
+        'like_post_permissions' => $like_post_permissions,
     )
 );
 

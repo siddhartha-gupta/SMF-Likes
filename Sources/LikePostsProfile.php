@@ -77,7 +77,7 @@ function LP_showLikeProfile($memID) {
 }
 
 function LP_getOwnLikes($memID) {
-	global $context, $sourcedir, $scripturl;
+	global $context, $sourcedir, $scripturl, $modSettings;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$select = 'COUNT(*)';
@@ -88,14 +88,14 @@ function LP_getOwnLikes($memID) {
 	$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
 
 	// Give admin options for these
-	$context['likes_per_page'] = 1;
+	$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
 
 	$context['like_post']['own_like_data'] = LP_DB_getOwnLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 }
 
 function LP_getOthersLikes($memID) {
-	global $context, $sourcedir, $scripturl;
+	global $context, $sourcedir, $scripturl, $modSettings;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$select = 'COUNT(DISTINCT(lp.id_msg))';
@@ -106,7 +106,7 @@ function LP_getOthersLikes($memID) {
 	$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
 
 	// Give admin options for these
-	$context['likes_per_page'] = 1;
+	$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
 
 	$context['like_post']['others_like_data'] = LP_DB_getOthersLikes($memID, $context['start']);
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);

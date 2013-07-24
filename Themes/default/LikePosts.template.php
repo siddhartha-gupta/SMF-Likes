@@ -92,8 +92,17 @@ function template_lp_admin_general_settings() {
 								}
 							echo '
 							</dt>
-							<dd>
-								<input type="checkbox" name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />
+							<dd>';
+
+							if($config_var['type'] === 'check') {
+								echo '
+								<input type="checkbox" name="', $config_var['name'], '" id="', $config_var['name'], '"', ($config_var['value'] ? ' checked="checked"' : ''), ' value="1" class="input_check" />';
+							} elseif ($config_var['type'] === 'text') {
+								echo '
+								<input type="text" name="', $config_var['name'], '" id="', $config_var['name'], '" value="', $config_var['value'], '"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' class="input_text" />';
+							}
+
+							echo '
 							</dd>
 						</dl>';
 					}

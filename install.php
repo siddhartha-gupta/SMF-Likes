@@ -90,7 +90,7 @@ $table = array(
 $smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
 
 // For all general settings add 'like_post_' as prefix
-updateSettings(array('like_post_enable' => 1));
+updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10));
 
 add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
 add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');

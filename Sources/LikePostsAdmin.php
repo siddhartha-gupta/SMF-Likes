@@ -94,6 +94,7 @@ function LP_generalSettings($return_config = false) {
 
 	$general_settings = array(
 		array('check', 'like_post_enable', 'subtext' => $txt['like_post_enable_desc']),
+		array('text', 'like_per_profile_page', 'subtext' => $txt['like_per_profile_page_desc']),
 	);
 
 	$context['page_title'] = $txt['like_post_admin_panel'];
@@ -114,6 +115,7 @@ function LP_saveGeneralSettings() {
 
 		$general_settings = array(
 			array('check', 'like_post_enable'),
+			array('text', 'like_per_profile_page'),
 		);
 
 		require_once($sourcedir . '/ManageServer.php');
