@@ -7,6 +7,7 @@ By default the mod is enabled for admins only. To enable it for other members, g
 My Community » Administration Center » Like Posts » Permission Settings
 1. Enable the permission "Can like posts" for those groups who can like the posts.
 2. Enable the permission "Can view like" for those groups who can view who liked which post.
+3. Enable the permission "Can view likes of other users in their profiles" for those groups who can view like posts section in other users profiles.
 
 
 User can like posts within a topic.
