@@ -101,7 +101,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
             });
         }
     } else {
-        $('<span id="like_count_' + params.msgId +'">('+ likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
+        $('<span class="display_inline" id="like_count_' + params.msgId +'">('+ likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
     }
 
     this.timeoutTimer = setTimeout(function() {

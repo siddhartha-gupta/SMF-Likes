@@ -64,3 +64,12 @@
     border: 1px solid #C9C9C9;
     border-radius: 5px;
 }
+
+.display_none {
+    display: none;
+}
+
+/*for firefox*/
+.display_inline {
+    display: inline !important;
+}

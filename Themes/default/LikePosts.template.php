@@ -180,7 +180,7 @@ function template_lp_show_own_likes() {
 			<tbody>';
 
 	echo '
-		<div class="pagesection" style="margin-bottom: 0;">
+		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
 
@@ -191,7 +191,7 @@ function template_lp_show_own_likes() {
 						<a class="some_data" href="', $data['href'] ,'">
 							', $data['subject'],'
 						</a>
-						<span class="" style="display: none">
+						<span class="display_none">
 							', $data['body'],'
 						</span>
 						<br />
@@ -235,7 +235,7 @@ function template_lp_show_others_likes() {
 			<tbody>';
 
 		echo '
-		<div class="pagesection" style="margin-bottom: 0;">
+		<div class="pagesection">
 			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
 		</div>';
 
@@ -246,7 +246,7 @@ function template_lp_show_others_likes() {
 						<a class="some_data" href="', $data['href'] ,'" title="">
 							', $data['subject'],'
 						</a>
-						<span class="" style="display: none">
+						<span class="display_none">
 							', $data['body'],'
 						</span>
 						<br />
