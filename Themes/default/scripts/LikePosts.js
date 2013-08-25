@@ -37,13 +37,13 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
     msgId = (mId != undefined) ? parseInt(mId) : 0;
     topicId = (tId != undefined) ? parseInt(tId) : 0;
     boardId = (bId != undefined) ? parseInt(bId) : 0;
-    var rating = ($('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
+    var rating = (lpObj.jQRef('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
 
     if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
         return false;
     }
 
-    $.ajax({
+    lpObj.jQRef.ajax({
         type: "POST",
         url: smf_scripturl + '?action=likeposts;sa=like_post',
         context: document.body,
@@ -77,31 +77,31 @@ likePosts.prototype.onLikeSuccess = function(params) {
     var count = parseInt(params.count);
     if(isNaN(count)) return false;
 
-    var likeButtonRef = $('#like_' + params.msgId),
+    var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
         likeText = params.likeText.replace(/&amp;/g, '&');
 
-    $(likeButtonRef).animate({
+    lpObj.jQRef(likeButtonRef).animate({
         left: '-40px',
         opacity: 'toggle'
     }, 1000, '', function() {
-        $(likeButtonRef).text(params.newText);
+        lpObj.jQRef(likeButtonRef).text(params.newText);
 
-        $(likeButtonRef).animate({
+        lpObj.jQRef(likeButtonRef).animate({
             left: '0px',
             opacity: 'toggle'
         }, 1000);
     });
 
-    if($('#like_count_' + params.msgId).length) {
+    if(lpObj.jQRef('#like_count_' + params.msgId).length) {
         if(likeText === '') {
-            $('#like_count_' + params.msgId).fadeOut(2000).remove();
+            lpObj.jQRef('#like_count_' + params.msgId).fadeOut(2000).remove();
         } else {
-            $('#like_count_' + params.msgId).fadeOut(1000, function() {
-                $(this).text('(' + likeText + ')').fadeIn(1000);
+            lpObj.jQRef('#like_count_' + params.msgId).fadeOut(1000, function() {
+                lpObj.jQRef(this).text('(' + likeText + ')').fadeIn(1000);
             });
         }
     } else {
-        $('<span class="display_inline" id="like_count_' + params.msgId +'">('+ likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
+        lpObj.jQRef('<span class="display_inline" id="like_count_' + params.msgId +'">('+ likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
     }
 
     this.timeoutTimer = setTimeout(function() {
@@ -112,7 +112,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
     if(isNaN(messageId)) return false;
 
-    $.ajax({
+    lpObj.jQRef.ajax({
         type: "GET",
         url: smf_scripturl + '?action=likeposts;sa=get_message_like_info',
         context: document.body,
@@ -132,10 +132,10 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
 
-                $('body').append(completeString);
-                $(document).one('click keyup', lpObj.removeOverlay);
+                lpObj.jQRef('body').append(completeString);
+                lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
 
-                $('.like_posts_member_info_box').click(function(e){
+                lpObj.jQRef('.like_posts_member_info_box').click(function(e){
                     e.stopPropagation();
                 });
             } else {
@@ -182,32 +182,33 @@ likePosts.prototype.removeOverlay = function (e) {
     else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
         clearTimeout(_this.timeoutTimer);
         _this.timeoutTimer = null;
-        $('.like_posts_overlay').remove();
-        $('.like_posts_overlay').unbind('click');
-        $(document).unbind('click', lpObj.removeOverlay);
-        $(document).unbind('keyup', lpObj.removeOverlay);
+        lpObj.jQRef('.like_posts_overlay').remove();
+        lpObj.jQRef('.like_posts_overlay').unbind('click');
+        lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
+        lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
     }
 }
 
 var lpObj = window.lpObj = new likePosts();
+lpObj.jQRef = jQuery.noConflict();
 
 (function() {
-    $(document).ready(function() {
-        $(".some_data").hover(function(e) {
+    lpObj.jQRef(document).ready(function() {
+        lpObj.jQRef(".some_data").hover(function(e) {
             e.preventDefault();
-            var currText = $(this).next().html();
+            var currText = lpObj.jQRef(this).next().html();
 
-            $("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+            lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
         }).mouseout(function(){
-            $(".subject_details").fadeOut("slow");
-            $(".subject_details").remove();
+            lpObj.jQRef(".subject_details").fadeOut("slow");
+            lpObj.jQRef(".subject_details").remove();
         }).mousemove(function(e) {
             var mousex = e.pageX + 20,
                 mousey = e.pageY + 10,
-                width = $("#wrapper").width() - mousex - 50;
+                width = lpObj.jQRef("#wrapper").width() - mousex - 50;
 
 
-            $(".subject_details").css({
+            lpObj.jQRef(".subject_details").css({
                 top: mousey,
                 left: mousex,
                 width: width + "px"

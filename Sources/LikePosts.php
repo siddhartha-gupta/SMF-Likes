@@ -44,9 +44,22 @@ function LP_includeAssets() {
 		if (!window.jQuery) {
 			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
 		}
-		if (!window.lpObj) {
-			document.write(\'<script src="' . $settings['default_theme_url'] . '/scripts/LikePosts.js"><\/script>\');
+
+		var lpLoaded = !window.lpObj ? false : true;
+		function isJqueryLoaded() {
+			if (window.jQuery) {
+				if (!lpLoaded) {
+					lpLoaded = true;
+					var head= document.getElementsByTagName("head")[0];
+					var script= document.createElement("script");
+					script.type= "text/javascript";
+					document.write("<script type=\"text/javascript\" src=\"'. $settings['default_theme_url']. '/scripts/LikePosts.js\"><\/script>");
+				}
+			} else {
+				setTimeout(isJqueryLoaded, 100);
+			}
 		}
+		isJqueryLoaded();
 	// ]]></script>';
 }
 
