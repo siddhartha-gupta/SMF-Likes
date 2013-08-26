@@ -42,18 +42,22 @@ function LP_includeAssets() {
 	$context['insert_after_template'] .= '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		if (!window.jQuery) {
-			document.write("<script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\"><\/script>");
+			var js = document.createElement("script");
+			js.type = "text/javascript";
+			js.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js";
+			document.body.appendChild(js);
 		}
 
-		var lpLoaded = !window.lpObj ? false : true;
+		var lpLoaded = false;
 		function isJqueryLoaded() {
 			if (window.jQuery) {
 				if (!lpLoaded) {
 					lpLoaded = true;
-					var head= document.getElementsByTagName("head")[0];
-					var script= document.createElement("script");
-					script.type= "text/javascript";
-					document.write("<script type=\"text/javascript\" src=\"'. $settings['default_theme_url']. '/scripts/LikePosts.js\"><\/script>");
+
+					var js = document.createElement("script");
+					js.type = "text/javascript";
+					js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
+					document.body.appendChild(js);
 				}
 			} else {
 				setTimeout(isJqueryLoaded, 100);

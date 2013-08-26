@@ -190,7 +190,9 @@ likePosts.prototype.removeOverlay = function (e) {
 }
 
 var lpObj = window.lpObj = new likePosts();
-lpObj.jQRef = jQuery.noConflict();
+if(!lpObj.jQRef) {
+    lpObj.jQRef = jQuery.noConflict(true);
+}
 
 (function() {
     lpObj.jQRef(document).ready(function() {
