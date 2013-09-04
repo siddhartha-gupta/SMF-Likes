@@ -160,6 +160,37 @@ function template_lp_admin_permission_settings() {
 	<br class="clear">';
 }
 
+function template_lp_admin_recount_stats() {
+	global $context, $txt, $scripturl, $modSettings;
+
+	template_lp_admin_info();
+
+	echo '
+	<div id="admincenter">
+		<div class="windowbg2">
+			<span class="topslice"><span></span></span>
+				<div class="content">';
+
+	echo '
+				<fieldset><legend>Recount members total likes</legend>
+					<div style="width: 70%; float:left; position:relative">
+						Reset members account
+					</div>
+					<div style="width: 30%; float:left; position:relative">
+						<span class="floatright">
+							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.recountStats({\'activity\': \'totallikes\'}); return false;">
+						</span>
+					</div>
+				</fieldset>';
+
+	echo '
+				</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>
+	<br class="clear">';
+}
+
 function template_lp_show_own_likes() {
 	global $context, $settings, $options, $scripturl, $txt;
 

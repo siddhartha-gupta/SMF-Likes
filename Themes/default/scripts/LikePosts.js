@@ -52,7 +52,7 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
             msg: msgId,
             topic: topicId,
             board: boardId,
-            rating: rating,
+            rating: rating
         },
 
         success: function(resp) {
@@ -68,7 +68,7 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
             } else {
                 //NOTE: Make an error callback over here
             }
-        },
+        }
     });
     return true;
 }
@@ -118,7 +118,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
         context: document.body,
         dataType : "json",
         data: {
-            msg_id: messageId,
+            msg_id: messageId
         },
 
         success: function(resp) {
@@ -142,7 +142,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
                 //NOTE: Make an error callback over here
                 return false;
             }
-        },
+        }
     });
 }
 
@@ -174,6 +174,33 @@ likePosts.prototype.bouncEffect = function (element, direction, times, distance,
     for (var i = 0; i < times; i++) {
         element.animate(anim1, speed).animate(anim2, speed);
     }
+}
+
+// some admin related functions
+likePosts.prototype.recountStats = function(options) {
+    // debugger;
+    if(!options.activity) return false;
+
+    var progress = options.progress || 0,
+        activity = options.activity,
+        total = options.total || 0;
+
+    lpObj.jQRef.ajax({
+        type: "POST",
+        url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
+        dataType : "json",
+        data: {
+            'progress': progress,
+            'activity': activity,
+            'totalWork': total
+        },
+
+        success: function(resp) {
+            console.log(resp);
+        }, error: function(err) {
+            console.log(err);
+        }
+    });
 }
 
 likePosts.prototype.removeOverlay = function (e) {

@@ -41,53 +41,83 @@ global $smcFunc, $db_prefix, $sourcedir;
 if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
 
-$table = array(
-	'table_name' => 'like_post',
-	'columns' => array(
-		array(
-			'name' => 'id_msg',
-			'type' => 'int',
-			'size' => 10,
-			'unsigned' => true,
-			'default' => '0',
+$tables = array(
+	'like_post' => array (
+		'columns' => array (
+			array(
+				'name' => 'id_msg',
+				'type' => 'int',
+				'size' => 10,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'id_topic',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'id_board',
+				'type' => 'smallint',
+				'size' => 5,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'id_member',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'rating',
+				'type' => 'smallint',
+				'size' => 1,
+				'unsigned' => true,
+				'default' => '0',
+			),
 		),
-		array(
-			'name' => 'id_topic',
-			'type' => 'mediumint',
-			'size' => 8,
-			'unsigned' => true,
-			'default' => '0',
-		),
-		array(
-			'name' => 'id_board',
-			'type' => 'smallint',
-			'size' => 5,
-			'unsigned' => true,
-			'default' => '0',
-		),
-		array(
-			'name' => 'id_member',
-			'type' => 'mediumint',
-			'size' => 8,
-			'unsigned' => true,
-			'default' => '0',
-		),
-		array(
-			'name' => 'rating',
-			'type' => 'smallint',
-			'size' => 1,
-			'unsigned' => true,
-			'default' => '0',
-		),
+		'indexes' => array(
+	        array(
+	            'type' => 'primary',
+	            'columns' => array('id_msg', 'id_member'),
+	        ),
+	    ),
 	),
-	'indexes' => array(
-        array(
-            'type' => 'primary',
-            'columns' => array('id_msg', 'id_member'),
-        ),
-    ),
+	'like_count' => array (
+		'columns' => array (
+			array(
+				'name' => 'id_member',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'like_count',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
+		),
+		'indexes' => array(
+	        array(
+	            'type' => 'primary',
+	            'columns' => array('id_member'),
+	        ),
+	    ),
+	)
 );
-$smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
+
+foreach ($tables as $table => $data) {
+	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
+}
+
+// $smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
 
 // For all general settings add 'like_post_' as prefix
 updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'lp_show_like_on_boards' => 1));
