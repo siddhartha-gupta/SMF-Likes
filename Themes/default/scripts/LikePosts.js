@@ -29,14 +29,14 @@
 */
 
 var likePosts = function() {
-    this.timeoutTimer = null
-}
+    this.timeoutTimer = null;
+};
 
 likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
     // Lets try JS validations
-    msgId = (mId != undefined) ? parseInt(mId) : 0;
-    topicId = (tId != undefined) ? parseInt(tId) : 0;
-    boardId = (bId != undefined) ? parseInt(bId) : 0;
+    msgId = (mId !== undefined) ? parseInt(mId, 10) : 0;
+    topicId = (tId !== undefined) ? parseInt(tId, 10) : 0;
+    boardId = (bId !== undefined) ? parseInt(bId, 10) : 0;
     var rating = (lpObj.jQRef('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
 
     if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
@@ -71,10 +71,10 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
         }
     });
     return true;
-}
+};
 
 likePosts.prototype.onLikeSuccess = function(params) {
-    var count = parseInt(params.count);
+    var count = parseInt(params.count, 10);
     if(isNaN(count)) return false;
 
     var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
@@ -107,7 +107,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
     this.timeoutTimer = setTimeout(function() {
         lpObj.removeOverlay();
     }, 3000);
-}
+};
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
     if(isNaN(messageId)) return false;
@@ -127,7 +127,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 
                 var data = resp.data;
                 var memberInfo = '';
-                for(i in data) {
+                for(var i in data) {
                     memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="'+ data[i].avatar.href +'" /><div class="like_posts_member_info_details"><a href="'+ data[i].href +'">' + data[i].name + '</a></div></div>';
                 }
                 var completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
@@ -144,7 +144,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
             }
         }
     });
-}
+};
 
 likePosts.prototype.bouncEffect = function (element, direction, times, distance, speed) {
     var dir = 'marginLeft';
@@ -174,7 +174,7 @@ likePosts.prototype.bouncEffect = function (element, direction, times, distance,
     for (var i = 0; i < times; i++) {
         element.animate(anim1, speed).animate(anim2, speed);
     }
-}
+};
 
 // some admin related functions
 likePosts.prototype.recountStats = function(options) {
@@ -201,7 +201,7 @@ likePosts.prototype.recountStats = function(options) {
             console.log(err);
         }
     });
-}
+};
 
 likePosts.prototype.removeOverlay = function (e) {
     var _this = this;
@@ -214,7 +214,7 @@ likePosts.prototype.removeOverlay = function (e) {
         lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
         lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
     }
-}
+};
 
 var lpObj = window.lpObj = new likePosts();
 if(!lpObj.jQRef) {
@@ -236,12 +236,11 @@ if(!lpObj.jQRef) {
                 mousey = e.pageY + 10,
                 width = lpObj.jQRef("#wrapper").width() - mousex - 50;
 
-
             lpObj.jQRef(".subject_details").css({
                 top: mousey,
                 left: mousex,
                 width: width + "px"
-            })
+            });
         });
-    })
+    });
 })();
