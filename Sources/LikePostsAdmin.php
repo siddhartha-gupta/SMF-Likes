@@ -63,10 +63,10 @@ function LP_modifySettings($return_config = false) {
 				'label' => $txt['like_post_permission_settings'],
 				'url' => 'permissionsettings',
 			),
-			// 'recountstats' => array(
-			// 	'label' => $txt['like_post_recount_stats'],
-			// 	'url' => 'recountlikestats',
-			// ),
+			'recountstats' => array(
+				'label' => $txt['like_post_recount_stats'],
+				'url' => 'recountlikestats',
+			),
 		),
 	);
 	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'generalsettings';
@@ -76,7 +76,7 @@ function LP_modifySettings($return_config = false) {
 		'savegeneralsettings' => 'LP_saveGeneralSettings',
 		'permissionsettings' => 'LP_permissionSettings',
 		'savepermissionsettings' => 'LP_savePermissionsettings',
-		// 'recountlikestats' => 'LP_recountLikeStats',
+		'recountlikestats' => 'LP_recountLikeStats',
 	);
 
 	//wakey wakey, call the func you lazy
@@ -218,98 +218,79 @@ function LP_recountLikeStats() {
 		return $subActions[$_REQUEST['activity']]();
 }
 
-// function LP_recountLikesTotal() {
-// 	global $txt, $context, $smcFunc;
+function LP_recountLikesTotal() {
+	global $txt, $context, $smcFunc;
 
-// 	isAllowedTo('admin_forum');
+	isAllowedTo('admin_forum');
 
-// 	if (empty($_REQUEST['start']))
-// 		$_REQUEST['start'] = 0;
+	if (empty($_REQUEST['start']))
+		$_REQUEST['start'] = 0;
 
-// 	// Lets fire the bullet.
-// 	@set_time_limit(300);
+	// Lets fire the bullet.
+	@set_time_limit(300);
 
-// 	if(!isset($_REQUEST['totalWork']) || empty($_REQUEST['totalWork'])) {
-// 		// SELECT COUNT(DISTINCT(id_msg))
-// 		$request = $smcFunc['db_query']('', '
-// 			SELECT COUNT(DISTINCT(id_msg))
-// 			FROM {db_prefix}like_post'
-// 		);
-// 		list($totalWork) = $smcFunc['db_fetch_row']($request);
-// 		$smcFunc['db_free_result']($request);
-// 	}
-// 	$start = !isset($_REQUEST['totalWork']) || empty($_REQUEST['totalWork']) ? $totalWork : (int) $_REQUEST['totalWork'];
+	if(!isset($_REQUEST['totalWork']) || empty($_REQUEST['totalWork'])) {
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(DISTINCT(id_msg))
+			FROM {db_prefix}like_post'
+		);
+		list($totalWork) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+	}
+	$start = !isset($_REQUEST['currentCounter']) || empty($_REQUEST['currentCounter']) ? 0 : (int) $_REQUEST['currentCounter'];
+	$increment = $start + 1;
 
-// 	// echo json_encode(array('totalWork' => $totalWork));
-// 	// die();
+	// Grab the set of messages to update.
+	$request = $smcFunc['db_query']('', '
+		SELECT m.id_member, COUNT(lp.id_member) 
+		FROM smf_like_post AS lp
+		INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
+		ORDER BY lp.id_msg
+		LIMIT {int:start}, {int:max}',
+		array(
+			'start' => $start,
+			'max' => $increment,
+		)
+	);
 
-// 	$increment = $start + 100;
+	// $smcFunc['db_query']('', '
+	// 	UPDATE {db_prefix}smf_like_count
+	// 	SET count = count + {int:count}
+	// 	WHERE id_member = {int:id_member}',
+	// 	array(
+	// 		'id_suite' => $case['id_suite'],
+	// 		'count' => 1,
+	// 	)
+	// );
 
-// 	// Grab the set of messages to update.
-// 	$request = $smcFunc['db_query']('', '
-// 		SELECT m.id_member, COUNT(lp.id_member) 
-// 		FROM smf_like_post AS lp
-// 		INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
-// 		ORDER BY lp.id_msg
-// 		LIMIT {int:start}, {int:max}',
-// 		array(
-// 			'start' => $start,
-// 			'max' => $increment,
-// 		)
-// 	);
+	// update smf_like_count
+	// SET like_count = '2'
+	// Where id_member = '40'
+	// 	SET count = count + {int:count}
+	$context['test'] = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$result = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}smf_like_count
+			SET count = count + {int:count}
+			WHERE id_member = {int:id_member}',
+			array(
+				'id_member' => $id_member,
+				'count' => $count
+			)
+		);
 
-// // use update - if row effected is 0 then insert a new row... simple :P
-
-// 	// First try to update an existing row...
-// 	$result = $smcFunc['db_query']('', '
-// 		UPDATE {db_prefix}smf_like_count
-// 		SET count = count + {int:count}
-// 		WHERE id_member = {int:id_member}',
-// 		array(
-// 			'id_member' => $id_member,
-// 			'count' => $count
-// 		)
-// 	);
-
-// 	// If that didn't work, try inserting a new one.
-// 	if ($smcFunc['db_affected_rows']() == 0) {
-// 		$result = $smcFunc['db_insert']('ignore',
-// 			'{db_prefix}smf_like_count',
-// 			array('id_member' => 'int', 'like_count' => 'int'),
-// 			array($id_member, $count),
-// 			array()
-// 		);
-// 	}
-
-
-
-// 	// $smcFunc['db_query']('', '
-// 	// 	UPDATE {db_prefix}smf_like_count
-// 	// 	SET count = count + {int:count}
-// 	// 	WHERE id_member = {int:id_member}',
-// 	// 	array(
-// 	// 		'id_suite' => $case['id_suite'],
-// 	// 		'count' => 1,
-// 	// 	)
-// 	// );
-
-// // update smf_like_count
-// // SET like_count = '2'
-// // Where id_member = '40'
-// // 	SET count = count + {int:count}
-// 	// $result = $smcFunc['db_insert']('ignore',
-// 	// 	'{db_prefix}like_count',
-// 	// 	array('id_member' => 'int', 'like_count' => 'int'),
-// 	// 	array(),
-// 	// 	array('session_id')
-// 	// );
-
-// 	// $smcFunc['db_insert']('replace',
-// 	// 	'{db_prefix}like_post',
-// 	// 	array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member' => 'int', 'rating' => 'int'),
-// 	// 	$data,
-// 	// 	array()
-// 	// );
-// }
+		// If that didn't work, try inserting a new one.
+		if ($smcFunc['db_affected_rows']() == 0) {
+			$result = $smcFunc['db_insert']('ignore',
+				'{db_prefix}smf_like_count',
+				array('id_member' => 'int', 'like_count' => 'int'),
+				array($id_member, $count),
+				array()
+			);
+		}
+	}
+	$smcFunc['db_free_result']($request);
+	$currentCounter += $increment;
+}
 
 ?>
