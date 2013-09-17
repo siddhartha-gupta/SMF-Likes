@@ -9,7 +9,7 @@
 */
 
 /*
-* Version: MPL 1.1
+* Version: MPL 1.1.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
 * 1.1 (the "License"); you may not use this file except in compliance with
@@ -116,8 +116,6 @@ $tables = array(
 foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
 }
-
-// $smcFunc['db_create_table']('{db_prefix}' . $table['table_name'], $table['columns'], $table['indexes']);
 
 // For all general settings add 'like_post_' as prefix
 updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'lp_show_like_on_boards' => 1));

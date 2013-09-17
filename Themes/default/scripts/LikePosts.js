@@ -7,7 +7,7 @@
 */
 
 /*
-* Version: MPL 1.1
+* Version: MPL 1.1.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
 * 1.1 (the "License"); you may not use this file except in compliance with
@@ -78,7 +78,11 @@ likePosts.prototype.onLikeSuccess = function(params) {
     if(isNaN(count)) return false;
 
     var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
-        likeText = params.likeText.replace(/&amp;/g, '&');
+        likeText = params.likeText;
+
+    if(likeText.indexOf('&amp;') > 0) {
+        likeText = likeText.replace(/&amp;/g, '&');
+    }
 
     lpObj.jQRef(likeButtonRef).animate({
         left: '-40px',
