@@ -1,13 +1,13 @@
 /**
 * @package manifest file for Like Posts
-* @version 1.1
+* @version 1.1.1
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
 */
 
 /*
-* Version: MPL 1.1.1
+* Version: MPL 1.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
 * 1.1 (the "License"); you may not use this file except in compliance with
@@ -185,18 +185,18 @@ likePosts.prototype.recountStats = function(options) {
     // debugger;
     if(!options.activity) return false;
 
-    var progress = options.progress || 0,
-        activity = options.activity,
-        total = options.total || 0;
+    var activity = options.activity,
+        currentCounter = options.currentCounter || 0,
+        totalWork = options.totalWork || 0;
 
     lpObj.jQRef.ajax({
         type: "POST",
         url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
         dataType : "json",
         data: {
-            'progress': progress,
             'activity': activity,
-            'totalWork': total
+            'totalWork': totalWork,
+            'currentCounter': currentCounter
         },
 
         success: function(resp) {
@@ -218,6 +218,11 @@ likePosts.prototype.removeOverlay = function (e) {
         lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
         lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
     }
+};
+
+likePosts.prototype.showPercentage = function (obj) {
+    var _this = this;
+    lpObj.jQRef('.like_posts_overlay').remove();
 };
 
 var lpObj = window.lpObj = new likePosts();

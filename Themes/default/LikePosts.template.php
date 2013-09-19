@@ -181,6 +181,7 @@ function template_lp_admin_recount_stats() {
 							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.recountStats({\'activity\': \'totallikes\'}); return false;">
 						</span>
 					</div>
+					<div class="member_count_precentage"></div>
 				</fieldset>';
 
 	echo '
@@ -188,7 +189,10 @@ function template_lp_admin_recount_stats() {
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br class="clear">';
+	<br class="clear">
+	<script type="text/javascript">
+		//lpObj.showPercentage(".member_count_precentage")
+	</script>';
 }
 
 function template_lp_show_own_likes() {

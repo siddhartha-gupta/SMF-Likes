@@ -2,14 +2,14 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.1
+* @version 1.1.1
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
 */
 
 /*
-* Version: MPL 1.1.1
+* Version: MPL 1.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
 * 1.1 (the "License"); you may not use this file except in compliance with
@@ -223,6 +223,7 @@ function LP_recountLikesTotal() {
 
 	isAllowedTo('admin_forum');
 
+	$currentCounter = 0;
 	if (empty($_REQUEST['start']))
 		$_REQUEST['start'] = 0;
 
@@ -238,13 +239,19 @@ function LP_recountLikesTotal() {
 		$smcFunc['db_free_result']($request);
 	}
 	$start = !isset($_REQUEST['currentCounter']) || empty($_REQUEST['currentCounter']) ? 0 : (int) $_REQUEST['currentCounter'];
-	$increment = $start + 1;
+	$increment = $start + 100;
 
-	// Grab the set of messages to update.
+	if($start === 0) {
+		$smcFunc['db_query']('truncate_table', '
+			TRUNCATE {db_prefix}like_count'
+		);
+	}
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_member, COUNT(lp.id_member) 
-		FROM smf_like_post AS lp
+		SELECT m.id_member, COUNT(lp.id_member) as count
+		FROM {db_prefix}like_post AS lp
 		INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
+		GROUP BY m.id_member
+		HAVING m.id_member > 0
 		ORDER BY lp.id_msg
 		LIMIT {int:start}, {int:max}',
 		array(
@@ -253,44 +260,34 @@ function LP_recountLikesTotal() {
 		)
 	);
 
-	// $smcFunc['db_query']('', '
-	// 	UPDATE {db_prefix}smf_like_count
-	// 	SET count = count + {int:count}
-	// 	WHERE id_member = {int:id_member}',
-	// 	array(
-	// 		'id_suite' => $case['id_suite'],
-	// 		'count' => 1,
-	// 	)
-	// );
-
-	// update smf_like_count
-	// SET like_count = '2'
-	// Where id_member = '40'
-	// 	SET count = count + {int:count}
-	$context['test'] = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$result = $smcFunc['db_query']('', '
-			UPDATE {db_prefix}smf_like_count
-			SET count = count + {int:count}
-			WHERE id_member = {int:id_member}',
-			array(
-				'id_member' => $id_member,
-				'count' => $count
-			)
-		);
-
-		// If that didn't work, try inserting a new one.
-		if ($smcFunc['db_affected_rows']() == 0) {
-			$result = $smcFunc['db_insert']('ignore',
-				'{db_prefix}smf_like_count',
-				array('id_member' => 'int', 'like_count' => 'int'),
-				array($id_member, $count),
-				array()
+		if(!empty($row['id_member'])) {
+			$result = $smcFunc['db_query']('', '
+				UPDATE {db_prefix}like_count
+				SET like_count = like_count + {int:count}
+				WHERE id_member = {int:id_member}',
+				array(
+					'id_member' => $row['id_member'],
+					'count' => $row['count']
+				)
 			);
+
+			if ($smcFunc['db_affected_rows']() == 0) {
+				$result = $smcFunc['db_insert']('ignore',
+					'{db_prefix}like_count',
+					array('id_member' => 'int', 'like_count' => 'int'),
+					array($row['id_member'], $row['count']),
+					array('id_member')
+				);
+			}
 		}
 	}
 	$smcFunc['db_free_result']($request);
 	$currentCounter += $increment;
+
+	$resp = array('totalWork' => $totalWork, 'currentCounter' => $currentCounter);
+	echo json_encode($resp);
+	die();
 }
 
 ?>
