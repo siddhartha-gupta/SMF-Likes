@@ -189,10 +189,7 @@ function template_lp_admin_recount_stats() {
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
-	<br class="clear">
-	<script type="text/javascript">
-		//lpObj.showPercentage(".member_count_precentage")
-	</script>';
+	<br class="clear">';
 }
 
 function template_lp_show_own_likes() {

@@ -182,12 +182,13 @@ likePosts.prototype.bouncEffect = function (element, direction, times, distance,
 
 // some admin related functions
 likePosts.prototype.recountStats = function(options) {
-    // debugger;
     if(!options.activity) return false;
 
     var activity = options.activity,
-        currentCounter = options.currentCounter || 0,
-        totalWork = options.totalWork || 0;
+        totalWork = options.totalWork || 0,
+        startLimit = options.startLimit || 0,
+        increment = options.increment || 100,
+        endLimit = options.endLimit || 100;
 
     lpObj.jQRef.ajax({
         type: "POST",
@@ -196,15 +197,46 @@ likePosts.prototype.recountStats = function(options) {
         data: {
             'activity': activity,
             'totalWork': totalWork,
-            'currentCounter': currentCounter
+            'startLimit': startLimit,
+            'endLimit': endLimit
         },
 
         success: function(resp) {
-            console.log(resp);
+            resp.activity = activity;
+            resp.increment = increment;
+            resp.startLimit = startLimit;
+            lpObj.checkRecount(resp);
         }, error: function(err) {
             console.log(err);
         }
     });
+};
+
+likePosts.prototype.checkRecount = function(obj) {
+    var startLimit;
+    if(obj.startLimit === 0)
+        startLimit = obj.startLimit + obj.increment + 1;
+    else
+        startLimit = obj.startLimit + obj.increment;
+
+    if(startLimit < obj.totalWork) {
+        var endLimit = obj.endLimit + obj.increment;
+        if(endLimit > obj.totalWork) {
+            endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
+        }
+        var percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
+        lpObj.jQRef('.member_count_precentage').text(percentage + '%').show();
+
+        lpObj.recountStats({
+            'activity': obj.activity,
+            'totalWork': obj.totalWork,
+            'startLimit': startLimit,
+            'endLimit': endLimit
+        });
+
+    } else {
+        lpObj.jQRef('.member_count_precentage').text('100%').show();
+    }
 };
 
 likePosts.prototype.removeOverlay = function (e) {
@@ -218,11 +250,6 @@ likePosts.prototype.removeOverlay = function (e) {
         lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
         lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
     }
-};
-
-likePosts.prototype.showPercentage = function (obj) {
-    var _this = this;
-    lpObj.jQRef('.like_posts_overlay').remove();
 };
 
 var lpObj = window.lpObj = new likePosts();

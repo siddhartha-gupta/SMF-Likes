@@ -223,10 +223,6 @@ function LP_recountLikesTotal() {
 
 	isAllowedTo('admin_forum');
 
-	$currentCounter = 0;
-	if (empty($_REQUEST['start']))
-		$_REQUEST['start'] = 0;
-
 	// Lets fire the bullet.
 	@set_time_limit(300);
 
@@ -237,11 +233,14 @@ function LP_recountLikesTotal() {
 		);
 		list($totalWork) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
+	} else {
+		$totalWork = $_REQUEST['totalWork'];
 	}
-	$start = !isset($_REQUEST['currentCounter']) || empty($_REQUEST['currentCounter']) ? 0 : (int) $_REQUEST['currentCounter'];
-	$increment = $start + 100;
 
-	if($start === 0) {
+	$startLimit = !isset($_REQUEST['startLimit']) || empty($_REQUEST['startLimit']) ? 0 : (int) $_REQUEST['startLimit'];
+	$endLimit = $_REQUEST['endLimit'];
+
+	if($startLimit === 0) {
 		$smcFunc['db_query']('truncate_table', '
 			TRUNCATE {db_prefix}like_count'
 		);
@@ -255,8 +254,8 @@ function LP_recountLikesTotal() {
 		ORDER BY lp.id_msg
 		LIMIT {int:start}, {int:max}',
 		array(
-			'start' => $start,
-			'max' => $increment,
+			'start' => $startLimit,
+			'max' => $endLimit,
 		)
 	);
 
@@ -283,9 +282,8 @@ function LP_recountLikesTotal() {
 		}
 	}
 	$smcFunc['db_free_result']($request);
-	$currentCounter += $increment;
 
-	$resp = array('totalWork' => $totalWork, 'currentCounter' => $currentCounter);
+	$resp = array('totalWork' => (int) $totalWork, 'endLimit' => (int) $endLimit);
 	echo json_encode($resp);
 	die();
 }
