@@ -196,7 +196,7 @@ function LP_savePermissionsettings() {
 }
 
 function LP_recountLikeStats() {
-	global $txt, $context, $sourcedir;
+	global $txt, $context, $sourcedir, $settings;
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
@@ -204,6 +204,7 @@ function LP_recountLikeStats() {
 	require_once($sourcedir . '/LikePosts.php');
 	LP_includeAssets();
 
+	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$context['page_title'] = $txt['like_post_admin_panel'];
 	$context['sub_template'] = 'lp_admin_recount_stats';
 	$context['like_posts']['tab_name'] = $txt['like_post_recount_stats'];
@@ -236,7 +237,6 @@ function LP_recountLikesTotal() {
 	} else {
 		$totalWork = $_REQUEST['totalWork'];
 	}
-
 	$startLimit = !isset($_REQUEST['startLimit']) || empty($_REQUEST['startLimit']) ? 0 : (int) $_REQUEST['startLimit'];
 	$endLimit = $_REQUEST['endLimit'];
 

@@ -189,7 +189,6 @@ likePosts.prototype.recountStats = function(options) {
         startLimit = options.startLimit || 0,
         increment = options.increment || 100,
         endLimit = options.endLimit || 100;
-
     lpObj.jQRef.ajax({
         type: "POST",
         url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
@@ -213,30 +212,55 @@ likePosts.prototype.recountStats = function(options) {
 };
 
 likePosts.prototype.checkRecount = function(obj) {
-    var startLimit;
-    if(obj.startLimit === 0)
+    var startLimit,
+        percentage = 0,
+        percentageText = '0%';
+
+    if(obj.startLimit === 0) {
+        var completeString = '<div class="like_posts_overlay"><div class="recount_stats"><div></div></div></div>';
+
+        lpObj.jQRef('body').append(completeString);
+
+        var screenWidth = lpObj.jQRef(window).width(),
+            screenHeight = lpObj.jQRef(window).height(),
+            popupHeight = lpObj.jQRef('.recount_stats').outerHeight(),
+            popupWidth = lpObj.jQRef('.recount_stats').outerWidth(),
+            topPopUpOffset = (screenHeight - popupHeight)/2,
+            leftPopUpOffset = (screenWidth - popupWidth)/2;
+
+        lpObj.jQRef('.recount_stats').css({
+            top: topPopUpOffset + 'px',
+            left: leftPopUpOffset + 'px'
+        });
         startLimit = obj.startLimit + obj.increment + 1;
-    else
+    } else {
         startLimit = obj.startLimit + obj.increment;
+    }
 
     if(startLimit < obj.totalWork) {
         var endLimit = obj.endLimit + obj.increment;
         if(endLimit > obj.totalWork) {
             endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
         }
-        var percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
-        lpObj.jQRef('.member_count_precentage').text(percentage + '%').show();
-
-        lpObj.recountStats({
-            'activity': obj.activity,
-            'totalWork': obj.totalWork,
-            'startLimit': startLimit,
-            'endLimit': endLimit
-        });
-
+        percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
+        percentageText = percentage + '%';
     } else {
-        lpObj.jQRef('.member_count_precentage').text('100%').show();
+        percentage = 100;
+        percentageText = 'Done';
+        lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
     }
+
+    lpObj.jQRef('.recount_stats').find('div').animate({width: percentage + '%'}, 1000, function() {
+        console.log('complete: ');
+        if(percentage < 100) {
+                lpObj.recountStats({
+                'activity': obj.activity,
+                'totalWork': obj.totalWork,
+                'startLimit': startLimit,
+                'endLimit': endLimit
+            });
+        }
+    }).html(percentageText + '&nbsp;');
 };
 
 likePosts.prototype.removeOverlay = function (e) {
