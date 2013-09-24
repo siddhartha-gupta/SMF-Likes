@@ -227,6 +227,9 @@ function LP_recountLikesTotal() {
 	// Lets fire the bullet.
 	@set_time_limit(300);
 
+	$startLimit = !isset($_REQUEST['startLimit']) || empty($_REQUEST['startLimit']) ? 0 : (int) $_REQUEST['startLimit'];
+	$endLimit = (int) $_REQUEST['endLimit'];
+
 	if(!isset($_REQUEST['totalWork']) || empty($_REQUEST['totalWork'])) {
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(DISTINCT(id_msg))
@@ -235,16 +238,9 @@ function LP_recountLikesTotal() {
 		list($totalWork) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
 	} else {
-		$totalWork = $_REQUEST['totalWork'];
+		$totalWork = (int) $_REQUEST['totalWork'];
 	}
-	$startLimit = !isset($_REQUEST['startLimit']) || empty($_REQUEST['startLimit']) ? 0 : (int) $_REQUEST['startLimit'];
-	$endLimit = $_REQUEST['endLimit'];
 
-	if($startLimit === 0) {
-		$smcFunc['db_query']('truncate_table', '
-			TRUNCATE {db_prefix}like_count'
-		);
-	}
 	$request = $smcFunc['db_query']('', '
 		SELECT m.id_member, COUNT(lp.id_member) as count
 		FROM {db_prefix}like_post AS lp
@@ -255,33 +251,58 @@ function LP_recountLikesTotal() {
 		LIMIT {int:start}, {int:max}',
 		array(
 			'start' => $startLimit,
-			'max' => $endLimit,
+			'max' => 100,
 		)
 	);
 
+	$insertData = array();
+	$updateIds = array();
+	$updateData = '';
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		if(!empty($row['id_member'])) {
-			$result = $smcFunc['db_query']('', '
-				UPDATE {db_prefix}like_count
-				SET like_count = like_count + {int:count}
+			$currentLikeCount = 0;
+			$request1 = $smcFunc['db_query']('', '
+				SELECT like_count
+				FROM {db_prefix}like_count
 				WHERE id_member = {int:id_member}',
 				array(
 					'id_member' => $row['id_member'],
-					'count' => $row['count']
 				)
 			);
-
-			if ($smcFunc['db_affected_rows']() == 0) {
-				$result = $smcFunc['db_insert']('ignore',
-					'{db_prefix}like_count',
-					array('id_member' => 'int', 'like_count' => 'int'),
-					array($row['id_member'], $row['count']),
-					array('id_member')
-				);
+			if ($smcFunc['db_num_rows']($request1) !== 0) {
+				list ($currentLikeCount) = $smcFunc['db_fetch_row']($request1);
+				if($currentLikeCount !== $row['count']) {
+					$updateIds[] = $row['id_member'];
+					$updateData .= '
+							WHEN ' . $row['id_member'] . ' THEN ' . $row['count'];
+				}
+			} else {
+				$insertData[] = array($row['id_member'], $row['count']);
 			}
+			$smcFunc['db_free_result']($request1);
 		}
 	}
 	$smcFunc['db_free_result']($request);
+
+	if(!empty($updateData) && !empty($updateIds)) {
+		$result = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}like_count
+			SET like_count = CASE id_member '. $updateData .' END
+			WHERE id_member IN ({array_int:updateIds})',
+			array(
+				'updateIds' => $updateIds
+			)
+		);	
+	}
+
+	if(!empty($insertData)) {
+		$result = $smcFunc['db_insert']('ignore',
+			'{db_prefix}like_count',
+			array('id_member' => 'int', 'like_count' => 'int'),
+			$insertData,
+			array('id_member')
+		);
+	}
 
 	$resp = array('totalWork' => (int) $totalWork, 'endLimit' => (int) $endLimit);
 	echo json_encode($resp);
