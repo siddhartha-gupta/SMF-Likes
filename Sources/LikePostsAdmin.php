@@ -232,8 +232,8 @@ function LP_recountLikesTotal() {
 
 	if(!isset($_REQUEST['totalWork']) || empty($_REQUEST['totalWork'])) {
 		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(DISTINCT(id_msg))
-			FROM {db_prefix}like_post'
+			SELECT COUNT(id_member)
+			FROM {db_prefix}members'
 		);
 		list($totalWork) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
@@ -242,12 +242,8 @@ function LP_recountLikesTotal() {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_member, COUNT(lp.id_member) as count
-		FROM {db_prefix}like_post AS lp
-		INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
-		GROUP BY m.id_member
-		HAVING m.id_member > 0
-		ORDER BY lp.id_msg
+		SELECT id_member
+		FROM {db_prefix}members
 		LIMIT {int:start}, {int:max}',
 		array(
 			'start' => $startLimit,
@@ -259,28 +255,30 @@ function LP_recountLikesTotal() {
 	$updateIds = array();
 	$updateData = '';
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(!empty($row['id_member'])) {
-			$currentLikeCount = 0;
-			$request1 = $smcFunc['db_query']('', '
-				SELECT like_count
-				FROM {db_prefix}like_count
-				WHERE id_member = {int:id_member}',
-				array(
-					'id_member' => $row['id_member'],
-				)
-			);
-			if ($smcFunc['db_num_rows']($request1) !== 0) {
-				list ($currentLikeCount) = $smcFunc['db_fetch_row']($request1);
-				if($currentLikeCount !== $row['count']) {
-					$updateIds[] = $row['id_member'];
-					$updateData .= '
-							WHEN ' . $row['id_member'] . ' THEN ' . $row['count'];
-				}
-			} else {
-				$insertData[] = array($row['id_member'], $row['count']);
+		$calculatedLikeCount = 0;
+		$request1 = $smcFunc['db_query']('', '
+			SELECT COUNT(lp.id_member) as count, lc.like_count
+			FROM smf_like_post AS lp
+			INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
+			LEFT JOIN smf_like_count AS lc ON (m.id_msg = lc.id_member)
+			where m.id_member = {int:id_member}',
+			array(
+				'id_member' => $row['id_member'],
+			)
+		);
+		if ($smcFunc['db_num_rows']($request1) !== 0) {
+			list ($calculatedLikeCount, $presentCount) = $smcFunc['db_fetch_row']($request1);
+			if($presentCount === NULL) {
+				$insertData[] = array($row['id_member'], $calculatedLikeCount);
+			} else if($calculatedLikeCount !== $presentCount) {
+				$updateIds[] = $row['id_member'];
+				$updateData .= '
+						WHEN ' . $row['id_member'] . ' THEN ' . $row['count'];
 			}
-			$smcFunc['db_free_result']($request1);
+		} else {
+			$insertData[] = array($row['id_member'], $calculatedLikeCount);
 		}
+		$smcFunc['db_free_result']($request1);
 	}
 	$smcFunc['db_free_result']($request);
 
