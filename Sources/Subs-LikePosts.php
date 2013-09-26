@@ -89,18 +89,20 @@ function LP_DB_deleteLikePost($data = array()) {
 /*
  * Underlying DB implementation of LP_getAllMessagesInfo
 */
-function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
+function LP_DB_getAllMessagesInfo($msgsArr, $postersArr, $boardId = '', $topicId = '') {
 	global $smcFunc, $user_info, $scripturl;
 
 	$topicsLikeInfo = array();
-	if (count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {
+	if (count($msgsArr) == 0 || count($postersArr) == 0 || empty($boardId) || empty($topicId)) {
 		return $topicsLikeInfo;
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name, lc.like_count
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		INNER JOIN {db_prefix}messages as m ON (lp.id_msg = m.id_msg)
+		LEFT JOIN {db_prefix}like_count as lc ON (m.id_member = lc.id_member)
 		WHERE lp.id_board = {int:id_board}
 		AND lp.id_topic = {int:id_topic}
 		AND lp.id_msg IN ({array_int:message_list})
@@ -126,6 +128,7 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 			'id_msg' => $row['id_msg'],
 			'rating' => $row['rating'],
 			'count' => isset($topicsLikeInfo[$row['id_msg']]['count']) ? ++$topicsLikeInfo[$row['id_msg']]['count'] : 1,
+			'user_total_likes' => empty($row['like_count']) ? 0 : $row['like_count'],
 		);
 	}
 	$smcFunc['db_free_result']($request);

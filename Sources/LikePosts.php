@@ -203,7 +203,7 @@ function LP_likePosts() {
 /*
  * To get like like data for all messages of a topic
 */
-function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
+function LP_getAllMessagesInfo($msgsArr = array(), $postersArr = array(), $boardId = '', $topicId = '') {
 	global $context, $sourcedir, $user_info;
 
 	if($user_info['is_guest']) {
@@ -213,6 +213,10 @@ function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '')
 	if (!is_array($msgsArr)) {
 		$msgsArr = array($msgsArr);
 	}
+	if (!is_array($msgsArr)) {
+		$postersArr = array($postersArr);
+	}
+
 	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
 	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
 
@@ -220,7 +224,7 @@ function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '')
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	$result = LP_DB_getAllMessagesInfo($msgsArr, $boardId, $topicId);
+	$result = LP_DB_getAllMessagesInfo($msgsArr, $postersArr, $boardId, $topicId);
 	return $result;
 }
 
@@ -238,6 +242,7 @@ function LP_isPostLiked($arr, $id) {
 		'text' => $txt['like_post_like'],
 		'count' => 0,
 		'members' => array(),
+		'user_total_likes' => 0,
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
@@ -247,6 +252,7 @@ function LP_isPostLiked($arr, $id) {
 		$data = array(
 			'members' => $arr[$id]['members'],
 			'count' => $arr[$id]['count'],
+			'user_total_likes' => $arr[$id]['user_total_likes'],
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
