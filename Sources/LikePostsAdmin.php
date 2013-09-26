@@ -258,9 +258,9 @@ function LP_recountLikesTotal() {
 		$calculatedLikeCount = 0;
 		$request1 = $smcFunc['db_query']('', '
 			SELECT COUNT(lp.id_member) as count, lc.like_count
-			FROM smf_like_post AS lp
-			INNER JOIN smf_messages AS m ON (m.id_msg = lp.id_msg)
-			LEFT JOIN smf_like_count AS lc ON (m.id_msg = lc.id_member)
+			FROM {db_prefix}like_post AS lp
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = lp.id_msg)
+			LEFT JOIN {db_prefix}like_count AS lc ON (lc.id_member = {int:id_member})
 			where m.id_member = {int:id_member}',
 			array(
 				'id_member' => $row['id_member'],
@@ -273,7 +273,7 @@ function LP_recountLikesTotal() {
 			} else if($calculatedLikeCount !== $presentCount) {
 				$updateIds[] = $row['id_member'];
 				$updateData .= '
-						WHEN ' . $row['id_member'] . ' THEN ' . $row['count'];
+						WHEN ' . $row['id_member'] . ' THEN ' . $calculatedLikeCount;
 			}
 		} else {
 			$insertData[] = array($row['id_member'], $calculatedLikeCount);
