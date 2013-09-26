@@ -290,7 +290,7 @@ function LP_recountLikesTotal() {
 			array(
 				'updateIds' => $updateIds
 			)
-		);	
+		);
 	}
 
 	if(!empty($insertData)) {

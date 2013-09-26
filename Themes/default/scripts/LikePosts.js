@@ -32,14 +32,15 @@ var likePosts = function() {
     this.timeoutTimer = null;
 };
 
-likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
+likePosts.prototype.likeUnlikePosts = function(mId, tId, bId, aId) {
     // Lets try JS validations
-    msgId = (mId !== undefined) ? parseInt(mId, 10) : 0;
-    topicId = (tId !== undefined) ? parseInt(tId, 10) : 0;
-    boardId = (bId !== undefined) ? parseInt(bId, 10) : 0;
-    var rating = (lpObj.jQRef('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
+    var msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
+        topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
+        boardId = (bId !== undefined) ? parseInt(bId, 10) : 0,
+        authorId = (aId !== undefined) ? parseInt(aId, 10) : 0,
+        rating = (lpObj.jQRef('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
 
-    if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId)) {
+    if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId) || isNaN(authorId)) {
         return false;
     }
 
@@ -52,7 +53,8 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId) {
             msg: msgId,
             topic: topicId,
             board: boardId,
-            rating: rating
+            rating: rating,
+            author: authorId
         },
 
         success: function(resp) {

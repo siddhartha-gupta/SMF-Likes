@@ -156,8 +156,9 @@ function LP_likePosts() {
 	$topic_id = isset($_REQUEST['topic']) && !empty($_REQUEST['topic']) ? (int) ($_REQUEST['topic']) : 0;
 	$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
 	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
+	$author_id = isset($_REQUEST['author']) ? (int) ($_REQUEST['author']) : 0;
 
-	if (empty($board_id) || empty($topic_id) || empty($msg_id)) {
+	if (empty($board_id) || empty($topic_id) || empty($msg_id) || empty($author_id)) {
 		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
@@ -171,6 +172,7 @@ function LP_likePosts() {
 		'id_board' => $board_id,
 		'id_member' => $user_info['id'],
 		'rating' => $rating,
+		'id_author' => $author_id,
 	);
 
 	if(empty($rating)) {
@@ -203,7 +205,7 @@ function LP_likePosts() {
 /*
  * To get like like data for all messages of a topic
 */
-function LP_getAllMessagesInfo($msgsArr = array(), $postersArr = array(), $boardId = '', $topicId = '') {
+function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 	global $context, $sourcedir, $user_info;
 
 	if($user_info['is_guest']) {
@@ -213,9 +215,6 @@ function LP_getAllMessagesInfo($msgsArr = array(), $postersArr = array(), $board
 	if (!is_array($msgsArr)) {
 		$msgsArr = array($msgsArr);
 	}
-	if (!is_array($msgsArr)) {
-		$postersArr = array($postersArr);
-	}
 
 	$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
 	$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
@@ -224,10 +223,26 @@ function LP_getAllMessagesInfo($msgsArr = array(), $postersArr = array(), $board
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	$result = LP_DB_getAllMessagesInfo($msgsArr, $postersArr, $boardId, $topicId);
+	$result = LP_DB_getAllMessagesInfo($msgsArr, $boardId, $topicId);
 	return $result;
 }
 
+
+function LP_posterInfo($postersArr = array()) {
+	global $context, $sourcedir, $user_info;
+
+	if($user_info['is_guest']) {
+		return false;
+	}
+
+	if (!is_array($postersArr)) {
+		$postersArr = array($postersArr);
+	}
+
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$result = LP_DB_posterInfo($postersArr);
+	return $result;
+}
 /*
  * To check whether a specific message is liked or not
  * Used in Display template
@@ -242,7 +257,6 @@ function LP_isPostLiked($arr, $id) {
 		'text' => $txt['like_post_like'],
 		'count' => 0,
 		'members' => array(),
-		'user_total_likes' => 0,
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
@@ -252,7 +266,6 @@ function LP_isPostLiked($arr, $id) {
 		$data = array(
 			'members' => $arr[$id]['members'],
 			'count' => $arr[$id]['count'],
-			'user_total_likes' => $arr[$id]['user_total_likes'],
 		);
 
 		if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
