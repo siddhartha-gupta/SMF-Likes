@@ -39,13 +39,13 @@ if (!defined('SMF'))
 function LP_DB_insertLikePost($data = array()) {
 	global $smcFunc, $user_info;
 
-    if ($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		return false;
 	}
 
-    if (!is_array($data)) {
-        return false;
-    }
+	if (!is_array($data)) {
+		return false;
+	}
 
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}like_post',
@@ -73,13 +73,13 @@ function LP_DB_insertLikePost($data = array()) {
 function LP_DB_deleteLikePost($data = array()) {
 	global $smcFunc, $user_info;
 
-    if ($user_info['is_guest']) {
+	if ($user_info['is_guest']) {
 		return false;
 	}
 
-    if (!is_array($data)) {
+	if (!is_array($data)) {
 		return false;
-    }
+	}
 
 	$smcFunc['db_query']('', '
 		DELETE FROM {db_prefix}like_post
@@ -164,13 +164,13 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 		return $topicsLikeInfo;
 	}
 
-    $memberData = array();
+	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        $memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
-            'id' => $row['id_member'],
-            'name' => $row['real_name'],
-            'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-        );
+		$memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+		);
 		$topicsLikeInfo[$row['id_msg']] = array(
 			'id_msg' => $row['id_msg'],
 			'rating' => $row['rating'],
@@ -179,14 +179,14 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 	}
 	$smcFunc['db_free_result']($request);
 
-    foreach($topicsLikeInfo as $key => $val) {
-        foreach($memberData as $memKey => $memVal) {
-            $tempArray = explode('_', $memKey);
-            if($tempArray[0] == $key) {
-                $topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
-            }
-        }
-    }
+	foreach($topicsLikeInfo as $key => $val) {
+		foreach($memberData as $memKey => $memVal) {
+			$tempArray = explode('_', $memKey);
+			if($tempArray[0] == $key) {
+				$topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
+			}
+		}
+	}
 
 	return $topicsLikeInfo;
 }
@@ -247,14 +247,14 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        $memberData[] = array(
-            'id' => $row['id_member'],
-            'name' => $row['real_name'],
-            'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+		$memberData[] = array(
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
 			'avatar' => array(
 				'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
 			),
-        );
+		);
 	}
 	$smcFunc['db_free_result']($request);
 	return $memberData;
@@ -291,8 +291,8 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
-            'id' => $row['id_member']
-        );
+			'id' => $row['id_member']
+		);
 		$topicsLikeInfo[$row['id_msg']] = array(
 			'id_msg' => $row['id_msg'],
 			'rating' => $row['rating'],
@@ -301,14 +301,14 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	}
 	$smcFunc['db_free_result']($request);
 
-    foreach($topicsLikeInfo as $key => $val) {
-        foreach($memberData as $memKey => $memVal) {
-            $tempArray = explode('_', $memKey);
-            if($tempArray[0] == $key) {
-                $topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
-            }
-        }
-    }
+	foreach($topicsLikeInfo as $key => $val) {
+		foreach($memberData as $memKey => $memVal) {
+			$tempArray = explode('_', $memKey);
+			if($tempArray[0] == $key) {
+				$topicsLikeInfo[$key]['members'][$tempArray[1]] = $memVal;
+			}
+		}
+	}
 	return $topicsLikeInfo;
 }
 

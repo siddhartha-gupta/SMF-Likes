@@ -94,7 +94,7 @@ function LP_includeAssets() {
 					foreach(array_keys($a) as $key) {
 						if (!is_int($key)) {
 							$isAssoc = true;
-        					break;
+							break;
 						}
 					}
 
