@@ -38,6 +38,16 @@
 
 	<file name="$themedir/Display.template.php">
 		<operation>
+			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
+			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo('can_view_likes')) {
+				echo '
+								<li class="postcount"><a href="', $scripturl ,'?action=profile;area=likeposts;u=', $message['member']['id'], '">', $txt['like_post_total_likes'] . ': ' . $context['like_posts']['posters_data'][$message['member']['id']], '</a></li>';
+			}
+
+			]]></add>
+		</operation>
+
+		<operation>
 			<search position="after"><![CDATA[// Show the member's signature?]]></search>
 			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			$context['like_posts']['single_msg_data'] = LP_isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
@@ -45,7 +55,7 @@
 			echo '<div class="like_post_box floatleft">';
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
-								<a class="like_unlike_link" id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
+								<a class="like_unlike_link" id="like_',$message['id'],'" href="#" onclick="lpObj.likeUnlikePosts(', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
 			}
 
 			if(LP_isAllowedTo('can_view_likes')) {
@@ -91,6 +101,11 @@
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
 			<add><![CDATA[if(!empty($modSettings['like_post_enable'])) {
 		require_once($sourcedir . '/LikePosts.php');
+		if(LP_isAllowedTo(array('can_view_likes'))) {
+			$lp_posters_data = LP_posterInfo($posters);
+			$context['like_posts']['posters_data'] = isset($lp_posters_data) ? $lp_posters_data : array();
+		}
+
 		if(LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
 			$topic_liked_data = LP_getAllMessagesInfo($messages);
 			$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();

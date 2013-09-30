@@ -66,7 +66,10 @@ function LP_includeAssets() {
 		isJqueryLoaded();
 	// ]]></script>';
 
-	//TODO: move this to somewhere else
+	LP_checkJsonEncode();
+}
+
+function LP_checkJsonEncode() {
 	if (!function_exists('json_encode')) {
 		function json_encode($a = false) {
 
@@ -118,7 +121,6 @@ function LP_includeAssets() {
 		}
 	}
 }
-
 /*
  * Our main function which decides which sub-function will be utilized
 */
@@ -240,6 +242,7 @@ function LP_posterInfo($postersArr = array()) {
 	}
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
+	loadlanguage('LikePosts');
 	$result = LP_DB_posterInfo($postersArr);
 	return $result;
 }
