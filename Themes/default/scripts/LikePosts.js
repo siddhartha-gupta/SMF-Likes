@@ -32,13 +32,14 @@ var likePosts = function() {
 	this.timeoutTimer = null;
 };
 
-likePosts.prototype.likeUnlikePosts = function(mId, tId, bId, aId) {
+likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
+	var userRating = e.target.href.split('#')[1];
 	// Lets try JS validations
 	var msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
 		topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
 		boardId = (bId !== undefined) ? parseInt(bId, 10) : 0,
 		authorId = (aId !== undefined) ? parseInt(aId, 10) : 0,
-		rating = (lpObj.jQRef('#like_' + msgId).text().toLowerCase() == 'like') ? 1 : 0;
+		rating = (userRating !== undefined) ? parseInt(userRating, 10) : 0;
 
 	if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId) || isNaN(authorId)) {
 		return false;
@@ -64,7 +65,7 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId, aId) {
 					count: (resp.count !== undefined) ? resp.count : '',
 					newText: resp.newText,
 					likeText: resp.likeText,
-					image_path: resp.image_path
+					rating: rating
 				};
 				lpObj.onLikeSuccess(params);
 			} else {
@@ -76,16 +77,19 @@ likePosts.prototype.likeUnlikePosts = function(mId, tId, bId, aId) {
 };
 
 likePosts.prototype.onLikeSuccess = function(params) {
+	console.log(params);
 	var count = parseInt(params.count, 10);
 	if(isNaN(count)) return false;
 
 	var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
-		likeText = params.likeText;
+		likeText = params.likeText,
+		newLink = (params.rating === 1) ? '#0' : '#1';
 
 	if(likeText.indexOf('&amp;') > 0) {
 		likeText = likeText.replace(/&amp;/g, '&');
 	}
 
+	lpObj.jQRef(likeButtonRef).attr('href', newLink);
 	lpObj.jQRef(likeButtonRef).animate({
 		left: '-40px',
 		opacity: 'toggle'
@@ -267,7 +271,7 @@ likePosts.prototype.checkRecount = function(obj) {
 
 likePosts.prototype.removeOverlay = function (e) {
 	var _this = this;
-	if(typeof(e) === undefined && this.timeoutTimer === null) return false;
+	if(typeof(e) === 'undefined' && this.timeoutTimer === null) return false;
 	else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
 		clearTimeout(_this.timeoutTimer);
 		_this.timeoutTimer = null;

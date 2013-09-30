@@ -54,7 +54,6 @@ function LP_DB_insertLikePost($data = array()) {
 		array()
 	);
 
-	//TODO: make a check of affected rows
 	$result = $smcFunc['db_query']('', '
 		UPDATE {db_prefix}like_count
 		SET like_count = like_count + {int:count}
@@ -64,6 +63,15 @@ function LP_DB_insertLikePost($data = array()) {
 			'count' => 1,
 		)
 	);
+
+	if ($smcFunc['db_affected_rows']() == 0) {
+		$result = $smcFunc['db_insert']('ignore',
+			'{db_prefix}like_count',
+			array('id_member' => 'int', 'like_count' => 'int'),
+			array($data['id_author'], 1),
+			array('id_member')
+		);
+	}
 	return true;
 }
 
