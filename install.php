@@ -2,14 +2,14 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.1
+* @version 1.2
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
 */
 
 /*
-* Version: MPL 1.1.1
+* Version: MPL 1.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
 * 1.1 (the "License"); you may not use this file except in compliance with
