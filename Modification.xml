@@ -40,8 +40,10 @@
 		<operation>
 			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
 			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo('can_view_likes')) {
+				$total_likes = isset($context['like_posts']['posters_data'][$message['member']['id']]) ? $context['like_posts']['posters_data'][$message['member']['id']] : 0;
+
 				echo '
-								<li class="postcount"><a href="', $scripturl ,'?action=profile;area=likeposts;sa=seeotherslikes;u=', $message['member']['id'], '">', $txt['like_post_total_likes'] . ': ' . $context['like_posts']['posters_data'][$message['member']['id']], '</a></li>';
+								<li class="postcount"><a href="', $scripturl ,'?action=profile;area=likeposts;sa=seeotherslikes;u=', $message['member']['id'], '">', $txt['like_post_total_likes'] . ': ' . $total_likes, '</a></li>';
 			}
 
 			]]></add>

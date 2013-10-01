@@ -120,7 +120,7 @@ function LP_DB_posterInfo($postersArr) {
 
 	$postersInfo = array();
 	if (count($postersArr) === 0) {
-		return $topicsLikeInfo;
+		return $postersInfo;
 	}
 
 	$request = $smcFunc['db_query']('', '
