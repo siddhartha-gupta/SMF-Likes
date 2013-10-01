@@ -294,7 +294,7 @@ function LP_recountLikesTotal() {
 	}
 
 	if(!empty($insertData)) {
-		$result = $smcFunc['db_insert']('ignore',
+		$result = $smcFunc['db_insert']('replace',
 			'{db_prefix}like_count',
 			array('id_member' => 'int', 'like_count' => 'int'),
 			$insertData,

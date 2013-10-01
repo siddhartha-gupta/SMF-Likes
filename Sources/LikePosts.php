@@ -260,6 +260,7 @@ function LP_isPostLiked($arr, $id) {
 		'text' => $txt['like_post_like'],
 		'count' => 0,
 		'members' => array(),
+		'already_liked' => 1,
 	);
 
 	if (!is_array($arr) || empty($arr) || empty($id))
@@ -276,9 +277,15 @@ function LP_isPostLiked($arr, $id) {
 
 			$remaining_likes = (int) ($data['count'] - 1);
 			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+
+			//If already liked make it to unlink
+			$data['already_liked'] = 0;
 		} else {
 			$data['text'] = $txt['like_post_like'];
 			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+
+			//Give them the option to like
+			$data['already_liked'] = 1;
 		}
 	}
 	return $data;
