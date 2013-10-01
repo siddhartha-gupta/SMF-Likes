@@ -1,19 +1,19 @@
-SMF-Likes
-=========
-
 Like Posts
 
 This mod provides and interface to like/unlike posts.
+
+User can like posts within a topic.
+Whereas on message index only the first post of topic is taken into consideration. One can like first post of topic from message index also.
+
 
 By default the mod is enabled for admins only. To enable it for other members, go to
 
 My Community » Administration Center » Like Posts » Permission Settings
 1. Enable the permission "Can like posts" for those groups who can like the posts.
 2. Enable the permission "Can view like" for those groups who can view who liked which post.
+3. Enable the permission "Can view likes of other users in their profiles" for those groups who can view like posts section in other users profiles.
 
-
-User can like posts within a topic.
-Whereas on message index only the first post of topic is taken into consideration. One can like first post of topic from message index also.
+Admin's can recount the total likes of users from admin section itself.
 
 All suggestions related to core features and UI are most welcomed.
 
