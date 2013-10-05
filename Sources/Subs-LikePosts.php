@@ -280,7 +280,7 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		SELECT t.id_topic, lp.id_msg, lp.id_member, lp.rating, mem.real_name
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
 		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
@@ -298,13 +298,13 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
+		$memberData[$row['id_topic'] . '_' .$row['id_member']] = array(
 			'id' => $row['id_member']
 		);
-		$topicsLikeInfo[$row['id_msg']] = array(
+		$topicsLikeInfo[$row['id_topic']] = array(
 			'id_msg' => $row['id_msg'],
 			'rating' => $row['rating'],
-			'count' => isset($topicsLikeInfo[$row['id_msg']]['count']) ? ++$topicsLikeInfo[$row['id_msg']]['count'] : 1,
+			'count' => isset($topicsLikeInfo[$row['id_topic']]['count']) ? ++$topicsLikeInfo[$row['id_topic']]['count'] : 1,
 		);
 	}
 	$smcFunc['db_free_result']($request);
