@@ -41,29 +41,61 @@ function LP_includeAssets() {
 
 	$context['insert_after_template'] .= '
 	<script type="text/javascript"><!-- // --><![CDATA[
-		if (!window.jQuery) {
+		var lpLoaded = false,
+		inConflict = false;
+
+		// Only do anything if jQuery isn"t defined
+		if (typeof jQuery == "undefined") {
+			if (typeof($) == "function") {
+				inConflict = true;
+			}
+
+			function loadJquery(url, callback) {
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = url;
+
+				var head = document.getElementsByTagName("head")[0],
+					done = false;
+
+				script.onload = script.onreadystatechange = function() {
+					if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+						done = true;
+
+						// callback function provided as param
+						callback();
+						script.onload = script.onreadystatechange = null;
+						head.removeChild(script);
+					};
+				};
+				head.appendChild(script);
+			};
+
+			loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+				if (typeof jQuery=="undefined") {
+					console.log("still not loaded");
+				} else {
+					if (inConflict === false) {
+						var js = document.createElement("script");
+						js.type = "text/javascript";
+						js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
+						document.body.appendChild(js);
+					} else {
+						// Use no conflict over here
+						var js = document.createElement("script");
+						js.type = "text/javascript";
+						js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
+						document.body.appendChild(js);
+					}
+				}
+			});
+		} else {
+			// jQuery is already loaded
 			var js = document.createElement("script");
 			js.type = "text/javascript";
-			js.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js";
+			js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
 			document.body.appendChild(js);
-		}
-
-		var lpLoaded = false;
-		function isJqueryLoaded() {
-			if (window.jQuery) {
-				if (!lpLoaded) {
-					lpLoaded = true;
-
-					var js = document.createElement("script");
-					js.type = "text/javascript";
-					js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
-					document.body.appendChild(js);
-				}
-			} else {
-				setTimeout(isJqueryLoaded, 100);
-			}
-		}
-		isJqueryLoaded();
+		};
 	// ]]></script>';
 
 	LP_checkJsonEncode();
