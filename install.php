@@ -44,6 +44,13 @@ if (!array_key_exists('db_add_column', $smcFunc))
 $tables = array(
 	'like_post' => array (
 		'columns' => array (
+            array(
+				'name' => 'id_like',
+				'type' => 'int',
+				'size' => 10,
+				'unsigned' => true,
+				'auto' => true,
+			),
 			array(
 				'name' => 'id_msg',
 				'type' => 'int',
@@ -83,7 +90,7 @@ $tables = array(
 		'indexes' => array(
 	        array(
 	            'type' => 'primary',
-	            'columns' => array('id_msg', 'id_member'),
+	            'columns' => array('id_like', 'id_msg', 'id_member'),
 	        ),
 	    ),
 	),
@@ -115,6 +122,34 @@ $tables = array(
 
 foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
+}
+    
+// Upgrade thinggy
+$is_upgrade = true;
+$request = $smcFunc['db_query']('', '
+    SHOW COLUMNS
+    FROM {db_prefix}like_post',
+    array(
+    )
+);
+if ($request !== false) {
+    while ($row = $smcFunc['db_fetch_assoc']($request))
+        if ($row['Field'] == 'id_like' && $row['Type'] == 'int')
+            $is_upgrade = false;
+
+    $smcFunc['db_free_result']($request);
+}
+
+// If upgrade, fire the bullet
+if($is_upgrade === true) {
+    $smcFunc['db_query']('', '
+        ALTER TABLE {db_prefix}like_post
+        ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
+        DROP PRIMARY KEY,
+        ADD PRIMARY KEY(id_like, id_msg, id_member)',
+        array(
+        )
+    );
 }
 
 // For all general settings add 'like_post_' as prefix
