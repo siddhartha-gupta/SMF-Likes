@@ -227,7 +227,6 @@ $request = $smcFunc['db_query']('', '
 );
 if ($request !== false) {
     while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        echo $row['Field'] . ' : ' . $row['Type'];
         if ($row['Field'] == 'id_like' && $row['Type'] == 'int(10) unsigned')
             $is_upgrade = false;
     }
@@ -236,7 +235,6 @@ if ($request !== false) {
 
 // If upgrade, fire the bullet
 if($is_upgrade === true) {
-    echo 'is_upgrade: ' . $is_upgrade;
     $smcFunc['db_query']('', '
         ALTER TABLE {db_prefix}like_post
         ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
