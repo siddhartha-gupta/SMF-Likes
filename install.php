@@ -117,7 +117,52 @@ $tables = array(
 	            'columns' => array('id_member'),
 	        ),
 	    ),
-	)
+	),
+    'like_posts_notification' => array (
+        'columns' => array (
+            array(
+                'name' => 'id_notification',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'auto' => true,
+            ),
+            array(
+                'name' => 'id_like',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_member_received',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_member_gave',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_msg',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'default' => '0',
+            )
+        ),
+        'indexes' => array(
+            array(
+                'type' => 'primary',
+                'columns' => array('id_notification'),
+            ),
+        ),
+    )
 );
 
 foreach ($tables as $table => $data) {
@@ -125,6 +170,54 @@ foreach ($tables as $table => $data) {
 }
     
 // Upgrade thinggy
+$new_tables = array(
+    'like_posts_notification' => array (
+        'columns' => array (
+            array(
+                'name' => 'id_notification',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'auto' => true,
+            ),
+            array(
+                'name' => 'id_like',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_member_received',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_member_gave',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_msg',
+                'type' => 'int',
+                'size' => 10,
+                'unsigned' => true,
+                'default' => '0',
+            )
+        ),
+        'indexes' => array(
+            array(
+                'type' => 'primary',
+                'columns' => array('id_notification'),
+            ),
+        ),
+    )
+);
+
 $is_upgrade = true;
 $request = $smcFunc['db_query']('', '
     SHOW COLUMNS
@@ -133,15 +226,17 @@ $request = $smcFunc['db_query']('', '
     )
 );
 if ($request !== false) {
-    while ($row = $smcFunc['db_fetch_assoc']($request))
-        if ($row['Field'] == 'id_like' && $row['Type'] == 'int')
+    while ($row = $smcFunc['db_fetch_assoc']($request)) {
+        echo $row['Field'] . ' : ' . $row['Type'];
+        if ($row['Field'] == 'id_like' && $row['Type'] == 'int(10) unsigned')
             $is_upgrade = false;
-
+    }
     $smcFunc['db_free_result']($request);
 }
 
 // If upgrade, fire the bullet
 if($is_upgrade === true) {
+    echo 'is_upgrade: ' . $is_upgrade;
     $smcFunc['db_query']('', '
         ALTER TABLE {db_prefix}like_post
         ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
@@ -150,6 +245,10 @@ if($is_upgrade === true) {
         array(
         )
     );
+
+    foreach ($tables as $table => $data) {
+        $smcFunc['db_create_table']('{db_prefix}' . $new_tables, $data['columns'], $data['indexes']);
+    }
 }
 
 // For all general settings add 'like_post_' as prefix
