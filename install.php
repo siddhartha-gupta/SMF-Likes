@@ -151,8 +151,8 @@ if ($request !== false) {
 if($is_upgrade === true) {
     $smcFunc['db_query']('', '
         ALTER TABLE {db_prefix}like_post
-        Add column id_member_recieved mediumint (8) unsigned Default 0,
-        CHANGE id_member id_member_gave mediumint (8)',
+        CHANGE id_member id_member_gave mediumint (8) unsigned,
+        Add column id_member_recieved mediumint (8) unsigned Default 0 AFTER id_member_gave',
         array(
         )
     );
