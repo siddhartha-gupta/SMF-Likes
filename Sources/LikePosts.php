@@ -189,8 +189,8 @@ function LP_likePosts() {
 	$board_id = isset($_REQUEST['board']) && !empty($_REQUEST['board']) ? (int) ($_REQUEST['board']) : 0;
 	$topic_id = isset($_REQUEST['topic']) && !empty($_REQUEST['topic']) ? (int) ($_REQUEST['topic']) : 0;
 	$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
-	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 	$author_id = isset($_REQUEST['author']) ? (int) ($_REQUEST['author']) : 0;
+	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 
 	if (empty($board_id) || empty($topic_id) || empty($msg_id) || empty($author_id)) {
 		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
@@ -204,9 +204,9 @@ function LP_likePosts() {
 		'id_msg' => $msg_id,
 		'id_topic' => $topic_id,
 		'id_board' => $board_id,
-		'id_member' => $user_info['id'],
+		'id_member_gave' => $user_info['id'],
+		'id_member_received' => $author_id,
 		'rating' => $rating,
-		'id_author' => $author_id,
 	);
 
 	if(empty($rating)) {

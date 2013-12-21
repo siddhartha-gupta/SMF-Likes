@@ -49,23 +49,17 @@ function LP_DB_insertLikePost($data = array()) {
 
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}like_post',
-		array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member' => 'int', 'rating' => 'int'),
-		array($data['id_msg'], $data['id_topic'], $data['id_board'], $data['id_member'], $data['rating']),
+		array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member_gave' => 'int', 'id_member_received' => 'int', 'rating' => 'int'),
+		array($data['id_msg'], $data['id_topic'], $data['id_board'], $data['id_member_gave'], $data['id_member_received'], $data['rating']),
 		array('id_like')
 	);
-
-    $notification_data = array();
-	$notification_data['id_like'] = $smcFunc['db_insert_id']('{db_prefix}like_post', 'id_like');
-	$notification_data['id_member_received'] = $data['id_member'];
-	$notification_data['id_member_gave'] = $user_info['id'];
-	$notification_data['id_msg'] = $data['id_msg'];
 
 	$result = $smcFunc['db_query']('', '
 		UPDATE {db_prefix}like_count
 		SET like_count = like_count + {int:count}
-		WHERE id_member = {int:id_author}',
+		WHERE id_member = {int:id_member_received}',
 		array(
-			'id_author' => $data['id_author'],
+			'id_member_received' => $data['id_member_received'],
 			'count' => 1,
 		)
 	);
@@ -74,12 +68,10 @@ function LP_DB_insertLikePost($data = array()) {
 		$result = $smcFunc['db_insert']('ignore',
 			'{db_prefix}like_count',
 			array('id_member' => 'int', 'like_count' => 'int'),
-			array($data['id_author'], 1),
+			array($data['id_member_received'], 1),
 			array('id_member')
 		);
 	}
-
-	LP_DB_addNotification($notification_data);
 	return true;
 }
 
@@ -102,28 +94,25 @@ function LP_DB_deleteLikePost($data = array()) {
 		WHERE id_msg = {int:id_msg}
 			AND id_topic = {int:id_topic}
 			AND id_board = {int:id_board}
-			AND id_member = {int:id_member}',
+			AND id_member_gave = {int:id_member_gave}',
 		array(
 			'id_msg' => $data['id_msg'],
 			'id_topic' => $data['id_topic'],
 			'id_board' => $data['id_board'],
-			'id_member' => $data['id_member'],
+			'id_member_gave' => $data['id_member_gave'],
 		)
 	);
 
 	$result = $smcFunc['db_query']('', '
 		UPDATE {db_prefix}like_count
 		SET like_count = like_count - {int:count}
-		WHERE id_member = {int:id_author}',
+		WHERE id_member = {int:id_member_received}',
 		array(
-			'id_author' => $data['id_author'],
+			'id_member_received' => $data['id_member_received'],
 			'count' => 1,
 		)
 	);
-	$notification_data['id_msg'] = $data['id_msg'];
-	$notification_data['id_member_gave'] = $data['id_member'];
 
-	LP_DB_removeNotification($notification_data);
 	return true;
 }
 
@@ -453,50 +442,6 @@ function LP_DB_updatePermissions($replaceArray) {
 	);
 
 	cache_put_data('modSettings', null, 90);
-}
-
-function LP_DB_addNotification($data = array()) {
-	global $smcFunc, $user_info;
-
-	if ($user_info['is_guest']) {
-		return false;
-	}
-
-	if (!is_array($data)) {
-		return false;
-	}
-
-	$smcFunc['db_insert']('replace',
-		'{db_prefix}like_posts_notification',
-		array('id_like' => 'int', 'id_member_received' => 'int', 'id_member_gave' => 'int', 'id_msg' => 'int'),
-		array($data['id_like'], $data['id_member_received'], $data['id_member_gave'], $data['id_msg']),
-		array()
-	);
-	return true;
-}
-
-function LP_DB_removeNotification($data = array()) {
-	global $smcFunc, $user_info;
-
-	if ($user_info['is_guest']) {
-		return false;
-	}
-
-	if (!is_array($data)) {
-		return false;
-	}
-
-	$smcFunc['db_query']('', '
-		DELETE FROM {db_prefix}like_posts_notification
-		WHERE id_msg = {int:id_msg}
-			AND id_member_gave = {int:id_member_gave}',
-		array(
-			'id_msg' => $data['id_msg'],
-			'id_member_gave' => $data['id_member_gave'],
-		)
-	);
-
-	return true;
 }
 
 ?>

@@ -41,7 +41,7 @@ require_once('SSI.php');
 function addMembers() {
 	global $smcFunc;
 
-	for($i = 0; $i< 600; $i++) {
+	for($i = 0; $i < 600; $i++) {
 		$seed = str_split('abcdefghijklmnopqrstuvwxyz' .'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 		$name = '';
 		foreach (array_rand($seed, 5) as $k) $name .= $seed[$k];
@@ -184,6 +184,7 @@ function addPosts() {
 		);
 	}
 	$smcFunc['db_free_result']($request);
+	echo 'Completed';
 }
 
 function likePosts() {
@@ -214,12 +215,40 @@ function likePosts() {
 		$smcFunc['db_free_result']($request1);
 	}
 	$smcFunc['db_free_result']($request);
+	echo 'Completed';
+}
+
+function rebuildGave() {
+	global $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_msg, m.id_member
+        FROM {db_prefix}like_post as lp
+        INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+        GROUP BY id_msg
+        ORDER BY id_msg'
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$result = $smcFunc['db_query']('', '
+			UPDATE {db_prefix}like_post
+			SET id_member_received = {int:id_member_received}
+			WHERE id_msg = {int:id_msg}',
+			array(
+				'id_member_received' => (int) $row['id_member'],
+				'id_msg' => $row['id_msg']
+			)
+		);
+	}
+	$smcFunc['db_free_result']($request);
+	echo 'Completed';
 }
 
 $subActions = array(
 	'addposts' => 'addPosts',
 	'addmembers' => 'addMembers',
-	'likeposts' => 'likePosts'
+	'likeposts' => 'likePosts',
+	'rebuildgave' => 'rebuildGave',
 );
 
 //wakey wakey, call the func you lazy
