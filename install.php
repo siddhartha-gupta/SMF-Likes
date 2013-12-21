@@ -72,13 +72,20 @@ $tables = array(
 				'unsigned' => true,
 				'default' => '0',
 			),
-			array(
-				'name' => 'id_member',
-				'type' => 'mediumint',
-				'size' => 8,
-				'unsigned' => true,
-				'default' => '0',
-			),
+            array(
+                'name' => 'id_member_received',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
+            array(
+                'name' => 'id_member_gave',
+                'type' => 'mediumint',
+                'size' => 8,
+                'unsigned' => true,
+                'default' => '0',
+            ),
 			array(
 				'name' => 'rating',
 				'type' => 'smallint',
@@ -90,7 +97,7 @@ $tables = array(
 		'indexes' => array(
 	        array(
 	            'type' => 'primary',
-	            'columns' => array('id_like', 'id_msg', 'id_member'),
+	            'columns' => array('id_like', 'id_msg', 'id_member_gave'),
 	        ),
 	    ),
 	),
@@ -117,52 +124,7 @@ $tables = array(
 	            'columns' => array('id_member'),
 	        ),
 	    ),
-	),
-    'like_posts_notification' => array (
-        'columns' => array (
-            array(
-                'name' => 'id_notification',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'auto' => true,
-            ),
-            array(
-                'name' => 'id_like',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_member_received',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_member_gave',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_msg',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'default' => '0',
-            )
-        ),
-        'indexes' => array(
-            array(
-                'type' => 'primary',
-                'columns' => array('id_notification'),
-            ),
-        ),
-    )
+	)
 );
 
 foreach ($tables as $table => $data) {
@@ -170,54 +132,6 @@ foreach ($tables as $table => $data) {
 }
     
 // Upgrade thinggy
-$new_tables = array(
-    'like_posts_notification' => array (
-        'columns' => array (
-            array(
-                'name' => 'id_notification',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'auto' => true,
-            ),
-            array(
-                'name' => 'id_like',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_member_received',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_member_gave',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_msg',
-                'type' => 'int',
-                'size' => 10,
-                'unsigned' => true,
-                'default' => '0',
-            )
-        ),
-        'indexes' => array(
-            array(
-                'type' => 'primary',
-                'columns' => array('id_notification'),
-            ),
-        ),
-    )
-);
-
 $is_upgrade = true;
 $request = $smcFunc['db_query']('', '
     SHOW COLUMNS
@@ -237,16 +151,20 @@ if ($request !== false) {
 if($is_upgrade === true) {
     $smcFunc['db_query']('', '
         ALTER TABLE {db_prefix}like_post
-        ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
-        DROP PRIMARY KEY,
-        ADD PRIMARY KEY(id_like, id_msg, id_member)',
+        Add column id_member_recieved mediumint (8) unsigned Default 0,
+        CHANGE id_member id_member_gave mediumint (8)',
         array(
         )
     );
 
-    foreach ($tables as $table => $data) {
-        $smcFunc['db_create_table']('{db_prefix}' . $new_tables, $data['columns'], $data['indexes']);
-    }
+    $smcFunc['db_query']('', '
+        ALTER TABLE {db_prefix}like_post
+        ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
+        DROP PRIMARY KEY,
+        ADD PRIMARY KEY(id_like, id_msg, id_member_gave)',
+        array(
+        )
+    );
 }
 
 // For all general settings add 'like_post_' as prefix
