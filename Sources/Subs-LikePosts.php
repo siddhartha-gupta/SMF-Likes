@@ -259,7 +259,7 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 		$memberData[] = array(
 			'id' => $row['id_member_gave'],
 			'name' => $row['real_name'],
-			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+			'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
 			'avatar' => array(
 				'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
 			),
@@ -338,7 +338,7 @@ function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
 		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-		WHERE lp.id_member = {int:id_member}
+		WHERE lp.id_member_gave = {int:id_member}
 		ORDER BY m.id_msg
 		LIMIT {int:start_limit}, {int:end_limit}',
 		array(
@@ -382,7 +382,7 @@ function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
 	$end_limit = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member, CHAR(8)) SEPARATOR ",") AS member_count
+		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS member_count
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 		WHERE m.id_member = {int:id_member}

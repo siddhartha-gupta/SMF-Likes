@@ -81,7 +81,7 @@ function LP_getOwnLikes($memID) {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$select = 'COUNT(*)';
-	$where = 'lp.id_member = ' . $memID;
+	$where = 'lp.id_member_gave = ' . $memID;
 	$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LP_DB_getTotalResults($select, $where);
 
 	$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
