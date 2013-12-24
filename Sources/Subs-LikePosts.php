@@ -156,9 +156,9 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		SELECT lp.id_msg, lp.id_member_gave, lp.rating, mem.real_name
 		FROM {db_prefix}like_post as lp
-		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		WHERE lp.id_board = {int:id_board}
 		AND lp.id_topic = {int:id_topic}
 		AND lp.id_msg IN ({array_int:message_list})
@@ -175,10 +175,10 @@ function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$memberData[$row['id_msg'] . '_' .$row['id_member']] = array(
-			'id' => $row['id_member'],
+		$memberData[$row['id_msg'] . '_' .$row['id_member_gave']] = array(
+			'id' => $row['id_member_gave'],
 			'name' => $row['real_name'],
-			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+			'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
 		);
 		$topicsLikeInfo[$row['id_msg']] = array(
 			'id_msg' => $row['id_msg'],
@@ -241,13 +241,13 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member, lp.rating, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
+		SELECT lp.id_msg, lp.id_member_gave, lp.rating, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
 			mem.gender, mem.avatar, mem.member_name, mem.real_name, mem.icq, mem.aim, mem.yim, mem.msn, mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online
 		FROM {db_prefix}like_post as lp
-		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
-		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member)
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
 		WHERE lp.id_msg = {int:id_msg}
-		ORDER BY lp.id_member',
+		ORDER BY lp.id_member_gave',
 		array(
 			'id_msg' => $msg_id,
 			'blank_string' => ''
@@ -257,7 +257,7 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$memberData[] = array(
-			'id' => $row['id_member'],
+			'id' => $row['id_member_gave'],
 			'name' => $row['real_name'],
 			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
 			'avatar' => array(
@@ -281,9 +281,9 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT t.id_topic, lp.id_msg, lp.id_member, lp.rating, mem.real_name
+		SELECT t.id_topic, lp.id_msg, lp.id_member_gave, lp.rating, mem.real_name
 		FROM {db_prefix}like_post as lp
-		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member)
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
 		WHERE lp.id_board = {int:id_board}
 		AND lp.id_topic IN ({array_int:topics_list})
@@ -300,7 +300,7 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$memberData[$row['id_topic'] . '_' .$row['id_member']] = array(
-			'id' => $row['id_member']
+			'id' => $row['id_member_gave']
 		);
 		$topicsLikeInfo[$row['id_topic']] = array(
 			'id_msg' => $row['id_msg'],
