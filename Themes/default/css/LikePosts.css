@@ -98,3 +98,14 @@
 	background: url(../images/progress_bar.gif) repeat-x;
 	font-size: 20px;
 }
+
+.like_posts_notification {
+	position: absolute;
+	background: #ffffff;
+	border: 1px solid #ccc;
+	padding: 5px 10px;
+	height: 70px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	min-width: 25%;
+}

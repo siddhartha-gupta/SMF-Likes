@@ -299,7 +299,7 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 
 	$memberData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$memberData[$row['id_topic'] . '_' .$row['id_member']] = array(
+		$memberData[$row['id_topic'] . '_' .$row['id_member_gave']] = array(
 			'id' => $row['id_member_gave']
 		);
 		$topicsLikeInfo[$row['id_topic']] = array(
@@ -442,6 +442,40 @@ function LP_DB_updatePermissions($replaceArray) {
 	);
 
 	cache_put_data('modSettings', null, 90);
+}
+
+function LP_DB_getAllNotification() {
+	global $smcFunc, $scripturl;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, mem.real_name, lp.id_member_gave
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
+		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		ORDER BY lp.id_like DESC
+		LIMIT {int:limit}',
+		array(
+			'limit' => 10,
+		)
+	);
+
+	$likedData = array();
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$likedData[$row['id_msg'] . '-' . $row['id_member_gave']] = array(
+			'id' => $row['id_msg'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+			'subject' => $row['subject'],
+			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
+			'time' => timeformat($row['poster_time']),
+			'total_likes' => 1,
+			'member' => array(
+				'name' => $row['real_name'],
+				'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
+			),
+		);
+	}
+	$smcFunc['db_free_result']($request);
+	return $likedData;
 }
 
 ?>

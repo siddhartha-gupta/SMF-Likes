@@ -165,6 +165,50 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 	});
 };
 
+likePosts.prototype.showLikeNotification = function() {
+	lpObj.jQRef.ajax({
+		type: "GET",
+		url: smf_scripturl + '?action=likeposts;sa=like_posts_notification',
+		context: document.body,
+		dataType: "json",
+
+		success: function(resp) {
+			if (resp.response) {
+				if (resp.data.length <= 0) {
+					return false;
+				}
+
+				var data = resp.data,
+					notificationInfo = '',
+					i,
+					completeString = '';
+
+				for (i in data) {
+					if (data.hasOwnProperty(i)) {
+						notificationInfo += '<div><a href="' + data[i].member.href + '"><strong>' + data[i].member.name + '</strong></a> liked ' + '<a href="' + data[i].href + '">' + data[i].subject + '</a></div>';
+					}
+				}
+				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
+
+				lpObj.jQRef('body').append(completeString);
+				lpObj.jQRef('.like_posts_notification').css({
+					'top': lpObj.jQRef('.showLikeNotification').offset().top,
+					'left': lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20
+				});
+
+				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+
+				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
+					e.stopPropagation();
+				});
+			} else {
+				//NOTE: Make an error callback over here
+				return false;
+			}
+		}
+	});
+};
+
 likePosts.prototype.bouncEffect = function(element, direction, times, distance, speed) {
 	var dir = 'marginLeft',
 		anim1 = {},

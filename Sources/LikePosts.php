@@ -166,6 +166,7 @@ function LP_mainIndex() {
 		'get_message_like_info' => 'LP_getMessageLikeInfo',
 		'get_all_messages_info' => 'LP_getAllMessagesInfo',
 		'get_all_topics_info' => 'LP_getAllTopicsInfo',
+		'like_posts_notification'=> 'LP_getAllNotification',
 	);
 
 	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']]))
@@ -439,6 +440,22 @@ function LP_isAllowedTo($permissions) {
 		}
 	}
 	return $flag;
+}
+
+function LP_getAllNotification() {
+	global $sourcedir, $user_info;
+
+	if(!(LP_isAllowedTo('can_view_likes')) || $user_info['is_guest']) {
+		return false;
+	}
+
+	require_once($sourcedir . '/Subs-LikePosts.php');
+
+	$result = LP_DB_getAllNotification();
+	$resp = array('response' => true, 'data' => $result);
+
+	echo json_encode($resp);
+	die();	
 }
 
 ?>
