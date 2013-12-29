@@ -102,10 +102,54 @@
 .like_posts_notification {
 	position: absolute;
 	background: #ffffff;
-	border: 1px solid #ccc;
-	padding: 5px 10px;
-	height: 70px;
+	height: 200px;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	min-width: 25%;
+	min-width: 35%;
+	padding: 0;
+	margin: 0;
+}
+
+.like_posts_notification .lp_notification_header {
+	position: relative;
+	width: 100%;
+	height: 34px;
+	background: #fff;
+	z-index: 1000;
+}
+
+.like_posts_notification .lp_notification_header .lp_notification_tabs {
+	width: 50%;
+	float: left;
+	position: relative;
+	padding: 10px 0;
+	text-align: center;
+	box-shadow: 0px 0px 0px 1px #ddd inset;
+}
+
+.like_posts_notification .lp_notification_body {
+	box-shadow: 0px 0px 0px 1px #ddd inset;
+	position: relative;
+	width: 100%;
+}
+
+.like_posts_notification .lp_notification_body .single_notify {
+	border-bottom: 1px solid #ddd;
+	color: #333;
+	font-family:'lucida grande', tahoma, verdana, arial, sans-serif;
+	padding: 10px;
+	overflow: hidden;
+}
+
+.like_posts_notification .lp_notification_body .single_notify .avatar {
+	width: 30px;
+	box-shadow: 1px 1px 5px #000;
+	float: left;
+	position: relative;
+}
+
+.like_posts_notification .lp_notification_body .single_notify .like_post_notify_data {
+	float: left;
+	position: relative;
+	padding-left: 10px;
 }

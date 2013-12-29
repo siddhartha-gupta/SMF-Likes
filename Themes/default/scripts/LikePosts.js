@@ -180,12 +180,30 @@ likePosts.prototype.showLikeNotification = function() {
 
 				var data = resp.data,
 					notificationInfo = '',
-					i,
+					i, j, k,
 					completeString = '';
+
+				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div></div>';
 
 				for (i in data) {
 					if (data.hasOwnProperty(i)) {
-						notificationInfo += '<div><a href="' + data[i].member.href + '"><strong>' + data[i].member.name + '</strong></a> liked ' + '<a href="' + data[i].href + '">' + data[i].subject + '</a></div>';
+						if (i === 'all') {
+							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
+							for (j in data[i]) {
+								if (data[i].hasOwnProperty(j)) {
+									notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+								}
+							}
+							notificationInfo += '</div>';
+						} else if (i === 'mine') {
+							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
+							for (k in data[i]) {
+								if (data[i].hasOwnProperty(k)) {
+									notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+								}
+							}
+							notificationInfo += '</div>';
+						}
 					}
 				}
 				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
@@ -196,17 +214,57 @@ likePosts.prototype.showLikeNotification = function() {
 					'left': lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20
 				});
 
-				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
-
-				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
-					e.stopPropagation();
+				lpObj.jQRef('#lp_all_notifications').css({
+					'font-weight': 'bold'
 				});
+
+				lpObj.jQRef('.lp_notification_header').on('click', function(e) {
+					e.preventDefault();
+					if (e.target.id === 'lp_all_notifications') {
+						lpObj.jQRef('#lp_all_notifications').css({
+							'font-weight': 'bold'
+						});
+						lpObj.jQRef('#lp_my_notifications').css({
+							'font-weight': 'normal'
+						});
+						lpObj.jQRef('.lp_my_notifications_data').hide();
+						lpObj.jQRef('.lp_all_notifications_data').show();
+					} else if (e.target.id === 'lp_my_notifications') {
+						lpObj.jQRef('#lp_all_notifications').css({
+							'font-weight': 'normal'
+						});
+						lpObj.jQRef('#lp_my_notifications').css({
+							'font-weight': 'bold'
+						});
+						lpObj.jQRef('.lp_all_notifications_data').hide().css({
+							'font-weight': 'normal'
+						});
+						lpObj.jQRef('.lp_my_notifications_data').show().css({
+							'font-weight': 'bold'
+						});
+					}
+				});
+				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
 			} else {
 				//NOTE: Make an error callback over here
 				return false;
 			}
 		}
 	});
+};
+
+likePosts.prototype.removeNotification = function(e) {
+	if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
+		var container = lpObj.jQRef('.lp_notification_header');
+		if (!container.is(e.target) && container.has(e.target).length === 0) {
+			lpObj.jQRef('.like_posts_notification').unbind('click');
+			lpObj.jQRef('.like_posts_notification').unbind('keyup');
+			lpObj.jQRef('.lp_notification_header').unbind('click');
+			lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
+			lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
+			lpObj.jQRef('.like_posts_notification').remove();
+		}
+	}
 };
 
 likePosts.prototype.bouncEffect = function(element, direction, times, distance, speed) {

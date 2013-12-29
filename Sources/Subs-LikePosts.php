@@ -445,13 +445,15 @@ function LP_DB_updatePermissions($replaceArray) {
 }
 
 function LP_DB_getAllNotification() {
-	global $smcFunc, $scripturl;
+	global $smcFunc, $scripturl, $settings, $user_info;
 
+	$notificationData = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, mem.real_name, lp.id_member_gave
+		SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
 		ORDER BY lp.id_like DESC
 		LIMIT {int:limit}',
 		array(
@@ -459,23 +461,55 @@ function LP_DB_getAllNotification() {
 		)
 	);
 
-	$likedData = array();
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$likedData[$row['id_msg'] . '-' . $row['id_member_gave']] = array(
+		$notificationData['all'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 			'id' => $row['id_msg'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'subject' => $row['subject'],
-			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
-			'time' => timeformat($row['poster_time']),
 			'total_likes' => 1,
 			'member' => array(
 				'name' => $row['real_name'],
 				'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
+				'avatar' => array(
+					'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+				),
 			),
 		);
 	}
 	$smcFunc['db_free_result']($request);
-	return $likedData;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
+		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
+		WHERE lp.id_member_received = {int:id_member_received}
+		ORDER BY lp.id_like DESC
+		LIMIT {int:limit}',
+		array(
+			'id_member_received' => $user_info['id'],
+			'limit' => 10,
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$notificationData['mine'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
+			'id' => $row['id_msg'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+			'subject' => $row['subject'],
+			'total_likes' => 1,
+			'member' => array(
+				'name' => $row['real_name'],
+				'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
+				'avatar' => array(
+					'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+				),
+			),
+		);
+	}
+	$smcFunc['db_free_result']($request);
+	return $notificationData;
 }
 
 ?>

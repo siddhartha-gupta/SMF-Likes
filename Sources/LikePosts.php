@@ -455,7 +455,7 @@ function LP_getAllNotification() {
 	$resp = array('response' => true, 'data' => $result);
 
 	echo json_encode($resp);
-	die();	
+	die();
 }
 
 ?>
