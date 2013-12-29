@@ -196,6 +196,7 @@ add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
 add_integration_function('integrate_profile_areas', 'LP_addProfilePanel');
 add_integration_function('integrate_actions', 'LP_addAction', true);
+add_integration_function('integrate_load_theme', 'LP_includeAssets', true);
 
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';
