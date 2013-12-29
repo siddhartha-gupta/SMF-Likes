@@ -445,7 +445,7 @@ function LP_DB_updatePermissions($replaceArray) {
 }
 
 function LP_DB_getAllNotification() {
-	global $smcFunc, $scripturl, $settings, $user_info;
+	global $smcFunc, $scripturl, $settings, $user_info, $modSettings;
 
 	$notificationData = array(
 		'all' => array(),
@@ -460,7 +460,7 @@ function LP_DB_getAllNotification() {
 		ORDER BY lp.id_like DESC
 		LIMIT {int:limit}',
 		array(
-			'limit' => 10,
+			'limit' => isset($modSettings['like_in_notification']) && !empty($modSettings['like_in_notification']) ? (int) $modSettings['like_in_notification'] : 10,
 		)
 	);
 
@@ -492,7 +492,7 @@ function LP_DB_getAllNotification() {
 		LIMIT {int:limit}',
 		array(
 			'id_member_received' => $user_info['id'],
-			'limit' => 10,
+			'limit' => isset($modSettings['like_in_notification']) && !empty($modSettings['like_in_notification']) ? (int) $modSettings['like_in_notification'] : 10,
 		)
 	);
 

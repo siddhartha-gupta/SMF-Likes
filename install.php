@@ -189,7 +189,7 @@ if($is_upgrade === true) {
 }
 
 // For all general settings add 'like_post_' as prefix
-updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'lp_show_like_on_boards' => 1));
+updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1));
 
 add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
 add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');

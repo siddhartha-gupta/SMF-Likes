@@ -100,6 +100,7 @@ function LP_generalSettings($return_config = false) {
 	$general_settings = array(
 		array('check', 'like_post_enable', 'subtext' => $txt['like_post_enable_desc']),
 		array('text', 'like_per_profile_page', 'subtext' => $txt['like_per_profile_page_desc']),
+		array('text', 'like_in_notification', 'subtext' => $txt['like_in_notification_desc']),
 		array('check', 'lp_show_like_on_boards', 'subtext' => $txt['lp_show_like_on_boards_desc']),
 	);
 
@@ -122,6 +123,7 @@ function LP_saveGeneralSettings() {
 		$general_settings = array(
 			array('check', 'like_post_enable'),
 			array('text', 'like_per_profile_page'),
+			array('text', 'like_in_notification'),
 			array('check', 'lp_show_like_on_boards'),
 		);
 
