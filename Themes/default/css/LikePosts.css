@@ -101,7 +101,7 @@
 
 .like_posts_notification {
 	position: absolute;
-	background: #ffffff;
+	background: #FFF8DC;
 	min-width: 35%;
 	padding: 0;
 	margin: 0;
@@ -111,8 +111,9 @@
 	position: relative;
 	width: 100%;
 	height: 34px;
-	background: #fff;
+	background: #eee;
 	z-index: 1000;
+	color: #444;
 }
 
 .like_posts_notification .lp_notification_header .lp_notification_tabs {

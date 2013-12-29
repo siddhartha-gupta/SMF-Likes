@@ -193,7 +193,7 @@ likePosts.prototype.showLikeNotification = function() {
 							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
 							var len = 0;
 							if (data[i].length === 0) {
-								notificationInfo += 'Nothing to show at the moment';
+								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
 							} else {
 								for (j in data[i]) {
 									if (data[i].hasOwnProperty(j)) {
@@ -208,7 +208,7 @@ likePosts.prototype.showLikeNotification = function() {
 							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
 							var len = 0;
 							if (data[i].length === 0) {
-								notificationInfo += 'Nothing to show at the moment';
+								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
 							} else {
 								for (k in data[i]) {
 									if (data[i].hasOwnProperty(k)) {

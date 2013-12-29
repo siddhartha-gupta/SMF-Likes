@@ -257,7 +257,7 @@ function LP_recountLikesTotal() {
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$calculatedLikeCount = 0;
 		$request1 = $smcFunc['db_query']('', '
-			SELECT COUNT(lp.id_member) as count, lc.like_count
+			SELECT COUNT(lp.id_member_received) as count, lc.like_count
 			FROM {db_prefix}like_post AS lp
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = lp.id_msg)
 			LEFT JOIN {db_prefix}like_count AS lc ON (lc.id_member = {int:id_member})
