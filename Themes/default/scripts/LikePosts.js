@@ -181,6 +181,8 @@ likePosts.prototype.showLikeNotification = function() {
 				var data = resp.data,
 					notificationInfo = '',
 					i, j, k,
+					dataLengthAll = 0,
+					dataLengthMine = 0,
 					completeString = '';
 
 				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div></div>';
@@ -189,29 +191,63 @@ likePosts.prototype.showLikeNotification = function() {
 					if (data.hasOwnProperty(i)) {
 						if (i === 'all') {
 							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
-							for (j in data[i]) {
-								if (data[i].hasOwnProperty(j)) {
-									notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+							var len = 0;
+							if (data[i].length === 0) {
+								notificationInfo += 'Nothing to show at the moment';
+							} else {
+								for (j in data[i]) {
+									if (data[i].hasOwnProperty(j)) {
+										len++;
+										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+									}
 								}
 							}
+							dataLengthAll = len;
 							notificationInfo += '</div>';
 						} else if (i === 'mine') {
 							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
-							for (k in data[i]) {
-								if (data[i].hasOwnProperty(k)) {
-									notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+							var len = 0;
+							if (data[i].length === 0) {
+								notificationInfo += 'Nothing to show at the moment';
+							} else {
+								for (k in data[i]) {
+									if (data[i].hasOwnProperty(k)) {
+										len++;
+										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+									}
 								}
 							}
+							dataLengthMine = len;
 							notificationInfo += '</div>';
 						}
 					}
 				}
 				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
 
+				dataLengthAll = dataLengthAll * 50;
+				if (dataLengthAll > 200) {
+					dataLengthAll = 200;
+				} else if (dataLengthAll < 100) {
+					dataLengthAll = 100;
+				}
+
+				dataLengthMine = dataLengthMine * 50;
+				if (dataLengthMine > 200) {
+					dataLengthMine = 200;
+				} else if (dataLengthMine < 100) {
+					dataLengthMine = 100;
+				}
+
 				lpObj.jQRef('body').append(completeString);
 				lpObj.jQRef('.like_posts_notification').css({
 					'top': lpObj.jQRef('.showLikeNotification').offset().top,
 					'left': lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20
+				});
+				lpObj.jQRef('.lp_all_notifications_data').css({
+					'height': dataLengthAll + 'px'
+				});
+				lpObj.jQRef('.lp_my_notifications_data').css({
+					'height': dataLengthMine + 'px'
 				});
 
 				lpObj.jQRef('#lp_all_notifications').css({
@@ -236,12 +272,8 @@ likePosts.prototype.showLikeNotification = function() {
 						lpObj.jQRef('#lp_my_notifications').css({
 							'font-weight': 'bold'
 						});
-						lpObj.jQRef('.lp_all_notifications_data').hide().css({
-							'font-weight': 'normal'
-						});
-						lpObj.jQRef('.lp_my_notifications_data').show().css({
-							'font-weight': 'bold'
-						});
+						lpObj.jQRef('.lp_all_notifications_data').hide();
+						lpObj.jQRef('.lp_my_notifications_data').show();
 					}
 				});
 				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);

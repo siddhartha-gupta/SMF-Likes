@@ -447,7 +447,10 @@ function LP_DB_updatePermissions($replaceArray) {
 function LP_DB_getAllNotification() {
 	global $smcFunc, $scripturl, $settings, $user_info;
 
-	$notificationData = array();
+	$notificationData = array(
+		'all' => array(),
+		'mine' => array()
+	);
 	$request = $smcFunc['db_query']('', '
 		SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
 		FROM {db_prefix}like_post as lp
