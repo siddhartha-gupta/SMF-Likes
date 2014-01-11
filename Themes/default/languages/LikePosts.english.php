@@ -42,6 +42,7 @@ $txt['like_post_string_part_and'] = '&amp;';
 $txt['like_post_like'] = 'Like';
 $txt['like_post_unlike'] = 'Unlike';
 $txt['like_post_total_likes'] = 'Total likes';
+$txt['like_show_notifications'] = 'Show Likes notification';
 
 // Error msgs
 $txt['like_post_cannot_like_posts'] = 'You do not have the permissions to like posts.';

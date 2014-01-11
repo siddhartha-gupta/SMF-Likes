@@ -39,6 +39,7 @@ if (!defined('SMF'))
 function LP_includeAssets() {
 	global $settings, $context;
 
+	loadlanguage('LikePosts');
 	$context['insert_after_template'] .= '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var lpLoaded = false,

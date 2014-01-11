@@ -141,7 +141,7 @@ $request = $smcFunc['db_query']('', '
 );
 if ($request !== false) {
     while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        if ($row['Field'] == 'id_like' && $row['Type'] == 'int(10) unsigned')
+        if ($row['Field'] == 'id_like' && $row['Type'] == 'int(10)')
             $is_upgrade = false;
     }
     $smcFunc['db_free_result']($request);
