@@ -141,7 +141,7 @@ $request = $smcFunc['db_query']('', '
 );
 if ($request !== false) {
     while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        if ($row['Field'] == 'id_like' && $row['Type'] == 'int(10)')
+        if ($row['Field'] == 'id_like' && ($row['Type'] == 'int(10) unsigned' || $row['Type'] == 'int(10)'))
             $is_upgrade = false;
     }
     $smcFunc['db_free_result']($request);
@@ -159,7 +159,7 @@ if($is_upgrade === true) {
 
     $smcFunc['db_query']('', '
         ALTER TABLE {db_prefix}like_post
-        ADD id_like INT(10) NOT NULL AUTO_INCREMENT FIRST,
+        ADD id_like INT(10) unsigned NOT NULL AUTO_INCREMENT FIRST,
         DROP PRIMARY KEY,
         ADD PRIMARY KEY(id_like, id_msg, id_member_gave)',
         array(
