@@ -1,20 +1,31 @@
-[b]Like Posts[/b]
+[url=http://custom.simplemachines.org/mods/index.php?mod=3708][b]Like Posts[/b][/url]
 
 This mod provides and interface to like/unlike posts.
 
-User can like posts within a topic.
-Whereas on message index only the first post of topic is taken into consideration. One can like first post of topic from message index also.
+[b][i]Features[/i][/b]
+- Users can like posts within a topic.
+- Whereas on message index only the first post of topic is taken into consideration. One can like first post of topic from message index also.
+- A notification system, where users can see who has liked what post in real time.
+- Total no of likes user has received so far is shown in post displays.
+- In profile section one can see the likes given and received by a user so far.
+- A complete dedicated admin interface, to control various features of mods
 
-Mod provides a complete notification feature, where users can see who has liked what post on the go.
 
-By default the mod is enabled for admins only. To enable it for other members, go to
+[b][i]Admin interface[/i][/b]
 
-[i]My Community » Administration Center » Like Posts » Permission Settings[/i]
-1. Enable the permission "Can like posts" for those groups who can like the posts.
-2. Enable the permission "Can view like" for those groups who can view who liked which post.
-3. Enable the permission "Can view likes of other users in their profiles" for those groups who can view like summary of other users in there profiles.
+[i]General Settings[/i]
+- Enable disable the mod with a single click
+- Number of likes to show at once in user profiles
+- Number of likes to show at once in notification panel
+- Whether to show like button on message index or not
 
-Admin's can recount the total likes of users from admin section itself.
+[i]Permission Settings[/i]
+- Enable the permission "Can like posts" for those groups who can like the posts.
+- Enable the permission "Can view like" for those groups who can view who liked which post.
+- Enable the permission "Can view likes of other users in their profiles" for those groups who can view like summary of other users in there profiles.
+
+[i]Recount Like Stats[/i]
+- To recount the total likes user has received so far. One should run this once a month at least.
 
 
 [b]Note[/b] - If you are upgrading from version < 1.2, please recount the total like of the users from:
