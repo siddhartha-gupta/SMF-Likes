@@ -449,7 +449,6 @@ function LP_getAllNotification() {
 	if(!(LP_isAllowedTo('can_view_likes')) || $user_info['is_guest']) {
 		return false;
 	}
-
 	require_once($sourcedir . '/Subs-LikePosts.php');
 
 	$result = LP_DB_getAllNotification();

@@ -338,7 +338,9 @@ function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
 		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-		WHERE lp.id_member_gave = {int:id_member}
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE {query_wanna_see_board}
+		AND lp.id_member_gave = {int:id_member}
 		ORDER BY m.id_msg
 		LIMIT {int:start_limit}, {int:end_limit}',
 		array(
@@ -385,7 +387,9 @@ function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
 		SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS member_count
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-		WHERE m.id_member = {int:id_member}
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE {query_wanna_see_board}
+		AND m.id_member = {int:id_member}
 		GROUP BY m.id_msg
 		ORDER BY m.id_msg
 		LIMIT {int:start_limit}, {int:end_limit}',
@@ -419,7 +423,9 @@ function LP_DB_getTotalResults($select, $where) {
 		SELECT '. $select .' as total_results
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-		WHERE ' . $where
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE {query_wanna_see_board}
+		AND ' . $where
 	);
 
 	if ($smcFunc['db_num_rows']($request) == 0)
@@ -456,7 +462,9 @@ function LP_DB_getAllNotification() {
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
+		WHERE {query_wanna_see_board}
 		ORDER BY lp.id_like DESC
 		LIMIT {int:limit}',
 		array(
@@ -486,8 +494,10 @@ function LP_DB_getAllNotification() {
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
-		WHERE lp.id_member_received = {int:id_member_received}
+		WHERE {query_wanna_see_board}
+		AND lp.id_member_received = {int:id_member_received}
 		ORDER BY lp.id_like DESC
 		LIMIT {int:limit}',
 		array(
