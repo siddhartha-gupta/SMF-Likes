@@ -237,11 +237,20 @@ likePosts.prototype.showLikeNotification = function() {
 				} else if (dataLengthMine < 100) {
 					dataLengthMine = 100;
 				}
-
 				lpObj.jQRef('body').append(completeString);
+
+				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
+					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+
+				if(checkFloat > window.innerWidth) {
+					console.log(leftOffset);
+					leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+					console.log(leftOffset);
+				}
+
 				lpObj.jQRef('.like_posts_notification').css({
 					'top': lpObj.jQRef('.showLikeNotification').offset().top,
-					'left': lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20
+					'left': leftOffset
 				});
 				lpObj.jQRef('.lp_all_notifications_data').css({
 					'height': dataLengthAll + 'px'
