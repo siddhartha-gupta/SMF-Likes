@@ -244,7 +244,7 @@ function LP_likePosts() {
 function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 	global $context, $sourcedir, $user_info;
 
-	if($user_info['is_guest']) {
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_posts'))) {
 		return false;
 	}
 
@@ -267,7 +267,7 @@ function LP_getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '')
 function LP_posterInfo($postersArr = array()) {
 	global $context, $sourcedir, $user_info;
 
-	if($user_info['is_guest']) {
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_posts'))) {
 		return false;
 	}
 
