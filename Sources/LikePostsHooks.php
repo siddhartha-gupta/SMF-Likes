@@ -49,17 +49,16 @@ function LP_addAdminPanel(&$admin_areas) {
 }
 
 function LP_addProfilePanel(&$profile_areas) {
-	global $txt, $user_info;
+	global $txt, $user_info, $modSettings;
 
-	if($user_info['is_guest']) return false;
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) return false;
 
 	if(isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) {
 		if($user_info['id'] !== $_REQUEST['u']) {
-			if (!(LP_isAllowedTo('can_view_others_likes_profile')))
+			if (!(LP_isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))))
 				return false;
 		}
 	}
-
 	loadLanguage('LikePosts');
 	loadtemplate('LikePosts');
 
@@ -68,8 +67,8 @@ function LP_addProfilePanel(&$profile_areas) {
 		'file' => 'LikePostsProfile.php',
 		'function' => 'LP_showLikeProfile',
 		'subsections' => array(
-			'seeownlikes' => array($txt['like_post_you_liked']),
-			'seeotherslikes' => array($txt['like_post_liked_by_others']),
+			'seeownlikes' => array($txt['like_post_you_liked'], array('profile_view_own', 'profile_view_any')),
+			'seeotherslikes' => array($txt['like_post_liked_by_others'], array('profile_view_own', 'profile_view_any')),
 		),
 		'permission' => array(
 			'own' => 'profile_view_own',

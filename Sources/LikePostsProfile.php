@@ -37,8 +37,7 @@ function LP_showLikeProfile($memID) {
 	global $context, $txt, $sourcedir, $settings, $user_info;
 
 	require_once($sourcedir . '/LikePosts.php');
-	if($user_info['is_guest'])
-		return false;
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) return false;
 
 	LP_includeAssets();
 
