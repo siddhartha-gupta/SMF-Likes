@@ -51,6 +51,12 @@ function LP_modifySettings($return_config = false) {
 		'can_view_others_likes_profile'
 	);
 
+	$context['like_posts']['guest_permission_settings'] = array(
+		'can_view_likes_in_posts',
+		'can_view_likes_in_boards',
+		'can_view_likes_in_profiles'
+	);
+
 	// Load up the guns
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['like_post_admin_panel'],
@@ -164,7 +170,6 @@ function LP_savePermissionsettings() {
 	if (isset($_POST['submit'])) {
 		checkSession();
 		unset($_POST['submit']);
-		//unset($_POST[$context['session_var']]);
 
 		$permissionKeys = array(
 			'can_like_posts',
@@ -172,9 +177,18 @@ function LP_savePermissionsettings() {
 			'can_view_others_likes_profile'
 		);
 
+		$guestPermissionKeys = array(
+			'can_view_likes_in_posts',
+			'can_view_likes_in_boards',
+			'can_view_likes_in_profiles'
+		);
+
+		// Array to be saved to DB
 		$general_settings = array();
+		// Array to be submitted to DB
 		foreach($_POST as $key => $val) {
 			if(in_array($key, $context['like_posts']['permission_settings'])) {
+				// Extract the user permissions first
 				if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
 					if(($key1 = array_search($key, $permissionKeys)) !== false) {
 						unset($permissionKeys[$key1]);
@@ -182,15 +196,29 @@ function LP_savePermissionsettings() {
 					$_POST[$key] = implode(',', $_POST[$key]);
 					$general_settings[] = array($key, $_POST[$key]);
 				}
+			} elseif(in_array($key, $context['like_posts']['guest_permission_settings'])) {
+				// Extract the guest permissions as well
+				if(is_numeric($_POST[$key])) {
+					if(($key1 = array_search($key, $guestPermissionKeys)) !== false) {
+						unset($guestPermissionKeys[$key1]);
+					}
+					$general_settings[] = array($key, $_POST[$key]);
+				}
 			}
 		}
 
+		// Remove the keys which were saved previously but removed this time
 		if(!empty($permissionKeys)) {
 			foreach ($permissionKeys as $value) {
 				$general_settings[] = array($value, '');
 			}
 		}
 
+		if(!empty($guestPermissionKeys)) {
+			foreach ($guestPermissionKeys as $value) {
+				$general_settings[] = array($value, '');
+			}
+		}
 		require_once($sourcedir . '/Subs-LikePosts.php');
 		LP_DB_updatePermissions($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=permissionsettings');

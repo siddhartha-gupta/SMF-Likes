@@ -69,6 +69,12 @@ $txt['like_post_perm_can_like_posts'] = 'Can like posts';
 $txt['like_post_perm_can_view_likes'] = 'Can view likes';
 $txt['like_post_perm_can_view_others_likes_profile'] = 'Can view likes of other users in their profiles';
 
+// For our beloved guests
+$txt['like_post_guest_permissions'] = 'Permissions for guests';
+$txt['like_post_guest_perm_can_view_likes_in_posts'] = 'Can view like posts in topics';
+$txt['like_post_guest_perm_can_view_likes_in_boards'] = 'Can view like posts in boards';
+$txt['like_post_guest_perm_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
+
 $txt['like_post_submit'] = 'Submit';
 
 // Profile area strings

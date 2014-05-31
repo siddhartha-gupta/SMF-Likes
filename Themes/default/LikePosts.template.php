@@ -146,6 +146,16 @@ function template_lp_admin_permission_settings() {
 						echo ' </fieldset>';
 					}
 
+
+					echo ' <fieldset>
+						<legend>' . $txt['like_post_guest_permissions'] . '</legend>';
+
+						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
+							echo '
+								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['like_post_guest_perm_' . $perm] . '</label><br />';
+						}
+					echo ' </fieldset>';
+
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['like_post_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
