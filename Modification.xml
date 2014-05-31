@@ -78,7 +78,7 @@
 			<search position="before"><![CDATA[							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';]]></search>
 			<add><![CDATA[
 
-			if(!empty($modSettings['like_post_enable']) && !empty($modSettings['lp_show_like_on_boards']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
+			if(!empty($modSettings['like_post_enable']) && !empty($modSettings['lp_show_like_on_boards']) && LP_isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_boards'))) {
 				$context['like_posts']['single_topic_data'] = LP_isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 				echo '
 					<div class="like_post_box floatright">';
@@ -88,9 +88,10 @@
 								<a class="like_unlike_link" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
 				}
 		
-				if(LP_isAllowedTo('can_view_likes'))
+				if(LP_isAllowedTo(array('can_view_likes', 'can_view_likes_in_boards'))) {
 					echo '
 								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
+				}
 
 				echo '
 					</div>';
@@ -133,7 +134,7 @@
 			<add><![CDATA[
 	if(!empty($modSettings['like_post_enable']) && !empty($modSettings['lp_show_like_on_boards'])) {
 		require_once($sourcedir . '/LikePosts.php');
-		if(LP_isAllowedTo(array('can_like_posts', 'can_view_likes'))) {
+		if(LP_isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_boards'))) {
 			$topic_liked_data = LP_getAllTopicsInfo($topic_ids, $board);
 			$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 		}

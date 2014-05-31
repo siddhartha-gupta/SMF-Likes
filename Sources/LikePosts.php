@@ -331,8 +331,10 @@ function LP_isPostLiked($arr, $id) {
 function LP_getMessageLikeInfo() {
 	global $sourcedir, $user_info;
 
-	if(!(LP_isAllowedTo('can_view_likes')) || $user_info['is_guest']) {
+	if($user_info['is_guest'] && !(LP_isAllowedTo('can_view_likes_in_boards'))) {
 		return false;
+	} elseif (!($user_info['is_guest']) && !(LP_isAllowedTo('can_view_likes'))) {
+
 	}
 
 	if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
@@ -355,7 +357,7 @@ function LP_getMessageLikeInfo() {
 function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 	global $context, $sourcedir, $user_info;
 
-	if($user_info['is_guest']) {
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_boards'))) {
 		return false;
 	}
 
@@ -403,6 +405,7 @@ function LP_isTopicLiked($arr, $id) {
 
 			$remaining_likes = (int) ($data['count'] - 1);
 			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+
 			//If already liked make it to unlink
 			$data['already_liked'] = 0;
 		} else {
@@ -426,21 +429,41 @@ function LP_isAllowedTo($permissions) {
 	if (!is_array($permissions))
 		$permissions = array($permissions);
 
-	$flag = true;
-	foreach($permissions as $permission) {
-		if(!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
-			$flag = false;
-		} else {
-			$allowedGroups = explode(',', $modSettings[$permission]);
-			$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+	$result = true;
 
-			if(empty($groupsPassed)) {
-				$flag = false;
-				break;
+	$guestPermission = array(
+		'can_view_likes_in_posts',
+		'can_view_likes_in_boards',
+		'can_view_likes_in_profiles'
+	);
+
+	if($user_info['is_guest']) {
+		$result = false;
+		$permToCheck = array_intersect($guestPermission, $permissions);
+		foreach($permToCheck as $permission) {
+			if(in_array($permission, $guestPermission) && isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
+				$result = true;
+			} else {
+				$result = false;
+			}
+		}
+	} else {
+		$permToCheck = array_diff($permissions, $guestPermission);
+		foreach($permToCheck as $permission) {
+			if(!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
+				$result = false;
+			} else {
+				$allowedGroups = explode(',', $modSettings[$permission]);
+				$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+
+				if(empty($groupsPassed)) {
+					$result = false;
+					break;
+				}
 			}
 		}
 	}
-	return $flag;
+	return $result;
 }
 
 function LP_getAllNotification() {
