@@ -23,6 +23,7 @@ This mod provides and interface to like/unlike posts.
 - Enable the permission "Can like posts" for those groups who can like the posts.
 - Enable the permission "Can view like" for those groups who can view who liked which post.
 - Enable the permission "Can view likes of other users in their profiles" for those groups who can view like summary of other users in there profiles.
+- Enable the permissions for guests about where they can see likes i.e in posts/topics, boards, profiles
 
 [i]Recount Like Stats[/i]
 - To recount the total likes user has received so far. One should run this once a month at least.
