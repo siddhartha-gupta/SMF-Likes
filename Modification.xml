@@ -39,7 +39,7 @@
 	<file name="$themedir/Display.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
-			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts', 'can_view_likes_in_profiles'))) {
+			<add><![CDATA[if(!empty($modSettings['like_post_enable']) && LP_isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts'))) {
 				$total_likes = isset($context['like_posts']['posters_data'][$message['member']['id']]) ? $context['like_posts']['posters_data'][$message['member']['id']] : 0;
 
 				echo '

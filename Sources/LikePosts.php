@@ -331,10 +331,10 @@ function LP_isPostLiked($arr, $id) {
 function LP_getMessageLikeInfo() {
 	global $sourcedir, $user_info;
 
-	if($user_info['is_guest'] && !(LP_isAllowedTo('can_view_likes_in_boards'))) {
+	if($user_info['is_guest'] && (!LP_isAllowedTo(array('can_view_likes_in_posts')) && !LP_isAllowedTo(array('can_view_likes_in_boards')))) {
 		return false;
-	} elseif (!($user_info['is_guest']) && !(LP_isAllowedTo('can_view_likes'))) {
-
+	} elseif (!$user_info['is_guest'] && !LP_isAllowedTo('can_view_likes')) {
+		return false;
 	}
 
 	if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
