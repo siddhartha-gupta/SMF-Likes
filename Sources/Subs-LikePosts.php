@@ -525,4 +525,100 @@ function LP_DB_getAllNotification() {
 	return $notificationData;
 }
 
+function LP_DB_getStatsMostLikedMessage() {
+	global $smcFunc;
+
+	// Most liked Message
+	$mostLikedMessage = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT mem.real_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_received)
+		GROUP BY lp.id_msg
+		ORDER BY like_count DESC
+		LIMIT 1',
+		array()
+	);
+	list ($mostLikedMessage['member_received_name'], $mostLikedMessage['id_msg'], $mostLikedMessage['id_topic'], $mostLikedMessage['id_board'], $mostLikedMessage['id_member_received'], $id_member_gave, $mostLikedMessage['like_count']) = $smcFunc['db_fetch_row']($request);
+
+	$smcFunc['db_free_result']($request);
+
+	// Lets fetch info of users who liked the message
+	$request = $smcFunc['db_query']('', '
+		SELECT mem.id_member, mem.real_name
+		FROM {db_prefix}members as mem
+		WHERE mem.id_member IN ({raw:id_member_gave})',
+		array(
+			'id_member_gave' => $id_member_gave
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$mostLikedMessage['id_member_gave'][] = array(
+			'real_name' => $row['real_name']
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $mostLikedMessage;
+}
+
+function LP_DB_getStatsMostLikedTopic() {
+	global $smcFunc;
+
+	// Most liked topic
+	$mostLikedTopic = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_topic, lp.id_board, GROUP_CONCAT(CONVERT(lp.id_msg, CHAR(8)) SEPARATOR ",") AS id_msg, COUNT(lp.id_topic) AS like_count
+		FROM {db_prefix}like_post as lp
+		GROUP BY lp.id_topic
+		ORDER BY like_count DESC
+		LIMIT 1',
+		array()
+	);
+	list ($mostLikedTopic['id_topic'], $mostLikedTopic['id_board'], $id_msg, $mostLikedTopic['like_count']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	// Lets fetch info messages in the topic
+	$request = $smcFunc['db_query']('', '
+		SELECT m.id_msg, m.poster_time
+		FROM {db_prefix}messages as m
+		WHERE m.id_msg IN ({raw:id_msg})',
+		array(
+			'id_msg' => $id_msg
+		)
+	);
+
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$mostLikedTopic['id_msg'][] = array(
+			'poster_time' => $row['poster_time']
+		);
+	}
+	$smcFunc['db_free_result']($request);
+
+	return $mostLikedTopic;
+}
+
+function LP_DB_getStatsMostLikedBoard() {
+	global $smcFunc;
+
+	// Most liked board
+	$mostLikedBoard = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT lp.id_board, GROUP_CONCAT(CONVERT(lp.id_topic, CHAR(8)) SEPARATOR ",") AS id_topic, GROUP_CONCAT(CONVERT(lp.id_msg, CHAR(8)) SEPARATOR ",") AS id_msg, COUNT(lp.id_board) AS like_count
+		FROM {db_prefix}like_post as lp
+		GROUP BY lp.id_board
+		ORDER BY like_count DESC
+		LIMIT 1',
+		array()
+	);
+	list ($mostLikedBoard['id_board'], $mostLikedBoard['id_topic'], $mostLikedBoard['id_msg'], $mostLikedBoard['like_count']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
+	$mostLikedBoard['topic_count'] = count(explode(',', $mostLikedBoard['id_topic']));
+	$mostLikedBoard['message_count'] = count(explode(',', $mostLikedBoard['id_msg']));
+
+	return $mostLikedBoard;
+}
+
 ?>

@@ -197,7 +197,7 @@ function likePosts() {
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
 		$request1 = $smcFunc['db_query']('', '
-			SELECT id_msg, id_topic, id_board
+			SELECT id_msg, id_topic, id_board, id_member
 			FROM {db_prefix}messages
 			ORDER BY RAND()
 			LIMIT 4'
@@ -205,9 +205,9 @@ function likePosts() {
 		while ($row1 = $smcFunc['db_fetch_assoc']($request1)) {
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}like_post',
-				array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member' => 'int', 'rating' => 'int'),
+				array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member_received' => 'int', 'id_member_gave' => 'int', 'rating' => 'int'),
 				array(
-					$row1['id_msg'], $row1['id_topic'], $row1['id_board'], $row['id_member'], 1
+					$row1['id_msg'], $row1['id_topic'], $row1['id_board'], $row1['id_member'], $row['id_member'], 1
 				),
 				array()
 			);

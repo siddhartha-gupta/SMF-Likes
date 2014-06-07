@@ -79,6 +79,7 @@ function LP_addProfilePanel(&$profile_areas) {
 
 function LP_addAction(&$actionArray) {
 	$actionArray['likeposts'] = array('LikePosts.php', 'LP_mainIndex');
+	$actionArray['likepostsstats'] = array('LikePostsStats.php', 'LP_statsMainIndex');
 }
 
 ?>
