@@ -85,4 +85,10 @@ $txt['like_post_like_you_obtained'] = 'Your posts liked by others';
 $txt['like_post_post_info']  = 'Post info';
 $txt['like_post_no_of_likes'] = 'No. of Likes';
 
+// Like posts stats strings
+$txt['like_post_stats'] = 'Like posts stats';
+$txt['like_posts_stats_desc'] = 'Stats related to like posts';
+$txt['like_post_user_stats'] = 'Like post user stats';
+$txt['like_post_message_stats'] = 'Like post message stats';
+
 ?>

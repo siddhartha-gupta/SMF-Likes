@@ -203,7 +203,7 @@ function template_lp_admin_recount_stats() {
 }
 
 function template_lp_show_own_likes() {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $scripturl, $txt;
 
 	echo '
 	<div class="tborder">
@@ -258,7 +258,7 @@ function template_lp_show_own_likes() {
 }
 
 function template_lp_show_others_likes() {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $scripturl, $txt;
 
 	echo '
 	<div class="tborder">

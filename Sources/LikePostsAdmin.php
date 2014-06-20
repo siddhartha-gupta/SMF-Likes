@@ -232,7 +232,6 @@ function LP_recountLikeStats() {
 	isAllowedTo('admin_forum');
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	require_once($sourcedir . '/LikePosts.php');
-	LP_includeAssets();
 
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$context['page_title'] = $txt['like_post_admin_panel'];

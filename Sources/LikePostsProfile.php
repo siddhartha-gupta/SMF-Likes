@@ -39,8 +39,6 @@ function LP_showLikeProfile($memID) {
 	require_once($sourcedir . '/LikePosts.php');
 	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) return false;
 
-	LP_includeAssets();
-
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$default_action_func = 'LP_getOwnLikes';
 	$default_template_func = 'lp_show_own_likes';

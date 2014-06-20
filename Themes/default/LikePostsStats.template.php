@@ -31,12 +31,36 @@
 */
 
 function template_lp_stats() {
-	global $context, $txt, $sourcedir, $settings, $user_info;
-	echo 'msg: ' . json_encode($context['like_stats_most_liked_message']);
-	echo '<br /><br />';
-	echo 'topic: ' . json_encode($context['like_stats_most_liked_topic']);
-	echo '<br /><br />';
-	echo 'board: ' . json_encode($context['like_stats_most_liked_board']);
+	global $context, $txt, $sourcedir, $settings, $user_info, $options, $scripturl;
+
+	echo '
+	<div class="cat_bar">
+		<h3 class="catbg">
+			<span class="ie6_header floatleft">', $txt['like_post_stats'] ,'</span>
+		</h3>
+	</div>
+	<p class="windowbg description">', $context['like_posts']['tab_desc'] ,'</p>';
+
+	echo '
+	<div id="adm_submenus">
+		<ul class="dropmenu">';
+	
+		// Print out all the items in this tab.
+		foreach ($context['lp_stats_tabs'] as $sa => $tab) {
+			echo '
+			<li>
+				<a class="firstlevel" href="', $scripturl, '?action=likepostsstats;sa=', $tab['url'],'"><span class="firstlevel">', $tab['label'], '</span></a>
+			</li>';
+		}
+
+		echo '
+		</ul>
+	</div><br class="clear" />';
+
+	echo '
+	<div class="cat_bar">
+		<h3 class="catbg" id="like_post_current_tab"></h3>
+	</div>';
 }
 
 ?>

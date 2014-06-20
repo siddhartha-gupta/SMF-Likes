@@ -77,26 +77,34 @@ function LP_includeAssets() {
 					console.log("still not loaded");
 				} else {
 					if (inConflict === false) {
-						var js = document.createElement("script");
-						js.type = "text/javascript";
-						js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
-						document.body.appendChild(js);
+						loadLPScript();
 					} else {
 						// Use no conflict over here
-						var js = document.createElement("script");
-						js.type = "text/javascript";
-						js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
-						document.body.appendChild(js);
+						loadLPScript();
 					}
 				}
 			});
 		} else {
 			// jQuery is already loaded
+			loadLPScript();
+		};
+
+		function loadLPScript() {
 			var js = document.createElement("script");
 			js.type = "text/javascript";
 			js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
 			document.body.appendChild(js);
-		};
+
+			var isLPStatsPage = (window.location.href.indexOf("likepostsstats") >= 0) ? true : false;
+
+			if(isLPStatsPage) {
+				console.log(isLPStatsPage);
+				var statsJS = document.createElement("script");
+				statsJS.type = "text/javascript";
+				statsJS.src = "' . $settings['default_theme_url'] . '/scripts/LikePostStats.js";
+				document.body.appendChild(statsJS);
+			}
+		}
 	// ]]></script>';
 
 	LP_checkJsonEncode();
@@ -160,7 +168,6 @@ function LP_checkJsonEncode() {
 function LP_mainIndex() {
 
 	// No globals :D
-	LP_includeAssets();
 	$subActions = array(
 		// Main views.
 		'like_post' => 'LP_likePosts',
@@ -287,7 +294,6 @@ function LP_posterInfo($postersArr = array()) {
 function LP_isPostLiked($arr, $id) {
 	global $context, $txt, $user_info;
 
-	LP_includeAssets();
 	loadlanguage('LikePosts');
 
 	$data = array(
@@ -381,7 +387,6 @@ function LP_getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 function LP_isTopicLiked($arr, $id) {
 	global $context, $txt, $user_info;
 
-	LP_includeAssets();
 	loadlanguage('LikePosts');
 
 	$data = array(
