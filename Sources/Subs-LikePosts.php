@@ -526,39 +526,48 @@ function LP_DB_getAllNotification() {
 }
 
 function LP_DB_getStatsMostLikedMessage() {
-	global $smcFunc;
+	global $smcFunc, $scripturl, $modSettings, $settings;
 
 	// Most liked Message
 	$mostLikedMessage = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.real_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count
+		SELECT mem.real_name as member_received_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.posts
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_received)
+		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_received)
+		WHERE {query_wanna_see_board}
 		GROUP BY lp.id_msg
 		ORDER BY like_count DESC
 		LIMIT 1',
 		array()
 	);
-	list ($mostLikedMessage['member_received_name'], $mostLikedMessage['id_msg'], $mostLikedMessage['id_topic'], $mostLikedMessage['id_board'], $mostLikedMessage['id_member_received'], $id_member_gave, $mostLikedMessage['like_count']) = $smcFunc['db_fetch_row']($request);
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$mostLikedMessage = array(
+			'id_msg' => $row['id_msg'],
+			'id_topic' => $row['id_topic'],
+			'id_board' => $row['id_board'],
+			'like_count' => $row['like_count'],
+			'subject' => $row['subject'],
+			'body' => $row['body'],
+			'poster_time' => $row['poster_time'],
+			'member_received' => array(
+				'id_member' => $row['id_member_received'],
+				'name' => $row['member_received_name'],
+				'total_posts' => $row['posts'],
+				'href' => $row['member_received_name'] != '' && !empty($row['id_member_received']) ? $scripturl . '?action=profile;u=' . $row['id_member_received'] : '',
+				'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+			),
+		);
+		$id_member_gave = $row['id_member_gave'];
+	}
 	$smcFunc['db_free_result']($request);
-
-	// Fetch the message details
-	$request = $smcFunc['db_query']('', '
-		SELECT subject, body
-		FROM {db_prefix}messages
-		WHERE id_msg = {int:id_msg}',
-		array(
-			'id_msg' => $mostLikedMessage['id_msg']
-		)
-	);
-	list ($mostLikedMessage['subject'], $mostLikedMessage['body']) = $smcFunc['db_fetch_row']($request);
-	$smcFunc['db_free_result']($request);
-
 
 	// Lets fetch info of users who liked the message
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.id_member, mem.real_name
+		SELECT mem.id_member, mem.real_name, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
 		FROM {db_prefix}members as mem
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
 		WHERE mem.id_member IN ({raw:id_member_gave})',
 		array(
 			'id_member_gave' => $id_member_gave
@@ -566,8 +575,12 @@ function LP_DB_getStatsMostLikedMessage() {
 	);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$mostLikedMessage['id_member_gave'][] = array(
-			'real_name' => $row['real_name']
+		$mostLikedMessage['member_liked_data'][] = array(
+			'id_member' => $row['id_member'],
+			'real_name' => $row['real_name'],
+			'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+			'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+
 		);
 	}
 	$smcFunc['db_free_result']($request);
@@ -583,6 +596,7 @@ function LP_DB_getStatsMostLikedTopic() {
 	$request = $smcFunc['db_query']('', '
 		SELECT lp.id_topic, lp.id_board, GROUP_CONCAT(CONVERT(lp.id_msg, CHAR(8)) SEPARATOR ",") AS id_msg, COUNT(lp.id_topic) AS like_count
 		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
 		GROUP BY lp.id_topic
 		ORDER BY like_count DESC
 		LIMIT 1',

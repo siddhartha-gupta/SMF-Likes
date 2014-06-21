@@ -158,7 +158,7 @@
 
 .like_post_stats {
 	position: relative;
-	overflow: hidden;
+	overflow: visible;
 	width: 100%;
 }
 
@@ -197,4 +197,76 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;
+}
+
+.like_post_message_data {
+	width: 94%;
+	position: relative;
+	overflow: hidden;
+	float: left;
+	color: #000;
+	background-color: #e7eaef;
+	padding: 20px 3%;
+}
+
+.like_post_message_data .message_title {
+	float: left;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+.like_post_message_data .poster_avatar {
+	float: left;
+	width: 100px;
+	height: 100px;
+	border: 5px solid #fff;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-position: center center;
+	border-radius: 10px;
+	margin: 20px 0;
+}
+
+.like_post_message_data .poster_data {
+	float: left;
+	position: relative;
+	overflow: hidden;
+	margin: 20px 0;
+}
+
+.like_post_message_data .poster_data .poster_details {
+	margin: 10px 0 0 20px;
+	float: left;
+	position: relative;
+	width: 100%;
+}
+
+.like_post_message_data .users_liked {
+	clear: both;
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.like_post_message_data .users_liked .poster_details {
+	text-decoration: none;
+	float: left;
+	position: relative;
+	margin: 0 15px 15px 0;
+}
+
+.like_post_message_data .users_liked .title {
+	font-size: 15px;
+}
+
+.like_post_message_data .users_liked .poster_details .poster_avatar {
+	width: 50px;
+	height: 50px;
+	border: 3px solid #fff;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-position: center center;
+	border-radius: 5px;
+	margin: 0;
 }

@@ -71,6 +71,8 @@
 
 			checkUrl = function(url) {
 				showSpinnerOverlay();
+
+				likePostStats.jQRef(".message_title").off('mouseenter mousemove mouseout');
 				if (typeof(url) === 'undefined' || url === '') {
 					var currentHref = window.location.href.split('#');
 					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : 'messagestats';
@@ -119,16 +121,50 @@
 			showMessageStats = function() {
 				// console.log(tabsVisitedCurrentSession[currentUrlFrag]);
 				var data = tabsVisitedCurrentSession[currentUrlFrag],
-					htmlContent = '';
+					htmlContent = '',
+					messageUrl = smf_scripturl +'?topic=' + data.id_topic + '.msg' + data.id_msg;
+
+				console.log(JSON.stringify(data));
+				// http://localhost/forum/smf2/index.php?topic=90.msg90#msg90
 
 				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Message');
 
-				htmlContent = '<div class="windowbg">'
-						+ '<a class="some_data" >' + data.subject + '</a>'
-						+ '<span class="display_none">' + data.body + '</span>'
-						+ '</div>';
+				htmlContent += '<a class="message_title" href="'+ messageUrl +'"> Topic: ' + data.subject + '</a>'
+							+ '<span class="display_none">' + data.body + '</span>';
+
+				htmlContent += '<div class="poster_avatar" style="background-image: url('+ data.member_received.avatar +')"></div>'
+							+ '<div class="poster_data">'
+							+ '<a class="poster_details" href="'+ data.member_received.href +'" style="font-size: 20px;">'+ data.member_received.name +'</a>'
+							+ '<div class="poster_details">Total posts: '+ data.member_received.total_posts +'</div>'
+							+ '</div>';
+
+				htmlContent += '<div class="users_liked">'
+				htmlContent += '<p class="title">'+ data.member_liked_data.length +' users who liked this post</p>';
+				for(var i = 0, len = data.member_liked_data.length; i < len; i++) {
+					htmlContent += '<a class="poster_details" href="'+ data.member_liked_data[i].href +'"><div class="poster_avatar" style="background-image: url('+ data.member_liked_data[i].avatar +')" title="'+ data.member_liked_data[i].real_name +'"></div></a>';
+				}
+				htmlContent += '</div>';
 
 				likePostStats.jQRef('.like_post_message_data').append(htmlContent).show();
+				likePostStats.jQRef(".message_title").on('mouseenter', function(e) {
+					e.preventDefault();
+					var currText = likePostStats.jQRef(this).next().html();
+
+					likePostStats.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+				}).on('mouseout', function() {
+					likePostStats.jQRef(".subject_details").fadeOut("slow");
+					likePostStats.jQRef(".subject_details").remove();
+				}).on('mousemove', function(e) {
+					var mousex = e.pageX + 20,
+						mousey = e.pageY + 10,
+						width = likePostStats.jQRef("#wrapper").width() - mousex - 50;
+
+					likePostStats.jQRef(".subject_details").css({
+						top: mousey,
+						left: mousex,
+						width: width + "px"
+					});
+				});
 				hideSpinnerOverlay();
 			},
 
@@ -157,29 +193,6 @@
 
 	likePostStats.jQRef(document).ready(function() {
 		likePostStats.prototype.init();
-
-		likePostStats.jQRef(".some_data").on('hover', function(e) {
-			console.log('on hover');
-			e.preventDefault();
-			var currText = likePostStats.jQRef(this).next().html();
-
-			likePostStats.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
-		}).on('mouseout', function() {
-			console.log('on mouseout');
-			likePostStats.jQRef(".subject_details").fadeOut("slow");
-			likePostStats.jQRef(".subject_details").remove();
-		}).on('mousemove', function(e) {
-			console.log('on mousemove');
-			var mousex = e.pageX + 20,
-				mousey = e.pageY + 10,
-				width = likePostStats.jQRef("#wrapper").width() - mousex - 50;
-
-			likePostStats.jQRef(".subject_details").css({
-				top: mousey,
-				left: mousex,
-				width: width + "px"
-			});
-		});
 	});
 
 	likePostStats.jQRef('.like_post_stats_menu a').on('click', function(e) {
