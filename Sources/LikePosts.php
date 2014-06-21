@@ -98,7 +98,6 @@ function LP_includeAssets() {
 			var isLPStatsPage = (window.location.href.indexOf("likepostsstats") >= 0) ? true : false;
 
 			if(isLPStatsPage) {
-				console.log(isLPStatsPage);
 				var statsJS = document.createElement("script");
 				statsJS.type = "text/javascript";
 				statsJS.src = "' . $settings['default_theme_url'] . '/scripts/LikePostStats.js";

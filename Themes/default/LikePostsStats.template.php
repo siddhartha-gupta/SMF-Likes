@@ -42,14 +42,14 @@ function template_lp_stats() {
 	<p class="windowbg description">', $context['like_posts']['tab_desc'] ,'</p>';
 
 	echo '
-	<div id="adm_submenus">
+	<div id="adm_submenus" class="like_post_stats_menu">
 		<ul class="dropmenu">';
 	
 		// Print out all the items in this tab.
 		foreach ($context['lp_stats_tabs'] as $sa => $tab) {
 			echo '
 			<li>
-				<a class="firstlevel" href="', $scripturl, '?action=likepostsstats;sa=', $tab['url'],'"><span class="firstlevel">', $tab['label'], '</span></a>
+				<a class="firstlevel" href="" id="', $tab['id'],'"><span class="firstlevel">', $tab['label'], '</span></a>
 			</li>';
 		}
 
@@ -60,6 +60,14 @@ function template_lp_stats() {
 	echo '
 	<div class="cat_bar">
 		<h3 class="catbg" id="like_post_current_tab"></h3>
+	</div>';
+
+	echo '
+	<div class="like_post_stats_data">
+	<div class="like_post_message_data"></div>
+	<div class="like_post_topic_data"></div>
+	<div class="like_post_board_data"></div>
+	<div class="like_post_user_data"></div>
 	</div>';
 }
 
