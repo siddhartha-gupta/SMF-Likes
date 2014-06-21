@@ -35,6 +35,8 @@
 		var currentUrlFrag = null,
 			allowedUrls = {},
 			tabsVisitedCurrentSession = {},
+			// defaultHash = 'messagestats',
+			defaultHash = 'topicstats',
 
 			init = function() {
 				allowedUrls = {
@@ -75,15 +77,17 @@
 				likePostStats.jQRef(".message_title").off('mouseenter mousemove mouseout');
 				if (typeof(url) === 'undefined' || url === '') {
 					var currentHref = window.location.href.split('#');
-					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : 'messagestats';
+					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : defaultHash;
 				} else {
 					currentUrlFrag = url;
 				}
 
 				if (allowedUrls.hasOwnProperty(currentUrlFrag) === false) {
-					currentUrlFrag = 'messagestats';
+					currentUrlFrag = defaultHash;
 				}
 
+				likePostStats.jQRef('.like_post_stats_data').children().hide();
+				highlightActiveTab();
 				if (tabsVisitedCurrentSession.hasOwnProperty(currentUrlFrag) === false) {
 					getDataFromServer({
 						'url': currentUrlFrag,
@@ -96,8 +100,6 @@
 
 			// Data/ajax functions from here
 			getDataFromServer = function(params) {
-				highlightActiveTab();
-
 				likePostStats.jQRef.ajax({
 					type: "POST",
 					url: smf_scripturl + '?action=likepostsstats',
@@ -119,20 +121,15 @@
 			},
 
 			showMessageStats = function() {
-				// console.log(tabsVisitedCurrentSession[currentUrlFrag]);
 				var data = tabsVisitedCurrentSession[currentUrlFrag],
 					htmlContent = '',
 					messageUrl = smf_scripturl +'?topic=' + data.id_topic + '.msg' + data.id_msg;
 
-				console.log(JSON.stringify(data));
-				// http://localhost/forum/smf2/index.php?topic=90.msg90#msg90
-
-				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Message');
-
+				likePostStats.jQRef('.like_post_message_data').html('');
 				htmlContent += '<a class="message_title" href="'+ messageUrl +'"> Topic: ' + data.subject + '</a>'
 							+ '<span class="display_none">' + data.body + '</span>';
 
-				htmlContent += '<div class="poster_avatar" style="background-image: url('+ data.member_received.avatar +')"></div>'
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url('+ data.member_received.avatar +')"></div></div>'
 							+ '<div class="poster_data">'
 							+ '<a class="poster_details" href="'+ data.member_received.href +'" style="font-size: 20px;">'+ data.member_received.name +'</a>'
 							+ '<div class="poster_details">Total posts: '+ data.member_received.total_posts +'</div>'
@@ -145,6 +142,7 @@
 				}
 				htmlContent += '</div>';
 
+				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Message');
 				likePostStats.jQRef('.like_post_message_data').append(htmlContent).show();
 				likePostStats.jQRef(".message_title").on('mouseenter', function(e) {
 					e.preventDefault();
@@ -168,16 +166,39 @@
 				hideSpinnerOverlay();
 			},
 
-			showTopicStats = function(response) {
-				console.log(response);
+			showTopicStats = function() {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '',
+					topicUrl = smf_scripturl +'?topic=' + data.id_topic;
+
+				console.log(data);
+				likePostStats.jQRef('.like_post_topic_data').html('');
+				htmlContent += '<a class="topic_title" href="'+ topicUrl +'">The most popular topic has received ' + data.like_count + ' like(s) so far<a/>';
+				htmlContent += '<p class="topic_info">The topic contains ' + data.msg_data.length + ' different posts. Few of the liked posts from it</p>';
+
+				for(var i = 0, len = data.msg_data.length; i < len; i++) {
+					var msgUrl = topicUrl + '.msg' + data.msg_data[i].id_msg;
+
+					console.log(data.msg_data[i].body.length);
+					htmlContent += '<div class="message_body"> ' + data.msg_data[i].body + '<a class="read_more" href="'+ msgUrl +'">read more...</a></div>';
+				}
+				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Topic');
+				likePostStats.jQRef('.like_post_topic_data').html(htmlContent).show();
+				hideSpinnerOverlay();
 			},
 
 			showBoardStats = function(response) {
-				console.log(response);
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '';
+
+				console.log(data);
 			},
 
 			showUserStats = function(response) {
-				console.log(response);
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '';
+
+				console.log(data);
 			};
 
 		return {

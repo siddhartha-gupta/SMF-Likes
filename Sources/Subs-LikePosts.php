@@ -241,8 +241,7 @@ function LP_DB_getMessageLikeInfo($msg_id = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, lp.id_member_gave, lp.rating, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
-			mem.gender, mem.avatar, mem.member_name, mem.real_name, mem.icq, mem.aim, mem.yim, mem.msn, mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online
+		SELECT lp.id_msg, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.real_name
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
@@ -281,7 +280,7 @@ function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 	}
 
 	$request = $smcFunc['db_query']('', '
-		SELECT t.id_topic, lp.id_msg, lp.id_member_gave, lp.rating, mem.real_name
+		SELECT t.id_topic, lp.id_msg, lp.id_member_gave, lp.rating
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
@@ -531,10 +530,11 @@ function LP_DB_getStatsMostLikedMessage() {
 	// Most liked Message
 	$mostLikedMessage = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT mem.real_name as member_received_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.posts
+		SELECT mem.real_name as member_received_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.posts, m.smileys_enabled
 		FROM {db_prefix}like_post as lp
 		INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_received)
 		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_received)
 		WHERE {query_wanna_see_board}
 		GROUP BY lp.id_msg
@@ -549,7 +549,7 @@ function LP_DB_getStatsMostLikedMessage() {
 			'id_board' => $row['id_board'],
 			'like_count' => $row['like_count'],
 			'subject' => $row['subject'],
-			'body' => $row['body'],
+			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
 			'poster_time' => $row['poster_time'],
 			'member_received' => array(
 				'id_member' => $row['id_member_received'],
@@ -589,14 +589,15 @@ function LP_DB_getStatsMostLikedMessage() {
 }
 
 function LP_DB_getStatsMostLikedTopic() {
-	global $smcFunc;
+	global $smcFunc, $scripturl, $modSettings, $settings;
 
 	// Most liked topic
 	$mostLikedTopic = array();
 	$request = $smcFunc['db_query']('', '
-		SELECT lp.id_topic, lp.id_board, GROUP_CONCAT(CONVERT(lp.id_msg, CHAR(8)) SEPARATOR ",") AS id_msg, COUNT(lp.id_topic) AS like_count
+		SELECT lp.id_topic, lp.id_board, GROUP_CONCAT(DISTINCT(CONVERT(lp.id_msg, CHAR(8))) SEPARATOR ",") AS id_msg, COUNT(lp.id_topic) AS like_count
 		FROM {db_prefix}like_post as lp
-		INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
+		INNER JOIN {db_prefix}boards AS b ON (b.id_board = lp.id_board)
+		WHERE {query_wanna_see_board}
 		GROUP BY lp.id_topic
 		ORDER BY like_count DESC
 		LIMIT 1',
@@ -605,19 +606,38 @@ function LP_DB_getStatsMostLikedTopic() {
 	list ($mostLikedTopic['id_topic'], $mostLikedTopic['id_board'], $id_msg, $mostLikedTopic['like_count']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
 
-	// Lets fetch info messages in the topic
+	// Lets fetch few messages in the topic
 	$request = $smcFunc['db_query']('', '
-		SELECT m.id_msg, m.poster_time
+		SELECT m.id_msg, m.body, m.poster_time, m.smileys_enabled, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.id_member, mem.real_name, mem.avatar
 		FROM {db_prefix}messages as m
-		WHERE m.id_msg IN ({raw:id_msg})',
+		INNER JOIN {db_prefix}members as mem ON (mem.id_member = m.id_member)
+		LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+		WHERE m.id_msg IN ({raw:id_msg})
+		ORDER BY m.id_msg
+		LIMIT 10',
 		array(
 			'id_msg' => $id_msg
 		)
 	);
-
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$mostLikedTopic['id_msg'][] = array(
-			'poster_time' => $row['poster_time']
+		if(strpos($row['body'], ' ') !== false) {
+			$msgString = substr($row['body'], 0, 254);
+			$temp_post = strpos($row['body'], ' ', 254);
+			$msgString .= substr($row['body'], 255, $temp_post);
+		} else {
+			$msgString = $row['body'];
+		}
+
+		$mostLikedTopic['msg_data'][] = array(
+			'id_msg' => $row['id_msg'],
+			'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
+			'poster_time' => $row['poster_time'],
+			'member' => array(
+				'id_member' => $row['id_member'],
+				'name' => $row['real_name'],
+				'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+			),
 		);
 	}
 	$smcFunc['db_free_result']($request);

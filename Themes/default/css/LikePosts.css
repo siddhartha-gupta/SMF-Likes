@@ -199,7 +199,7 @@
 	background-size: 100% auto;
 }
 
-.like_post_message_data {
+.like_post_message_data, .like_post_topic_data {
 	width: 94%;
 	position: relative;
 	overflow: hidden;
@@ -209,23 +209,39 @@
 	padding: 20px 3%;
 }
 
-.like_post_message_data .message_title {
+.like_post_message_data .message_title, .like_post_topic_data .topic_title {
 	float: left;
 	position: relative;
 	overflow: hidden;
 	width: 100%;
+	font-size: 15px;
+	line-height: normal;
 }
 
+/*Specific to message data tile*/
 .like_post_message_data .poster_avatar {
 	float: left;
 	width: 100px;
 	height: 100px;
 	border: 5px solid #fff;
-	background-repeat: no-repeat;
-	background-size: 100% auto;
-	background-position: center center;
 	border-radius: 10px;
+	box-shadow: 0px 0px 10px 1px #777;
 	margin: 20px 0;
+}
+
+.like_post_message_data .poster_avatar .avatar {
+	width: 100px;
+	height: 100px;
+	border-radius: 10px;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: center center;
+}
+
+.like_post_message_data .poster_avatar img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
 }
 
 .like_post_message_data .poster_data {
@@ -253,7 +269,7 @@
 	text-decoration: none;
 	float: left;
 	position: relative;
-	margin: 0 15px 15px 0;
+	margin: 0 10px 15px;
 }
 
 .like_post_message_data .users_liked .title {
@@ -265,8 +281,32 @@
 	height: 50px;
 	border: 3px solid #fff;
 	background-repeat: no-repeat;
-	background-size: 100% auto;
+	background-size: 100% 100%;
 	background-position: center center;
 	border-radius: 5px;
 	margin: 0;
+}
+
+/*specific to topic data tile*/
+.like_post_topic_data .topic_info {
+	margin: 7px 0 15px;
+	float: left;
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.like_post_topic_data .message_body {
+	width: 100%;
+	background: #fff;
+	float: left;
+	padding: 10px;
+	margin: 0 0 10px;
+	border: 1px solid #C4C4C4;
+}
+
+.like_post_topic_data .message_body .read_more {
+	float: right;
+	background: #E0E0E0;
+	padding: 0 3px;
+	margin: 5px 0 0 10px;
 }
