@@ -540,8 +540,20 @@ function LP_DB_getStatsMostLikedMessage() {
 		array()
 	);
 	list ($mostLikedMessage['member_received_name'], $mostLikedMessage['id_msg'], $mostLikedMessage['id_topic'], $mostLikedMessage['id_board'], $mostLikedMessage['id_member_received'], $id_member_gave, $mostLikedMessage['like_count']) = $smcFunc['db_fetch_row']($request);
-
 	$smcFunc['db_free_result']($request);
+
+	// Fetch the message details
+	$request = $smcFunc['db_query']('', '
+		SELECT subject, body
+		FROM {db_prefix}messages
+		WHERE id_msg = {int:id_msg}',
+		array(
+			'id_msg' => $mostLikedMessage['id_msg']
+		)
+	);
+	list ($mostLikedMessage['subject'], $mostLikedMessage['body']) = $smcFunc['db_fetch_row']($request);
+	$smcFunc['db_free_result']($request);
+
 
 	// Lets fetch info of users who liked the message
 	$request = $smcFunc['db_query']('', '

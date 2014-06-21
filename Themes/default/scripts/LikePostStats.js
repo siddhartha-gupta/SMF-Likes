@@ -34,7 +34,7 @@
 	likePostStats.prototype = function() {
 		var currentUrlFrag = null,
 			allowedUrls = {},
-			tabsVisitedCurrentSession = [],
+			tabsVisitedCurrentSession = {},
 
 			init = function() {
 				allowedUrls = {
@@ -54,12 +54,14 @@
 				checkUrl();
 			},
 
-			showSpinner = function() {
-				likePostStats.jQRef('#lp_spinner').show();
+			showSpinnerOverlay = function() {
+				likePostStats.jQRef('#like_post_stats_overlay').show();
+				likePostStats.jQRef('#lp_preloader').show();
 			},
 
-			hideSpinner = function() {
-				likePostStats.jQRef('#lp_spinner').hide();
+			hideSpinnerOverlay = function() {
+				likePostStats.jQRef('#lp_preloader').hide();
+				likePostStats.jQRef('#like_post_stats_overlay').hide();
 			},
 
 			highlightActiveTab = function() {
@@ -68,6 +70,7 @@
 			},
 
 			checkUrl = function(url) {
+				showSpinnerOverlay();
 				if (typeof(url) === 'undefined' || url === '') {
 					var currentHref = window.location.href.split('#');
 					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : 'messagestats';
@@ -79,8 +82,7 @@
 					currentUrlFrag = 'messagestats';
 				}
 
-				if (tabsVisitedCurrentSession.indexOf(currentUrlFrag) < 0) {
-					tabsVisitedCurrentSession.push(currentUrlFrag);
+				if (tabsVisitedCurrentSession.hasOwnProperty(currentUrlFrag) === false) {
 					getDataFromServer({
 						'url': currentUrlFrag,
 						'uiFunc': allowedUrls[currentUrlFrag].uiFunc
@@ -105,7 +107,8 @@
 					},
 					success: function(resp) {
 						if (resp.response) {
-							params.uiFunc(resp.data);
+							tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
+							params.uiFunc();
 						} else {
 							//NOTE: Make an error callback over here
 						}
@@ -113,8 +116,20 @@
 				});
 			},
 
-			showMessageStats = function(response) {
-				console.log(response);
+			showMessageStats = function() {
+				// console.log(tabsVisitedCurrentSession[currentUrlFrag]);
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '';
+
+				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Message');
+
+				htmlContent = '<div class="windowbg">'
+						+ '<a class="some_data" >' + data.subject + '</a>'
+						+ '<span class="display_none">' + data.body + '</span>'
+						+ '</div>';
+
+				likePostStats.jQRef('.like_post_message_data').append(htmlContent).show();
+				hideSpinnerOverlay();
 			},
 
 			showTopicStats = function(response) {
@@ -142,6 +157,29 @@
 
 	likePostStats.jQRef(document).ready(function() {
 		likePostStats.prototype.init();
+
+		likePostStats.jQRef(".some_data").on('hover', function(e) {
+			console.log('on hover');
+			e.preventDefault();
+			var currText = likePostStats.jQRef(this).next().html();
+
+			likePostStats.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+		}).on('mouseout', function() {
+			console.log('on mouseout');
+			likePostStats.jQRef(".subject_details").fadeOut("slow");
+			likePostStats.jQRef(".subject_details").remove();
+		}).on('mousemove', function(e) {
+			console.log('on mousemove');
+			var mousex = e.pageX + 20,
+				mousey = e.pageY + 10,
+				width = likePostStats.jQRef("#wrapper").width() - mousex - 50;
+
+			likePostStats.jQRef(".subject_details").css({
+				top: mousey,
+				left: mousex,
+				width: width + "px"
+			});
+		});
 	});
 
 	likePostStats.jQRef('.like_post_stats_menu a').on('click', function(e) {

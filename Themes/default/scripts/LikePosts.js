@@ -442,15 +442,19 @@ if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
 
 (function() {
 	lpObj.jQRef(document).ready(function() {
-		lpObj.jQRef(".some_data").hover(function(e) {
+		console.log('test');
+		lpObj.jQRef(".some_data").on('hover', function(e) {
+			console.log('on hover');
 			e.preventDefault();
 			var currText = lpObj.jQRef(this).next().html();
 
 			lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
-		}).mouseout(function() {
+		}).on('mouseout', function() {
+			console.log('on mouseout');
 			lpObj.jQRef(".subject_details").fadeOut("slow");
 			lpObj.jQRef(".subject_details").remove();
-		}).mousemove(function(e) {
+		}).on('mousemove', function(e) {
+			console.log('on mousemove');
 			var mousex = e.pageX + 20,
 				mousey = e.pageY + 10,
 				width = lpObj.jQRef("#wrapper").width() - mousex - 50;

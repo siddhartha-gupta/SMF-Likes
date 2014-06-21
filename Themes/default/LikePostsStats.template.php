@@ -34,40 +34,46 @@ function template_lp_stats() {
 	global $context, $txt, $sourcedir, $settings, $user_info, $options, $scripturl;
 
 	echo '
-	<div class="cat_bar">
-		<h3 class="catbg">
-			<span class="ie6_header floatleft">', $txt['like_post_stats'] ,'</span>
-		</h3>
-	</div>
-	<p class="windowbg description">', $context['like_posts']['tab_desc'] ,'</p>';
+	<div class="like_post_stats">
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', $txt['like_post_stats'] ,'</span>
+			</h3>
+		</div>
+		<p class="windowbg description">', $context['like_posts']['tab_desc'] ,'</p>';
 
 	echo '
-	<div id="adm_submenus" class="like_post_stats_menu">
-		<ul class="dropmenu">';
-	
-		// Print out all the items in this tab.
-		foreach ($context['lp_stats_tabs'] as $sa => $tab) {
-			echo '
-			<li>
-				<a class="firstlevel" href="" id="', $tab['id'],'"><span class="firstlevel">', $tab['label'], '</span></a>
-			</li>';
-		}
-
-		echo '
-		</ul>
-	</div><br class="clear" />';
+		<div id="adm_submenus" class="like_post_stats_menu">
+			<ul class="dropmenu">';
+		
+			// Print out all the items in this tab.
+			foreach ($context['lp_stats_tabs'] as $sa => $tab) {
+				echo '
+				<li>
+					<a class="firstlevel" href="" id="', $tab['id'],'"><span class="firstlevel">', $tab['label'], '</span></a>
+				</li>';
+			}
 
 	echo '
-	<div class="cat_bar">
-		<h3 class="catbg" id="like_post_current_tab"></h3>
-	</div>';
+			</ul>
+		</div><br class="clear" />';
 
 	echo '
-	<div class="like_post_stats_data">
-	<div class="like_post_message_data"></div>
-	<div class="like_post_topic_data"></div>
-	<div class="like_post_board_data"></div>
-	<div class="like_post_user_data"></div>
+		<div class="cat_bar">
+			<h3 class="catbg" id="like_post_current_tab"></h3>
+		</div>';
+
+	echo '
+		<div class="like_post_stats_data">
+			<div class="individual_data like_post_message_data"></div>
+			<div class="individual_data like_post_topic_data"></div>
+			<div class="individual_data like_post_board_data"></div>
+			<div class="individual_data like_post_user_data"></div>
+		</div>';
+
+	echo '
+		<div id="like_post_stats_overlay"></div>
+		<div id="lp_preloader"></div>
 	</div>';
 }
 
