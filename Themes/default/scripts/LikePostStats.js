@@ -180,7 +180,7 @@
 					var msgUrl = topicUrl + '.msg' + data.msg_data[i].id_msg;
 
 					console.log(data.msg_data[i].body.length);
-					htmlContent += '<div class="message_body"> ' + data.msg_data[i].body + '<a class="read_more" href="'+ msgUrl +'">read more...</a></div>';
+					htmlContent += '<div class="message_body"><div class="posted_at">'+ data.msg_data[i].poster_time +'</div> ' + data.msg_data[i].body + '<a class="read_more" href="'+ msgUrl +'">read more...</a></div>';
 				}
 				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Topic');
 				likePostStats.jQRef('.like_post_topic_data').html(htmlContent).show();

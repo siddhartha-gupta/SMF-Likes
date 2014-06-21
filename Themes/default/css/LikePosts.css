@@ -297,11 +297,24 @@
 }
 .like_post_topic_data .message_body {
 	width: 100%;
-	background: #fff;
+	background: #FFF;
 	float: left;
-	padding: 10px;
+	padding: 30px 10px 5px;
 	margin: 0 0 10px;
 	border: 1px solid #C4C4C4;
+	position: relative;
+}
+
+.like_post_topic_data .message_body .posted_at {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 3px;
+	border: 1px solid #C4C4C4;
+	border-top: none;
+	border-left: none;
+	background: #C4C4C4;
+	box-shadow: 0px 0px 2px 1px #8D9EC0;
 }
 
 .like_post_topic_data .message_body .read_more {

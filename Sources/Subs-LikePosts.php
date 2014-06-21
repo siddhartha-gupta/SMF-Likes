@@ -550,7 +550,7 @@ function LP_DB_getStatsMostLikedMessage() {
 			'like_count' => $row['like_count'],
 			'subject' => $row['subject'],
 			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
-			'poster_time' => $row['poster_time'],
+			'poster_time' => timeformat($row['poster_time']),
 			'member_received' => array(
 				'id_member' => $row['id_member_received'],
 				'name' => $row['member_received_name'],
@@ -631,7 +631,7 @@ function LP_DB_getStatsMostLikedTopic() {
 		$mostLikedTopic['msg_data'][] = array(
 			'id_msg' => $row['id_msg'],
 			'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
-			'poster_time' => $row['poster_time'],
+			'poster_time' => timeformat($row['poster_time']),
 			'member' => array(
 				'id_member' => $row['id_member'],
 				'name' => $row['real_name'],
