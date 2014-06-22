@@ -43,7 +43,8 @@ function LP_statsMainIndex() {
 			'messagestats' => 'LP_messageStats',
 			'topicstats' => 'LP_topicStats',
 			'boardstats' => 'LP_boardStats',
-			'userstats' => 'LP_userStats',
+			'mostlikesreceiveduserstats' => 'LP_mostLikesReceivedUserStats',
+			'mostlikesgivenuserstats' => 'LP_mostLikesGivenUserStats',
 		);
 
 		//wakey wakey, call the func you lazy
@@ -73,9 +74,13 @@ function LP_statsMainIndex() {
 				'label' => 'Board',
 				'id' => 'boardstats',
 			),
-			'userstats' => array(
-				'label' => 'User',
-				'id' => 'userstats',
+			'usergivenstats' => array(
+				'label' => 'Most liked User',
+				'id' => 'mostlikesreceiveduserstats',
+			),
+			'userreceivedstats' => array(
+				'label' => 'Most likes giving user',
+				'id' => 'mostlikesgivenuserstats',
 			),
 		);
 		$context['sub_template'] = 'lp_stats';
@@ -113,15 +118,24 @@ function LP_boardStats() {
 	die();
 }
 
-function LP_userStats() {
+function LP_mostLikesReceivedUserStats() {
 	global $context, $txt, $sourcedir, $settings, $user_info;
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
-	// $data = 
-	$resp = array('response' => true, 'data' => 'nothing to show here');
+	$data = LP_DB_getStatsMostLikedUser();
+	$resp = array('response' => true, 'data' => $data);
 	echo json_encode($resp);
 	die();
-	// echo 'nothing to show here';
+}
+
+function LP_mostLikesGivenUserStats() {
+	global $context, $txt, $sourcedir, $settings, $user_info;
+
+	require_once($sourcedir . '/Subs-LikePosts.php');
+	$data = LP_DB_getStatsMostLikesGivenUser();
+	$resp = array('response' => true, 'data' => $data);
+	echo json_encode($resp);
+	die();
 }
 
 ?>

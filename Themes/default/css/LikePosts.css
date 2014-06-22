@@ -232,7 +232,7 @@
 .like_post_message_data .poster_avatar .avatar {
 	width: 100px;
 	height: 100px;
-	border-radius: 10px;
+	border-radius: 5px;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	background-position: center center;
@@ -295,6 +295,7 @@
 	width: 100%;
 	overflow: hidden;
 }
+
 .like_post_topic_data .message_body, .like_post_board_data .message_body {
 	width: 100%;
 	background: #FFF;
@@ -303,6 +304,26 @@
 	margin: 0 0 10px;
 	border: 1px solid #C4C4C4;
 	position: relative;
+}
+
+.like_post_topic_data .message_body .poster_details, .like_post_board_data .message_body .poster_details {
+	text-decoration: none;
+	float: left;
+	position: relative;
+	margin: 5px 10px 15px 0;
+	border: 5px solid #FFF;
+	border-radius: 5px;
+	box-shadow: 0px 0px 4px 2px #C4C4C4;
+}
+
+.like_post_topic_data .message_body .poster_details .poster_avatar, .like_post_board_data .message_body .poster_details .poster_avatar {
+	width: 50px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: center center;
+	border-radius: 5px;
+	margin: 0;
 }
 
 .like_post_topic_data .message_body .posted_at, .like_post_board_data .message_body .posted_at {

@@ -68,7 +68,8 @@ function template_lp_stats() {
 			<div class="individual_data like_post_message_data"></div>
 			<div class="individual_data like_post_topic_data"></div>
 			<div class="individual_data like_post_board_data"></div>
-			<div class="individual_data like_post_user_data"></div>
+			<div class="individual_data like_post_most_liked_user_data"></div>
+			<div class="individual_data like_post_most_likes_given_user_data"></div>
 		</div>';
 
 	echo '
