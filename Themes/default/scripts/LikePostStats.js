@@ -36,7 +36,7 @@
 			allowedUrls = {},
 			tabsVisitedCurrentSession = {},
 			// defaultHash = 'messagestats',
-			defaultHash = 'topicstats',
+			defaultHash = 'boardstats',
 
 			init = function() {
 				allowedUrls = {
@@ -173,13 +173,12 @@
 
 				console.log(data);
 				likePostStats.jQRef('.like_post_topic_data').html('');
-				htmlContent += '<a class="topic_title" href="'+ topicUrl +'">The most popular topic has received ' + data.like_count + ' like(s) so far<a/>';
+				htmlContent += '<a class="topic_title" href="'+ topicUrl +'">The most popular topic has received ' + data.like_count + ' like(s) so far</a>';
 				htmlContent += '<p class="topic_info">The topic contains ' + data.msg_data.length + ' different posts. Few of the liked posts from it</p>';
 
 				for(var i = 0, len = data.msg_data.length; i < len; i++) {
 					var msgUrl = topicUrl + '.msg' + data.msg_data[i].id_msg;
 
-					console.log(data.msg_data[i].body.length);
 					htmlContent += '<div class="message_body"><div class="posted_at">'+ data.msg_data[i].poster_time +'</div> ' + data.msg_data[i].body + '<a class="read_more" href="'+ msgUrl +'">read more...</a></div>';
 				}
 				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Topic');
@@ -189,9 +188,23 @@
 
 			showBoardStats = function(response) {
 				var data = tabsVisitedCurrentSession[currentUrlFrag],
-					htmlContent = '';
+					htmlContent = '',
+					boardUrl = smf_scripturl +'?board=' + data.id_board;
 
 				console.log(data);
+				likePostStats.jQRef('.like_post_board_data').html('');
+				htmlContent += '<a class="board_title" href="'+ boardUrl +'">'+ data.name +' has received ' + data.like_count + ' like(s) so far</a>';
+				htmlContent += '<p class="board_info">The board contains ' + data.num_topics + ' different topics, out which ' + data.topics_liked +' topics are liked.</p>';
+				htmlContent += '<p class="board_info" style="margin: 5px 0 20px;">Furthermore, these topic contains '+ data.num_posts +' different posts, out of which '+ data.msgs_liked +' posts are liked so far. Few of the liked topics from it</p>';
+
+				for(var i = 0, len = data.topic_data.length; i < len; i++) {
+					var topicUrl = smf_scripturl +'?topic=' + data.topic_data[i].id_topic;
+
+					htmlContent += '<div class="message_body"><div class="posted_at">'+ data.topic_data[i].poster_time +'</div> ' + data.topic_data[i].body + '<a class="read_more" href="'+ topicUrl +'">read more...</a></div>';
+				}
+				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Board');
+				likePostStats.jQRef('.like_post_board_data').html(htmlContent).show();
+				hideSpinnerOverlay();
 			},
 
 			showUserStats = function(response) {

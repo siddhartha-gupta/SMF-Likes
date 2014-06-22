@@ -70,7 +70,7 @@ function LP_statsMainIndex() {
 				'id' => 'topicstats',
 			),
 			'boardstats' => array(
-				'label' => 'board',
+				'label' => 'Board',
 				'id' => 'boardstats',
 			),
 			'userstats' => array(
