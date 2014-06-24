@@ -442,7 +442,6 @@ if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
 
 (function() {
 	lpObj.jQRef(document).ready(function() {
-		console.log('test');
 		lpObj.jQRef(".some_data").on('hover', function(e) {
 			console.log('on hover');
 			e.preventDefault();

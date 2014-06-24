@@ -199,7 +199,7 @@
 	background-size: 100% auto;
 }
 
-.like_post_message_data, .like_post_topic_data, .like_post_board_data {
+.like_post_message_data, .like_post_topic_data, .like_post_board_data, .like_post_most_liked_user_data, .like_post_most_likes_given_user_data {
 	width: 94%;
 	position: relative;
 	overflow: hidden;
@@ -219,7 +219,7 @@
 }
 
 /*Specific to message data tile*/
-.like_post_message_data .poster_avatar {
+.like_post_message_data .poster_avatar, .like_post_most_liked_user_data .poster_avatar, .like_post_most_likes_given_user_data .poster_avatar {
 	float: left;
 	width: 100px;
 	height: 100px;
@@ -229,7 +229,7 @@
 	margin: 20px 0;
 }
 
-.like_post_message_data .poster_avatar .avatar {
+.like_post_message_data .poster_avatar .avatar, .like_post_most_liked_user_data .poster_avatar .avatar, .like_post_most_likes_given_user_data .poster_avatar .avatar {
 	width: 100px;
 	height: 100px;
 	border-radius: 5px;
@@ -238,24 +238,22 @@
 	background-position: center center;
 }
 
-.like_post_message_data .poster_avatar img {
-    width: 100%;
-    display: block;
-    border-radius: 10px;
-}
-
-.like_post_message_data .poster_data {
+.like_post_message_data .poster_data, .like_post_most_liked_user_data .poster_data, .like_post_most_likes_given_user_data .poster_data {
 	float: left;
 	position: relative;
 	overflow: hidden;
 	margin: 20px 0;
 }
 
-.like_post_message_data .poster_data .poster_details {
-	margin: 10px 0 0 20px;
+.like_post_message_data .poster_data .poster_details, .like_post_most_liked_user_data .poster_data .poster_details, .like_post_most_likes_given_user_data .poster_data .poster_details {
+	margin: 0 0 5px 20px;
 	float: left;
 	position: relative;
 	width: 100%;
+}
+
+.like_post_message_data .poster_data a.poster_details, .like_post_most_liked_user_data .poster_data a.poster_details, .like_post_most_likes_given_user_data .poster_data a.poster_details {
+	margin: 10px 0 10px 20px;
 }
 
 .like_post_message_data .users_liked {
@@ -296,7 +294,7 @@
 	overflow: hidden;
 }
 
-.like_post_topic_data .message_body, .like_post_board_data .message_body {
+.like_post_topic_data .message_body, .like_post_board_data .message_body, .like_post_most_liked_user_data .message_body, .like_post_most_likes_given_user_data .message_body {
 	width: 100%;
 	background: #FFF;
 	float: left;
@@ -326,7 +324,7 @@
 	margin: 0;
 }
 
-.like_post_topic_data .message_body .posted_at, .like_post_board_data .message_body .posted_at {
+.like_post_topic_data .message_body .posted_at, .like_post_board_data .message_body .posted_at, .like_post_most_liked_user_data .posted_at, .like_post_most_likes_given_user_data .posted_at {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -338,7 +336,7 @@
 	box-shadow: 0px 0px 2px 1px #8D9EC0;
 }
 
-.like_post_topic_data .message_body .read_more, .like_post_board_data .message_body .read_more {
+.like_post_topic_data .message_body .read_more, .like_post_board_data .message_body .read_more, .like_post_most_liked_user_data .read_more, .like_post_most_likes_given_user_data .read_more {
 	float: right;
 	background: #E0E0E0;
 	padding: 0 3px;
@@ -352,4 +350,13 @@
 	position: relative;
 	width: 100%;
 	overflow: hidden;
+}
+
+.like_post_most_liked_user_data .generic_text, .like_post_most_likes_given_user_data .generic_text {
+	margin: 20px 0 30px;
+	float: left;
+	position: relative;
+	width: 100%;
+	font-size: 20px;
+	line-height: normal;
 }
