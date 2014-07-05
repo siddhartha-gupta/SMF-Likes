@@ -525,7 +525,7 @@ function LP_DB_getAllNotification() {
 }
 
 function LP_DB_getStatsMostLikedMessage() {
-	global $smcFunc, $scripturl, $modSettings, $settings;
+	global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 	// Most liked Message
 	$mostLikedMessage = array();
@@ -563,6 +563,12 @@ function LP_DB_getStatsMostLikedMessage() {
 	}
 	$smcFunc['db_free_result']($request);
 
+	if(!isset($id_member_gave) || empty($id_member_gave)) {
+		return $mostLikedMessage = array(
+			'noDataMessage' => $txt['like_post_error_no_data']
+		);
+	}
+
 	// Lets fetch info of users who liked the message
 	$request = $smcFunc['db_query']('', '
 		SELECT mem.id_member, mem.real_name, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
@@ -589,7 +595,7 @@ function LP_DB_getStatsMostLikedMessage() {
 }
 
 function LP_DB_getStatsMostLikedTopic() {
-	global $smcFunc, $scripturl, $modSettings, $settings;
+	global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 	// Most liked topic
 	$mostLikedTopic = array();
@@ -605,6 +611,12 @@ function LP_DB_getStatsMostLikedTopic() {
 	);
 	list ($mostLikedTopic['id_topic'], $mostLikedTopic['id_board'], $id_msg, $mostLikedTopic['like_count']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
+
+	if(!isset($id_msg) || empty($id_msg)) {
+		return $mostLikedTopic = array(
+			'noDataMessage' => $txt['like_post_error_no_data']
+		);
+	}
 
 	// Lets fetch few messages in the topic
 	$request = $smcFunc['db_query']('', '
@@ -646,7 +658,7 @@ function LP_DB_getStatsMostLikedTopic() {
 }
 
 function LP_DB_getStatsMostLikedBoard() {
-	global $smcFunc, $scripturl, $modSettings, $settings;
+	global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 	// Most liked board
 	$mostLikedBoard = array();
@@ -662,6 +674,12 @@ function LP_DB_getStatsMostLikedBoard() {
 	);
 	list ($mostLikedBoard['id_board'], $mostLikedBoard['name'], $mostLikedBoard['num_topics'], $mostLikedBoard['num_posts'], $mostLikedBoard['topics_liked'], $mostLikedBoard['msgs_liked'], $id_topics, $mostLikedBoard['like_count']) = $smcFunc['db_fetch_row']($request);
 	$smcFunc['db_free_result']($request);
+
+	if(!isset($id_topics) || empty($id_topics)) {
+		return $mostLikedBoard = array(
+			'noDataMessage' => $txt['like_post_error_no_data']
+		);
+	}
 
 	// Lets fetch few topics from this board
 	$request = $smcFunc['db_query']('', '
@@ -703,7 +721,7 @@ function LP_DB_getStatsMostLikedBoard() {
 }
 
 function LP_DB_getStatsMostLikedUser() {
-	global $smcFunc, $scripturl, $modSettings, $settings;
+	global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 	// Most liked board
 	$mostLikedMember = array();
@@ -731,6 +749,12 @@ function LP_DB_getStatsMostLikedUser() {
 		$id_member = $row['id_member'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	if(!isset($id_member) || empty($id_member)) {
+		return $mostLikedMember = array(
+			'noDataMessage' => $txt['like_post_error_no_data']
+		);
+	}
 
 	// Lets fetch highest liked posts by this user
 	$request = $smcFunc['db_query']('', '
@@ -771,7 +795,7 @@ function LP_DB_getStatsMostLikedUser() {
 }
 
 function LP_DB_getStatsMostLikesGivenUser() {
-	global $smcFunc, $scripturl, $modSettings, $settings;
+	global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 	// Most liked board
 	$mostLikeGivingMember = array();
@@ -800,6 +824,12 @@ function LP_DB_getStatsMostLikesGivenUser() {
 		$id_msgs = $row['id_msgs'];
 	}
 	$smcFunc['db_free_result']($request);
+
+	if(!isset($id_msgs) || empty($id_msgs)) {
+		return $mostLikeGivingMember = array(
+			'noDataMessage' => $txt['like_post_error_no_data']
+		);
+	}
 
 	// Lets fetch highest liked posts by this user
 	$request = $smcFunc['db_query']('', '

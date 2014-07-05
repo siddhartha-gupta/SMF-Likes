@@ -116,15 +116,19 @@
 						'sa': params.url
 					},
 					success: function(resp) {
-						if (resp.response) {
+						if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
+							genericErrorMessage({
+								errorMsg: resp.error
+							});
+						} else if (typeof(resp.data) !== 'undefined' && typeof(resp.data.noDataMessage) !== 'undefined' && resp.data.noDataMessage !== '') {
+							genericErrorMessage({
+								errorMsg: resp.data.noDataMessage
+							});
+						} else if (resp.response) {
 							tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
 							params.uiFunc();
 						} else {
-							if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
-								genericErrorMessage({
-									errorMsg: resp.error
-								});
-							}
+
 						}
 					}
 				});

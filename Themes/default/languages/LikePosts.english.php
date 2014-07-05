@@ -129,6 +129,7 @@ $txt['like_post_submit'] = 'Submit';
 // Error msgs
 $txt['like_post_cannot_like_posts'] = 'You do not have the permissions to like posts.';
 $txt['like_post_no_access'] = 'Oops! It looks like you are not allowed to access this section';
-$txt['like_post_error_something_wrong'] = 'Oops! There seems to be some server error. Please contact the site administrator.'
+$txt['like_post_error_something_wrong'] = 'Oops! There seems to be some server error. Please contact the site administrator.';
+$txt['like_post_error_no_data'] = 'Sorry, it looks like there is nothing to show yet!';
 
 ?>

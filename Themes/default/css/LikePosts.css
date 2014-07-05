@@ -199,7 +199,18 @@
 	background-size: 100% auto;
 }
 
-.like_post_message_data, .like_post_topic_data, .like_post_board_data, .like_post_most_liked_user_data, .like_post_most_likes_given_user_data, .like_post_stats_error {
+.like_post_stats_error {
+	width: 94%;
+	position: relative;
+	overflow: hidden;
+	float: left;
+	color: #000;
+	background-color: #e7eaef;
+	padding: 10px 20px;
+	font-size: 14px;
+}
+
+.like_post_message_data, .like_post_topic_data, .like_post_board_data, .like_post_most_liked_user_data, .like_post_most_likes_given_user_data {
 	width: 94%;
 	position: relative;
 	overflow: hidden;
