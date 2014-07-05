@@ -30,9 +30,12 @@
 
 var likePosts = function() {
 	this.timeoutTimer = null;
+	this.isLikeAjaxInProgress = false;
 };
 
 likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
+	if(this.isLikeAjaxInProgress === true) return false;
+
 	var userRating = e.target.href.split('#')[1],
 		msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
 		topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
@@ -44,6 +47,7 @@ likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
 		return false;
 	}
 
+	this.isLikeAjaxInProgress = true;
 	lpObj.jQRef.ajax({
 		type: "POST",
 		url: smf_scripturl + '?action=likeposts;sa=like_post',
@@ -56,7 +60,6 @@ likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
 			rating: rating,
 			author: authorId
 		},
-
 		success: function(resp) {
 			if (resp.response) {
 				var params = {
@@ -76,8 +79,11 @@ likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
 };
 
 likePosts.prototype.onLikeSuccess = function(params) {
-	var count = parseInt(params.count, 10);
+	var _this = this,
+		count = parseInt(params.count, 10);
+
 	if (isNaN(count)) {
+		this.isLikeAjaxInProgress = false;
 		return false;
 	}
 
@@ -115,8 +121,9 @@ likePosts.prototype.onLikeSuccess = function(params) {
 	}
 
 	this.timeoutTimer = setTimeout(function() {
+		_this.isLikeAjaxInProgress = false;
 		lpObj.removeOverlay();
-	}, 3000);
+	}, 2000);
 };
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
