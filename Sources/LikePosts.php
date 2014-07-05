@@ -201,7 +201,7 @@ function LP_likePosts() {
 	$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 
 	if (empty($board_id) || empty($topic_id) || empty($msg_id) || empty($author_id)) {
-		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}
@@ -238,7 +238,7 @@ function LP_likePosts() {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}

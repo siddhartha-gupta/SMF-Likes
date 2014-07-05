@@ -44,9 +44,6 @@ $txt['like_post_unlike'] = 'Unlike';
 $txt['like_post_total_likes'] = 'Total likes';
 $txt['like_show_notifications'] = 'Show Likes notification';
 
-// Error msgs
-$txt['like_post_cannot_like_posts'] = 'You do not have the permissions to like posts.';
-
 //Admin panel strings
 $txt['like_post_menu'] = 'Like Posts';
 $txt['like_post_admin_panel'] = 'Like Posts admin panel';
@@ -77,8 +74,6 @@ $txt['like_post_guest_perm_can_view_likes_in_boards'] = 'Can view like posts in 
 $txt['like_post_guest_perm_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
 $txt['like_post_guest_perm_guests_can_view_likes_stats'] = 'Can view like stats';
 
-$txt['like_post_submit'] = 'Submit';
-
 // Profile area strings
 $txt['like_post_you_liked'] = 'Likes given';
 $txt['like_post_liked_by_others'] = 'Likes received';
@@ -96,7 +91,6 @@ $txt['like_post_tab_mlb'] = 'Most liked board';
 $txt['like_post_tab_mlmember'] = 'Most Liked Member';
 $txt['like_post_tab_mlgmember'] = 'Most Like Giving user';
 $txt['like_post_generic_heading1'] = 'like(s) so far';
-
 
 // For message
 $txt['like_post_users_who_liked'] = 'users who liked this post';
@@ -123,8 +117,6 @@ $txt['like_post_most_popular_user_heading1'] = 'Few of users most liked posts';
 $txt['like_post_total_likes_given'] = 'Total Likes Given';
 $txt['like_post_most_like_given_user_heading1'] = 'Few of users recently liked posts';
 
-$txt['like_post_no_access'] = 'You are not allowed to access this section';
-
 // Like posts generic strings
 $txt['like_post_topic'] = 'Topic';
 $txt['like_post_message'] = 'Message';
@@ -132,5 +124,11 @@ $txt['like_post_board'] = 'Board';
 $txt['like_post_total_posts'] = 'Total posts';
 $txt['like_post_posted_at'] = 'Posted at';
 $txt['like_post_read_more'] = 'read more...';
+$txt['like_post_submit'] = 'Submit';
+
+// Error msgs
+$txt['like_post_cannot_like_posts'] = 'You do not have the permissions to like posts.';
+$txt['like_post_no_access'] = 'Oops! It looks like you are not allowed to access this section';
+$txt['like_post_error_something_wrong'] = 'Oops! There seems to be some server error. Please contact the site administrator.'
 
 ?>

@@ -40,7 +40,6 @@
 
 			init = function(params) {
 				txtStrings = likePostStats.jQRef.extend({}, params.txtStrings);
-				console.log(txtStrings);
 				if (params.onError === "") {
 					allowedUrls = {
 						'messagestats': {
@@ -106,6 +105,7 @@
 			},
 
 			getDataFromServer = function(params) {
+				likePostStats.jQRef('.like_post_stats_error').hide().html('');
 				likePostStats.jQRef.ajax({
 					type: "POST",
 					url: smf_scripturl + '?action=likepostsstats',
@@ -120,7 +120,11 @@
 							tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
 							params.uiFunc();
 						} else {
-							//NOTE: Make an error callback over here
+							if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
+								genericErrorMessage({
+									errorMsg: resp.error
+								});
+							}
 						}
 					}
 				});
@@ -192,14 +196,14 @@
 					boardUrl = smf_scripturl + '?board=' + data.id_board;
 
 				likePostStats.jQRef('.like_post_board_data').html('');
-				htmlContent += '<a class="board_title" href="' + boardUrl + '">' + data.name + ' '+ txtStrings.mostPopularBoardHeading1 +' ' + data.like_count + ' ' + txtStrings.genricHeading1 + '</a>';
+				htmlContent += '<a class="board_title" href="' + boardUrl + '">' + data.name + ' ' + txtStrings.mostPopularBoardHeading1 + ' ' + data.like_count + ' ' + txtStrings.genricHeading1 + '</a>';
 				htmlContent += '<p class="board_info">' + txtStrings.mostPopularBoardSubHeading1 + ' ' + data.num_topics + ' ' + txtStrings.mostPopularBoardSubHeading2 + ' ' + data.topics_liked + ' ' + txtStrings.mostPopularBoardSubHeading3 + '</p>';
-				htmlContent += '<p class="board_info" style="margin: 5px 0 20px;">'+ txtStrings.mostPopularBoardSubHeading4 +' ' + data.num_posts + ' '+ txtStrings.mostPopularBoardSubHeading5 +' ' + data.msgs_liked + ' ' + txtStrings.mostPopularBoardSubHeading6 + '</p>';
+				htmlContent += '<p class="board_info" style="margin: 5px 0 20px;">' + txtStrings.mostPopularBoardSubHeading4 + ' ' + data.num_posts + ' ' + txtStrings.mostPopularBoardSubHeading5 + ' ' + data.msgs_liked + ' ' + txtStrings.mostPopularBoardSubHeading6 + '</p>';
 
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
 					var topicUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic;
 
-					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + data.topic_data[i].member.name + ' : '+ txtStrings.postedAt +' ' + data.topic_data[i].poster_time + '</div> ' + '<a class="poster_details" href="' + data.topic_data[i].member.href + '"><div class="poster_avatar" style="background-image: url(' + data.topic_data[i].member.avatar + ')"></div></a><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + topicUrl + '">'+ txtStrings.readMore +'</a></div>';
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + data.topic_data[i].member.name + ' : ' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + '</div> ' + '<a class="poster_details" href="' + data.topic_data[i].member.href + '"><div class="poster_avatar" style="background-image: url(' + data.topic_data[i].member.avatar + ')"></div></a><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + topicUrl + '">' + txtStrings.readMore + '</a></div>';
 				}
 				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikedBoard);
 				likePostStats.jQRef('.like_post_board_data').html(htmlContent).show();
@@ -217,7 +221,7 @@
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
 					var msgUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic + '.msg' + data.topic_data[i].id_msg;
 
-					htmlContent += '<div class="message_body">' + '<div class="posted_at">'+ txtStrings.postedAt +' ' + data.topic_data[i].poster_time + ': ' + txtStrings.likesReceived + ' (' + data.topic_data[i].like_count + ')</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + ': ' + txtStrings.likesReceived + ' (' + data.topic_data[i].like_count + ')</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
 				}
 				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikedMember);
 				likePostStats.jQRef('.like_post_most_liked_user_data').html(htmlContent).show();
@@ -239,6 +243,11 @@
 				}
 				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikeGivingMember);
 				likePostStats.jQRef('.like_post_most_likes_given_user_data').html(htmlContent).show();
+				hideSpinnerOverlay();
+			},
+
+			genericErrorMessage = function(params) {
+				likePostStats.jQRef('.like_post_stats_error').html(params.errorMsg).show();
 				hideSpinnerOverlay();
 			};
 

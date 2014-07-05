@@ -73,6 +73,7 @@ function template_lp_stats() {
 				<div class="individual_data like_post_board_data"></div>
 				<div class="individual_data like_post_most_liked_user_data"></div>
 				<div class="individual_data like_post_most_likes_given_user_data"></div>
+				<div class="individual_data like_post_stats_error"></div>
 			</div>';
 
 		echo '
@@ -105,13 +106,11 @@ function template_lp_stats() {
 					readMore: ' . JavaScriptEscape($txt['like_post_read_more']) . ',
 					genricHeading1: ' . JavaScriptEscape($txt['like_post_generic_heading1']) . ',
 					totalLikesReceived: ' . JavaScriptEscape($txt['like_post_total_likes_received']) . ',
-
 					mostLikedMessage: ' . JavaScriptEscape($txt['like_post_tab_mlm']) . ',
 					mostLikedTopic: ' . JavaScriptEscape($txt['like_post_tab_mlt']) . ',
 					mostLikedBoard: ' . JavaScriptEscape($txt['like_post_tab_mlb']) . ',
 					mostLikedMember: ' . JavaScriptEscape($txt['like_post_tab_mlmember']) . ',
 					mostLikeGivingMember: ' . JavaScriptEscape($txt['like_post_tab_mlgmember']) . ',
-
 					usersWhoLiked: ' . JavaScriptEscape($txt['like_post_users_who_liked']) . ',
 					mostPopularTopicHeading1: ' . JavaScriptEscape($txt['like_post_most_popular_topic_heading1']) . ',
 					mostPopularTopicSubHeading1: ' . JavaScriptEscape($txt['like_post_most_popular_topic_sub_heading1']) . ',

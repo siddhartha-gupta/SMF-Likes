@@ -36,6 +36,8 @@ if (!defined('SMF'))
 function LP_statsMainIndex() {
 	global $context, $txt, $sourcedir, $modSettings, $user_info;
 
+	// Every request passes from here
+	// Check the permission over here itself
 	$context['like_post_stats_error'] = '';
 	if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
 		$context['like_post_stats_error'] = $txt['like_post_no_access'];
@@ -102,9 +104,16 @@ function LP_messageStats () {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$data = LP_DB_getStatsMostLikedMessage();
-	$resp = array('response' => true, 'data' => $data);
-	echo json_encode($resp);
-	die();
+
+	if($data) {
+		$resp = array('response' => true, 'data' => $data);
+		echo json_encode($resp);
+		die();
+	} else {
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		echo json_encode($resp);
+		die();
+	}
 }
 
 function LP_topicStats() {
@@ -112,9 +121,16 @@ function LP_topicStats() {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$data = LP_DB_getStatsMostLikedTopic();
-	$resp = array('response' => true, 'data' => $data);
-	echo json_encode($resp);
-	die();
+
+	if($data) {
+		$resp = array('response' => true, 'data' => $data);
+		echo json_encode($resp);
+		die();
+	} else {
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		echo json_encode($resp);
+		die();
+	}
 }
 
 function LP_boardStats() {
@@ -122,9 +138,16 @@ function LP_boardStats() {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$data = LP_DB_getStatsMostLikedBoard();
-	$resp = array('response' => true, 'data' => $data);
-	echo json_encode($resp);
-	die();
+
+	if($data) {
+		$resp = array('response' => true, 'data' => $data);
+		echo json_encode($resp);
+		die();
+	} else {
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		echo json_encode($resp);
+		die();
+	}
 }
 
 function LP_mostLikesReceivedUserStats() {
@@ -132,9 +155,16 @@ function LP_mostLikesReceivedUserStats() {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$data = LP_DB_getStatsMostLikedUser();
-	$resp = array('response' => true, 'data' => $data);
-	echo json_encode($resp);
-	die();
+
+	if($data) {
+		$resp = array('response' => true, 'data' => $data);
+		echo json_encode($resp);
+		die();
+	} else {
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		echo json_encode($resp);
+		die();
+	}
 }
 
 function LP_mostLikesGivenUserStats() {
@@ -142,9 +172,16 @@ function LP_mostLikesGivenUserStats() {
 
 	require_once($sourcedir . '/Subs-LikePosts.php');
 	$data = LP_DB_getStatsMostLikesGivenUser();
-	$resp = array('response' => true, 'data' => $data);
-	echo json_encode($resp);
-	die();
+
+	if($data) {
+		$resp = array('response' => true, 'data' => $data);
+		echo json_encode($resp);
+		die();
+	} else {
+		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		echo json_encode($resp);
+		die();
+	}
 }
 
 ?>
