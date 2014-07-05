@@ -211,15 +211,15 @@
 					htmlContent = '';
 
 				likePostStats.jQRef('.like_post_most_liked_user_data').html('');
-				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + data.member_received.avatar + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">Total posts: ' + data.member_received.total_posts + '</div>' + '<div class="poster_details">Total Likes Received: ' + data.like_count + '</div>' + '</div>';
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + data.member_received.avatar + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesReceived + ': ' + data.like_count + '</div>' + '</div>';
 
-				htmlContent += '<p class="generic_text">Few of users most liked posts</p>';
+				htmlContent += '<p class="generic_text">' + txtStrings.mostPopularUserHeading1 + '</p>';
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
 					var msgUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic + '.msg' + data.topic_data[i].id_msg;
 
-					htmlContent += '<div class="message_body">' + '<div class="posted_at">Posted at ' + data.topic_data[i].poster_time + ': Likes received (' + data.topic_data[i].like_count + ')</div> ' + data.topic_data[i].body + '<a class="read_more" href="' + msgUrl + '">read more...</a></div>';
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">'+ txtStrings.postedAt +' ' + data.topic_data[i].poster_time + ': ' + txtStrings.likesReceived + ' (' + data.topic_data[i].like_count + ')</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
 				}
-				likePostStats.jQRef('#like_post_current_tab').text('Most Liked Member');
+				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikedMember);
 				likePostStats.jQRef('.like_post_most_liked_user_data').html(htmlContent).show();
 				hideSpinnerOverlay();
 			},
@@ -229,15 +229,15 @@
 					htmlContent = '';
 
 				likePostStats.jQRef('.like_post_most_likes_given_user_data').html('');
-				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + data.member_given.avatar + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_given.href + '" style="font-size: 20px;">' + data.member_given.name + '</a>' + '<div class="poster_details">Total posts: ' + data.member_given.total_posts + '</div>' + '<div class="poster_details">Total Likes Given: ' + data.like_count + '</div>' + '</div>';
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + data.member_given.avatar + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_given.href + '" style="font-size: 20px;">' + data.member_given.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_given.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesGiven + ': ' + data.like_count + '</div>' + '</div>';
 
-				htmlContent += '<p class="generic_text">Few of users recently liked posts</p>';
+				htmlContent += '<p class="generic_text">' + txtStrings.mostLikeGivenUserHeading1 + '</p>';
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
 					var msgUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic + '.msg' + data.topic_data[i].id_msg;
 
-					htmlContent += '<div class="message_body">' + '<div class="posted_at">Posted at ' + data.topic_data[i].poster_time + '</div> ' + data.topic_data[i].body + '<a class="read_more" href="' + msgUrl + '">read more...</a></div>';
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + '</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
 				}
-				likePostStats.jQRef('#like_post_current_tab').text('Most Like Giving user');
+				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikeGivingMember);
 				likePostStats.jQRef('.like_post_most_likes_given_user_data').html(htmlContent).show();
 				hideSpinnerOverlay();
 			};

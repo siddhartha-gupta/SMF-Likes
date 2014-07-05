@@ -337,7 +337,7 @@
 }
 
 .content_encapsulate {
-	margin: 10px;
+	margin: 0 0 10px;
 }
 
 .like_post_topic_data .message_body .read_more, .like_post_board_data .message_body .read_more, .like_post_most_liked_user_data .read_more, .like_post_most_likes_given_user_data .read_more {

@@ -93,6 +93,8 @@ $txt['like_posts_stats_desc'] = 'Stats related to like posts';
 $txt['like_post_tab_mlm'] = 'Most liked message';
 $txt['like_post_tab_mlt'] = 'Most liked topic';
 $txt['like_post_tab_mlb'] = 'Most liked board';
+$txt['like_post_tab_mlmember'] = 'Most Liked Member';
+$txt['like_post_tab_mlgmember'] = 'Most Like Giving user';
 $txt['like_post_generic_heading1'] = 'like(s) so far';
 
 
@@ -109,10 +111,17 @@ $txt['like_post_most_popular_board_heading1'] = 'has received';
 $txt['like_post_most_popular_board_sub_heading1'] = 'The board contains';
 $txt['like_post_most_popular_board_sub_heading2'] = 'different topics, out which';
 $txt['like_post_most_popular_board_sub_heading3'] = 'topics are liked.';
-
 $txt['like_post_most_popular_board_sub_heading4'] = 'Furthermore, these topic contains';
 $txt['like_post_most_popular_board_sub_heading5'] = 'different posts, out of which';
 $txt['like_post_most_popular_board_sub_heading6'] = 'posts are liked so far. Few of the liked topics from it';
+
+// Most liked user
+$txt['like_post_total_likes_received'] = 'Total Likes Received';
+$txt['like_post_most_popular_user_heading1'] = 'Few of users most liked posts';
+
+// Most like giving user
+$txt['like_post_total_likes_given'] = 'Total Likes Given';
+$txt['like_post_most_like_given_user_heading1'] = 'Few of users recently liked posts';
 
 $txt['like_post_no_access'] = 'You are not allowed to access this section';
 
