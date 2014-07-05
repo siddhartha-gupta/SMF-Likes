@@ -82,4 +82,41 @@ function LP_addAction(&$actionArray) {
 	$actionArray['likepostsstats'] = array('LikePostsStats.php', 'LP_statsMainIndex');
 }
 
+function LP_addMenu(&$menu_buttons) {
+	global $scripturl, $txt, $user_info, $modSettings;
+
+	$isAllowedToAccess = true;
+
+	if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
+		$isAllowedToAccess = false;
+	}
+
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('guests_can_view_likes_stats'))) {
+		$isAllowedToAccess = false;
+	}
+	if(!LP_isAllowedTo(array('can_view_likes_stats'))) {
+		$isAllowedToAccess = false;
+	}
+
+	if($isAllowedToAccess) {
+		// insert before logout
+		$initPos = 0;
+		reset($menu_buttons);
+		while((list($key, $val) = each($menu_buttons)) && $key != 'logout')
+			$initPos++;
+
+		$menu_buttons = array_merge(
+			array_slice($menu_buttons, 0, $initPos),
+			array(
+				'like_post_stats' => array(
+					'title' => $txt['like_post_stats'],
+					'href' => $scripturl . '?action=likepostsstats',
+					'show' => true,
+				),
+			),
+			array_slice($menu_buttons, $initPos, count($menu_buttons) - $initPos)
+		);
+	}
+}
+
 ?>

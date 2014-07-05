@@ -50,7 +50,7 @@ function LP_statsMainIndex() {
 		$context['like_post_stats_error'] = $txt['like_post_no_access'];
 	}
 
-	if(isset($_REQUEST['area']) && !empty($_REQUEST['area']) && $_REQUEST['area'] === 'ajaxdata') {
+	if(isset($_REQUEST['area']) && !empty($_REQUEST['area']) && $_REQUEST['area'] === 'ajaxdata' && empty($context['like_post_stats_error'])) {
 		$default_action_func = 'LP_messageStats';
 		$subActions = array(
 			'messagestats' => 'LP_messageStats',

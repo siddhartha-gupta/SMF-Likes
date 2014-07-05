@@ -83,7 +83,7 @@ $txt['like_post_post_info']  = 'Post info';
 $txt['like_post_no_of_likes'] = 'No. of Likes';
 
 // Like posts stats strings
-$txt['like_post_stats'] = 'Like posts stats';
+$txt['like_post_stats'] = 'Like stats';
 $txt['like_posts_stats_desc'] = 'Stats related to like posts';
 $txt['like_post_tab_mlm'] = 'Most liked message';
 $txt['like_post_tab_mlt'] = 'Most liked topic';
