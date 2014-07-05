@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.4
+* @version 1.5
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -32,7 +32,7 @@
 
 /** 
 * Note - I don't recommend using this file anywhere
-* Use this at your risk. I don't hold any responsibility if anything happens to you wensite by using this file.
+* Use this at your risk. I don't hold any responsibility if anything happens to you website by using this file.
 * This file is completely intended to be use by mod developer as a utility for developing the mod
 */
 
