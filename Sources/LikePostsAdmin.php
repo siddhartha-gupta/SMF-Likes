@@ -48,13 +48,15 @@ function LP_modifySettings($return_config = false) {
 	$context['like_posts']['permission_settings'] = array(
 		'can_like_posts',
 		'can_view_likes',
-		'can_view_others_likes_profile'
+		'can_view_others_likes_profile',
+		'can_view_likes_stats'
 	);
 
 	$context['like_posts']['guest_permission_settings'] = array(
 		'can_view_likes_in_posts',
 		'can_view_likes_in_boards',
-		'can_view_likes_in_profiles'
+		'can_view_likes_in_profiles',
+		'guests_can_view_likes_stats'
 	);
 
 	// Load up the guns
@@ -174,13 +176,15 @@ function LP_savePermissionsettings() {
 		$permissionKeys = array(
 			'can_like_posts',
 			'can_view_likes',
-			'can_view_others_likes_profile'
+			'can_view_others_likes_profile',
+			'can_view_likes_stats'
 		);
 
 		$guestPermissionKeys = array(
 			'can_view_likes_in_posts',
 			'can_view_likes_in_boards',
-			'can_view_likes_in_profiles'
+			'can_view_likes_in_profiles',
+			'guests_can_view_likes_stats'
 		);
 
 		// Array to be saved to DB

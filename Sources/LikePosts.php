@@ -187,7 +187,7 @@ function LP_likePosts() {
 	global $user_info, $sourcedir, $txt, $settings;
 
 	loadlanguage('LikePosts');
-	if ($user_info['is_guest'] || !(LP_isAllowedTo('can_like_posts'))) {
+	if ($user_info['is_guest'] || !(LP_isAllowedTo(array('can_like_posts')))) {
 		$resp = array('response' => false, 'error' => $txt['like_post_cannot_like_posts']);
 		echo json_encode($resp);
 		die();
@@ -338,7 +338,7 @@ function LP_getMessageLikeInfo() {
 
 	if($user_info['is_guest'] && (!LP_isAllowedTo(array('can_view_likes_in_posts')) && !LP_isAllowedTo(array('can_view_likes_in_boards')))) {
 		return false;
-	} elseif (!$user_info['is_guest'] && !LP_isAllowedTo('can_view_likes')) {
+	} elseif (!$user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes'))) {
 		return false;
 	}
 
@@ -473,7 +473,7 @@ function LP_isAllowedTo($permissions) {
 function LP_getAllNotification() {
 	global $sourcedir, $user_info;
 
-	if(!(LP_isAllowedTo('can_view_likes')) || $user_info['is_guest']) {
+	if(!(LP_isAllowedTo(array('can_view_likes'))) || $user_info['is_guest']) {
 		return false;
 	}
 	require_once($sourcedir . '/Subs-LikePosts.php');

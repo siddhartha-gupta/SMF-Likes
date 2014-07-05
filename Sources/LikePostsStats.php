@@ -34,8 +34,19 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 function LP_statsMainIndex() {
-	global $context, $txt, $sourcedir;
+	global $context, $txt, $sourcedir, $modSettings, $user_info;
 
+	$context['like_post_stats_error'] = '';
+	if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
+		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+	}
+
+	if($user_info['is_guest'] && !LP_isAllowedTo(array('guests_can_view_likes_stats'))) {
+		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+	}
+	if(!LP_isAllowedTo(array('can_view_likes_stats'))) {
+		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+	}
 
 	if(isset($_REQUEST['area']) && !empty($_REQUEST['area']) && $_REQUEST['area'] === 'ajaxdata') {
 		$default_action_func = 'LP_messageStats';
@@ -55,10 +66,8 @@ function LP_statsMainIndex() {
 		$default_action_func();
 	} else {
 		loadtemplate('LikePostsStats');
-		$context['page_title'] = 'Like posts stats';
-
+		$context['page_title'] = $txt['like_post_stats'];
 		$context['like_posts']['tab_desc'] = $txt['like_posts_stats_desc'];
-		$context['like_posts']['tab_name'] = $txt['like_post_message_stats'];
 
 		// Load up the guns
 		$context['lp_stats_tabs'] = array(

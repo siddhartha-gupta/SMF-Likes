@@ -336,11 +336,17 @@
 	box-shadow: 0px 0px 2px 1px #8D9EC0;
 }
 
+.content_encapsulate {
+	margin: 10px;
+}
+
 .like_post_topic_data .message_body .read_more, .like_post_board_data .message_body .read_more, .like_post_most_liked_user_data .read_more, .like_post_most_likes_given_user_data .read_more {
-	float: right;
 	background: #E0E0E0;
 	padding: 0 3px;
 	margin: 5px 0 0 10px;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
 }
 
 /*specific to board stats tab*/
