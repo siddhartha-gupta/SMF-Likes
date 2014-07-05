@@ -44,7 +44,7 @@ if (!array_key_exists('db_add_column', $smcFunc))
 $tables = array(
 	'like_post' => array (
 		'columns' => array (
-            array(
+			array(
 				'name' => 'id_like',
 				'type' => 'int',
 				'size' => 10,
@@ -72,20 +72,20 @@ $tables = array(
 				'unsigned' => true,
 				'default' => '0',
 			),
-            array(
-                'name' => 'id_member_received',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
-            array(
-                'name' => 'id_member_gave',
-                'type' => 'mediumint',
-                'size' => 8,
-                'unsigned' => true,
-                'default' => '0',
-            ),
+			array(
+				'name' => 'id_member_received',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
+			array(
+				'name' => 'id_member_gave',
+				'type' => 'mediumint',
+				'size' => 8,
+				'unsigned' => true,
+				'default' => '0',
+			),
 			array(
 				'name' => 'rating',
 				'type' => 'smallint',
@@ -93,13 +93,20 @@ $tables = array(
 				'unsigned' => true,
 				'default' => '0',
 			),
+			array(
+				'name' => 'liked_timestamp',
+				'type' => 'int',
+				'size' => 10,
+				'unsigned' => true,
+				'default' => '0',
+			),
 		),
 		'indexes' => array(
-	        array(
-	            'type' => 'primary',
-	            'columns' => array('id_like', 'id_msg', 'id_member_gave'),
-	        ),
-	    ),
+			array(
+				'type' => 'primary',
+				'columns' => array('id_like', 'id_msg', 'id_member_gave'),
+			),
+		),
 	),
 	'like_count' => array (
 		'columns' => array (
@@ -119,74 +126,21 @@ $tables = array(
 			),
 		),
 		'indexes' => array(
-	        array(
-	            'type' => 'primary',
-	            'columns' => array('id_member'),
-	        ),
-	    ),
+			array(
+				'type' => 'primary',
+				'columns' => array('id_member'),
+			),
+		),
 	)
 );
 
 foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
 }
-    
+	
 // Upgrade thinggy
-$is_upgrade = true;
-$request = $smcFunc['db_query']('', '
-    SHOW COLUMNS
-    FROM {db_prefix}like_post',
-    array(
-    )
-);
-if ($request !== false) {
-    while ($row = $smcFunc['db_fetch_assoc']($request)) {
-        if ($row['Field'] == 'id_like' && ($row['Type'] == 'int(10) unsigned' || $row['Type'] == 'int(10)'))
-            $is_upgrade = false;
-    }
-    $smcFunc['db_free_result']($request);
-}
-
-// If upgrade, fire the bullet
-if($is_upgrade === true) {
-    $smcFunc['db_query']('', '
-        ALTER TABLE {db_prefix}like_post
-        CHANGE id_member id_member_gave mediumint (8) unsigned,
-        Add column id_member_received mediumint (8) unsigned Default 0 AFTER id_member_gave',
-        array(
-        )
-    );
-
-    $smcFunc['db_query']('', '
-        ALTER TABLE {db_prefix}like_post
-        ADD id_like INT(10) unsigned NOT NULL AUTO_INCREMENT FIRST,
-        DROP PRIMARY KEY,
-        ADD PRIMARY KEY(id_like, id_msg, id_member_gave)',
-        array(
-        )
-    );
-
-    $request = $smcFunc['db_query']('', '
-		SELECT lp.id_msg, m.id_member
-        FROM {db_prefix}like_post as lp
-        INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-        GROUP BY id_msg
-        ORDER BY id_msg'
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		$result = $smcFunc['db_query']('', '
-			UPDATE {db_prefix}like_post
-			SET id_member_received = {int:id_member_received}
-			WHERE id_msg = {int:id_msg}',
-			array(
-				'id_member_received' => (int) $row['id_member'],
-				'id_msg' => $row['id_msg']
-			)
-		);
-	}
-	$smcFunc['db_free_result']($request);
-}
+checkVersion1_2Upgrade();
+checkVersion1_5Upgrade();
 
 // For all general settings add 'like_post_' as prefix
 updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1));
@@ -200,5 +154,94 @@ add_integration_function('integrate_load_theme', 'LP_includeAssets', true);
 
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';
+
+function checkVersion1_2Upgrade() {
+	global $smcFunc;
+
+	$is_upgrade = true;
+	$request = $smcFunc['db_query']('', '
+		SHOW COLUMNS
+		FROM {db_prefix}like_post',
+		array(
+		)
+	);
+	if ($request !== false) {
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			if ($row['Field'] == 'id_like' && ($row['Type'] == 'int(10) unsigned' || $row['Type'] == 'int(10)'))
+				$is_upgrade = false;
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
+	// If upgrade, fire the bullet
+	if($is_upgrade === true) {
+		$smcFunc['db_query']('', '
+			ALTER TABLE {db_prefix}like_post
+			CHANGE id_member id_member_gave mediumint (8) unsigned,
+			Add column id_member_received mediumint (8) unsigned Default 0 AFTER id_member_gave',
+			array(
+			)
+		);
+
+		$smcFunc['db_query']('', '
+			ALTER TABLE {db_prefix}like_post
+			ADD id_like INT(10) unsigned NOT NULL AUTO_INCREMENT FIRST,
+			DROP PRIMARY KEY,
+			ADD PRIMARY KEY(id_like, id_msg, id_member_gave)',
+			array(
+			)
+		);
+
+		$request = $smcFunc['db_query']('', '
+			SELECT lp.id_msg, m.id_member
+			FROM {db_prefix}like_post as lp
+			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+			GROUP BY id_msg
+			ORDER BY id_msg'
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			$result = $smcFunc['db_query']('', '
+				UPDATE {db_prefix}like_post
+				SET id_member_received = {int:id_member_received}
+				WHERE id_msg = {int:id_msg}',
+				array(
+					'id_member_received' => (int) $row['id_member'],
+					'id_msg' => $row['id_msg']
+				)
+			);
+		}
+		$smcFunc['db_free_result']($request);
+	}
+}
+
+function checkVersion1_5Upgrade() {
+	global $smcFunc;
+
+	$is_upgrade = true;
+	$request = $smcFunc['db_query']('', '
+		SHOW COLUMNS
+		FROM {db_prefix}like_post',
+		array(
+		)
+	);
+	if ($request !== false) {
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			if ($row['Field'] == 'liked_timestamp' && ($row['Type'] == 'int(10) unsigned' || $row['Type'] == 'int(10)'))
+				$is_upgrade = false;
+		}
+		$smcFunc['db_free_result']($request);
+	}
+
+	// If upgrade, fire the bullet
+	if($is_upgrade === true) {
+		$smcFunc['db_query']('', '
+			ALTER TABLE {db_prefix}like_post
+			Add column liked_timestamp int (10) unsigned Default 0',
+			array(
+			)
+		);
+	}
+}
 
 ?>

@@ -49,8 +49,8 @@ function LP_DB_insertLikePost($data = array()) {
 
 	$smcFunc['db_insert']('replace',
 		'{db_prefix}like_post',
-		array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member_gave' => 'int', 'id_member_received' => 'int', 'rating' => 'int'),
-		array($data['id_msg'], $data['id_topic'], $data['id_board'], $data['id_member_gave'], $data['id_member_received'], $data['rating']),
+		array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member_gave' => 'int', 'id_member_received' => 'int', 'rating' => 'int', 'liked_timestamp' => 'int'),
+		array($data['id_msg'], $data['id_topic'], $data['id_board'], $data['id_member_gave'], $data['id_member_received'], $data['rating'], time()),
 		array('id_like')
 	);
 

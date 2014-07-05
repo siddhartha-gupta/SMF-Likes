@@ -185,7 +185,7 @@ likePosts.prototype.showLikeNotification = function() {
 					dataLengthMine = 0,
 					completeString = '';
 
-				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div></div>';
+				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
 
 				for (i in data) {
 					if (data.hasOwnProperty(i)) {
@@ -242,7 +242,7 @@ likePosts.prototype.showLikeNotification = function() {
 				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
 					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
 
-				if(checkFloat > window.innerWidth) {
+				if (checkFloat > window.innerWidth) {
 					leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
 					console.log(leftOffset);
 				}
@@ -264,24 +264,35 @@ likePosts.prototype.showLikeNotification = function() {
 
 				lpObj.jQRef('.lp_notification_header').on('click', function(e) {
 					e.preventDefault();
-					if (e.target.id === 'lp_all_notifications') {
-						lpObj.jQRef('#lp_all_notifications').css({
-							'font-weight': 'bold'
-						});
-						lpObj.jQRef('#lp_my_notifications').css({
-							'font-weight': 'normal'
-						});
-						lpObj.jQRef('.lp_my_notifications_data').hide();
-						lpObj.jQRef('.lp_all_notifications_data').show();
-					} else if (e.target.id === 'lp_my_notifications') {
-						lpObj.jQRef('#lp_all_notifications').css({
-							'font-weight': 'normal'
-						});
-						lpObj.jQRef('#lp_my_notifications').css({
-							'font-weight': 'bold'
-						});
-						lpObj.jQRef('.lp_all_notifications_data').hide();
-						lpObj.jQRef('.lp_my_notifications_data').show();
+					switch (e.target.id) {
+						case 'lp_all_notifications':
+							lpObj.jQRef('#lp_all_notifications').css({
+								'font-weight': 'bold'
+							});
+							lpObj.jQRef('#lp_my_notifications').css({
+								'font-weight': 'normal'
+							});
+							lpObj.jQRef('.lp_my_notifications_data').hide();
+							lpObj.jQRef('.lp_all_notifications_data').show();
+							break;
+
+						case 'lp_my_notifications':
+							lpObj.jQRef('#lp_all_notifications').css({
+								'font-weight': 'normal'
+							});
+							lpObj.jQRef('#lp_my_notifications').css({
+								'font-weight': 'bold'
+							});
+							lpObj.jQRef('.lp_all_notifications_data').hide();
+							lpObj.jQRef('.lp_my_notifications_data').show();
+							break;
+
+						case 'close_notifications':
+							lpObj.removeNotification(e);
+							break;
+
+						default:
+							break;
 					}
 				});
 				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
@@ -295,7 +306,7 @@ likePosts.prototype.showLikeNotification = function() {
 
 likePosts.prototype.removeNotification = function(e) {
 	if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
-		var container = lpObj.jQRef('.lp_notification_header');
+		var container = lpObj.jQRef('#lp_all_notifications, #lp_my_notifications');
 		if (!container.is(e.target) && container.has(e.target).length === 0) {
 			lpObj.jQRef('.like_posts_notification').unbind('click');
 			lpObj.jQRef('.like_posts_notification').unbind('keyup');
