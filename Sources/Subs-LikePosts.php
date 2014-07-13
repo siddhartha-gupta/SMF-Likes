@@ -543,13 +543,16 @@ function LP_DB_getStatsMostLikedMessage() {
 		array()
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		censorText($row['body']);
+		$msgString = LP_trimContent($row['body'], ' ', 255);
+
 		$mostLikedMessage = array(
 			'id_msg' => $row['id_msg'],
 			'id_topic' => $row['id_topic'],
 			'id_board' => $row['id_board'],
 			'like_count' => $row['like_count'],
 			'subject' => $row['subject'],
-			'body' => parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']),
+			'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
 			'poster_time' => timeformat($row['poster_time']),
 			'member_received' => array(
 				'id_member' => $row['id_member_received'],
@@ -632,13 +635,8 @@ function LP_DB_getStatsMostLikedTopic() {
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(strpos($row['body'], ' ') !== false) {
-			$msgString = substr($row['body'], 0, 254);
-			$temp_post = strpos($row['body'], ' ', 254);
-			$msgString .= substr($row['body'], 255, $temp_post);
-		} else {
-			$msgString = $row['body'];
-		}
+		censorText($row['body']);
+		$msgString = LP_trimContent($row['body'], ' ', 255);
 
 		$mostLikedTopic['msg_data'][] = array(
 			'id_msg' => $row['id_msg'],
@@ -695,13 +693,8 @@ function LP_DB_getStatsMostLikedBoard() {
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(strpos($row['body'], ' ') !== false) {
-			$msgString = substr($row['body'], 0, 254);
-			$temp_post = strpos($row['body'], ' ', 254);
-			$msgString .= substr($row['body'], 255, $temp_post);
-		} else {
-			$msgString = $row['body'];
-		}
+		censorText($row['body']);
+		$msgString = LP_trimContent($row['body'], ' ', 255);
 
 		$mostLikedBoard['topic_data'][] = array(
 			'id_topic' => $row['id_topic'],
@@ -772,13 +765,8 @@ function LP_DB_getStatsMostLikedUser() {
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(strpos($row['body'], ' ') !== false) {
-			$msgString = substr($row['body'], 0, 254);
-			$temp_post = strpos($row['body'], ' ', 254);
-			$msgString .= substr($row['body'], 255, $temp_post);
-		} else {
-			$msgString = $row['body'];
-		}
+		censorText($row['body']);
+		$msgString = LP_trimContent($row['body'], ' ', 255);
 
 		$mostLikedMember['topic_data'][] = array(
 			'id_topic' => $row['id_topic'],
@@ -845,13 +833,8 @@ function LP_DB_getStatsMostLikesGivenUser() {
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
-		if(strpos($row['body'], ' ') !== false) {
-			$msgString = substr($row['body'], 0, 254);
-			$temp_post = strpos($row['body'], ' ', 254);
-			$msgString .= substr($row['body'], 255, $temp_post);
-		} else {
-			$msgString = $row['body'];
-		}
+		censorText($row['body']);
+		$msgString = LP_trimContent($row['body'], ' ', 255);
 
 		$mostLikeGivingMember['topic_data'][] = array(
 			'id_msg' => $row['id_msg'],

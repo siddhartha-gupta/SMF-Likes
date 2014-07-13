@@ -485,4 +485,17 @@ function LP_getAllNotification() {
 	die();
 }
 
+function LP_trimContent($str, $delimiter, $limit = 255) {
+	if (strlen($str) > $limit) {
+		if(strpos($str, $delimiter) !== false) {
+			$msgString = substr($str, 0, $limit - 1);
+			$temp_post = strpos($str, $delimiter, $limit - 1);
+			$msgString .= substr($str, $limit, $temp_post);
+			return $msgString;
+		}
+		return $str;
+	}
+	return $str;
+}
+
 ?>
