@@ -34,7 +34,7 @@ var likePosts = function() {
 };
 
 likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
-	if(this.isLikeAjaxInProgress === true) return false;
+	if (this.isLikeAjaxInProgress === true) return false;
 
 	var userRating = e.target.href.split('#')[1],
 		msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
@@ -147,18 +147,28 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 				}
 
 				var data = resp.data,
-					memberInfo = '',
 					i,
-					completeString = '';
+					counter = 0,
+					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
 
 				for (i in data) {
 					if (data.hasOwnProperty(i)) {
-						memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
+						counter++;
+						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
 					}
 				}
-				completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
-
+				completeString += '</div></div>';
 				lpObj.jQRef('body').append(completeString);
+
+				setTimeout(function() {
+					var individualDivHeight = lpObj.jQRef('.like_posts_member_info').outerHeight();
+
+					lpObj.jQRef('.like_posts_member_info_box').css({
+						'max-height': individualDivHeight * counter,
+						'visibility': 'visible'
+					});
+				}, 50);
+
 				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
 
 				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
