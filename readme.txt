@@ -38,6 +38,12 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 [b]Change Log[/b]
 
 
+[i]Version 1.5.1[/i]
+- Much better handling for jQuery loading
+- Like posts info section scrolling and height fixes
+- Fixes for strpos error
+
+
 [i]Version 1.5[/i]
 - Added a completed new module to showcase the like stats
 - Added button to close the like posts notification popup
