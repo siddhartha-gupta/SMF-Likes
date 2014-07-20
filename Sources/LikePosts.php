@@ -46,9 +46,44 @@ function LP_includeAssets() {
 		inConflict = false;
 
 		// Only do anything if jQuery isn"t defined
-		if (typeof jQuery == "undefined") {
+		if (typeof(jQuery) == "undefined") {
+			console.log("jquery not found");
 			if (typeof($) == "function") {
+				console.log("jquery but in conflict");
 				inConflict = true;
+			}
+
+			function compareJQueryVersion(v1, v2, callback) {
+					var v1parts = v1.split('.');
+					var v2parts = v2.split('.');
+
+					for (var i = 0; i < v1parts.length; ++i) {
+						if (v2parts.length == i) {
+							//v1 + " is larger"
+							callback(1);
+							return;
+						}
+
+						if (v1parts[i] == v2parts[i]) {
+							continue;
+						} else if (v1parts[i] > v2parts[i]) {
+							//v1 + " is larger";
+							callback(1);
+							return;
+						} else {
+							//v2 + " is larger";
+							callback(2);
+							return;
+						}
+					}
+
+					if (v1parts.length != v2parts.length) {
+						//v2 + " is larger";
+						callback(2);
+						return;
+					}
+					callback(false);
+					return;
 			}
 
 			function loadJquery(url, callback) {
@@ -62,8 +97,6 @@ function LP_includeAssets() {
 				script.onload = script.onreadystatechange = function() {
 					if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
 						done = true;
-
-						// callback function provided as param
 						callback();
 						script.onload = script.onreadystatechange = null;
 						head.removeChild(script);
@@ -73,20 +106,45 @@ function LP_includeAssets() {
 			};
 
 			loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
-				if (typeof jQuery=="undefined") {
-					console.log("still not loaded");
-				} else {
-					if (inConflict === false) {
-						loadLPScript();
-					} else {
-						// Use no conflict over here
-						loadLPScript();
-					}
+				if (typeof(jQuery) !=="undefined") {
+					console.log("directly loaded with version: " + jQuery.fn.jquery);
+					lp_jquery2_0_3 = jQuery.noConflict(true);
+					loadLPScript();
 				}
 			});
 		} else {
 			// jQuery is already loaded
-			loadLPScript();
+			console.log("jquery is already loaded with version: " + jQuery.fn.jquery);
+			compareJQueryVersion(jQuery.fn.jquery, "2.0.3", function(result) {
+				console.log("result of version check: " + result)
+				switch(result) {
+					case false:
+					case 1:
+						lp_jquery2_0_3 = jQuery.noConflict(true);
+						loadLPScript();
+						break;
+
+					case 2:
+						loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							if (typeof(jQuery) !=="undefined") {
+								console.log("after version check loaded with version: " + jQuery.fn.jquery);
+								lp_jquery2_0_3 = jQuery.noConflict(true);
+								loadLPScript();
+							}
+						});
+						break;
+
+					default:
+						loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							if (typeof(jQuery) !=="undefined") {
+								console.log("default version check loaded with version: " + jQuery.fn.jquery);
+								lp_jquery2_0_3 = jQuery.noConflict(true);
+								loadLPScript();
+							}
+						});
+						break;
+				}
+			})
 		};
 
 		function loadLPScript() {

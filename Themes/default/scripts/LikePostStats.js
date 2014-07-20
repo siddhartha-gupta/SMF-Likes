@@ -263,7 +263,7 @@
 
 	this.likePostStats = likePostStats;
 	if (typeof(likePostStats.jQRef) !== "function" && typeof(likePostStats.jQRef) === "undefined") {
-		likePostStats.jQRef = jQuery.noConflict();
+		likePostStats.jQRef = lp_jquery2_0_3;
 	}
 
 	likePostStats.jQRef(".like_post_stats_menu a").on("click", function(e) {
