@@ -26,6 +26,7 @@
 	margin-left: -300px;
 	overflow-x: hidden;
 	overflow-y: scroll;
+	max-height: 80%;
 }
 
 .like_posts_member_info {

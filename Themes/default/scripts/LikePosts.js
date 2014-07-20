@@ -148,12 +148,11 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 
 				var data = resp.data,
 					i,
-					counter = 0,
+					height = 0,
 					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
 
 				for (i in data) {
 					if (data.hasOwnProperty(i)) {
-						counter++;
 						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
 					}
 				}
@@ -161,10 +160,15 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 				lpObj.jQRef('body').append(completeString);
 
 				setTimeout(function() {
-					var individualDivHeight = lpObj.jQRef('.like_posts_member_info').outerHeight();
+					lpObj.jQRef('.like_posts_member_info').each(function() {
+						height += lpObj.jQRef(this).outerHeight();
+					});
 
+					if(height >= (window.innerHeight - 100)) {
+						height = window.innerHeight - 200;
+					}
 					lpObj.jQRef('.like_posts_member_info_box').css({
-						'max-height': individualDivHeight * counter,
+						'height': height,
 						'visibility': 'visible'
 					});
 				}, 50);
