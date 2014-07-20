@@ -34,7 +34,7 @@ var likePosts = function() {
 };
 
 likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
-	if(this.isLikeAjaxInProgress === true) return false;
+	if (this.isLikeAjaxInProgress === true) return false;
 
 	var userRating = e.target.href.split('#')[1],
 		msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
@@ -147,18 +147,32 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 				}
 
 				var data = resp.data,
-					memberInfo = '',
 					i,
-					completeString = '';
+					height = 0,
+					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
 
 				for (i in data) {
 					if (data.hasOwnProperty(i)) {
-						memberInfo += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
+						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
 					}
 				}
-				completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">' + memberInfo + '</div></div>';
-
+				completeString += '</div></div>';
 				lpObj.jQRef('body').append(completeString);
+
+				setTimeout(function() {
+					lpObj.jQRef('.like_posts_member_info').each(function() {
+						height += lpObj.jQRef(this).outerHeight();
+					});
+
+					if(height >= (window.innerHeight - 100)) {
+						height = window.innerHeight - 200;
+					}
+					lpObj.jQRef('.like_posts_member_info_box').css({
+						'height': height,
+						'visibility': 'visible'
+					});
+				}, 50);
+
 				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
 
 				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
@@ -455,7 +469,7 @@ likePosts.prototype.removeOverlay = function(e) {
 
 var lpObj = window.lpObj = new likePosts();
 if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
-	lpObj.jQRef = jQuery.noConflict();
+	lpObj.jQRef = lp_jquery2_0_3;
 }
 
 (function() {
