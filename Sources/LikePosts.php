@@ -45,6 +45,58 @@ function LP_includeAssets() {
 		var lpLoaded = false,
 		inConflict = false;
 
+		function compareJQueryVersion(v1, v2, callback) {
+			var v1parts = v1.split('.');
+			var v2parts = v2.split('.');
+
+			for (var i = 0; i < v1parts.length; ++i) {
+				if (v2parts.length == i) {
+					//v1 + " is larger"
+					callback(1);
+					return;
+				}
+
+				if (v1parts[i] == v2parts[i]) {
+					continue;
+				} else if (v1parts[i] > v2parts[i]) {
+					//v1 + " is larger";
+					callback(1);
+					return;
+				} else {
+					//v2 + " is larger";
+					callback(2);
+					return;
+				}
+			}
+
+			if (v1parts.length != v2parts.length) {
+				//v2 + " is larger";
+				callback(2);
+				return;
+			}
+			callback(false);
+			return;
+		}
+
+		function loadJquery(url, callback) {
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = url;
+
+			var head = document.getElementsByTagName("head")[0],
+				done = false;
+
+			script.onload = script.onreadystatechange = function() {
+				if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+					done = true;
+					callback();
+					script.onload = script.onreadystatechange = null;
+					head.removeChild(script);
+				};
+			};
+			head.appendChild(script);
+		}
+
 		// Only do anything if jQuery isn"t defined
 		if (typeof(jQuery) == "undefined") {
 			console.log("jquery not found");
@@ -52,58 +104,6 @@ function LP_includeAssets() {
 				console.log("jquery but in conflict");
 				inConflict = true;
 			}
-
-			function compareJQueryVersion(v1, v2, callback) {
-					var v1parts = v1.split('.');
-					var v2parts = v2.split('.');
-
-					for (var i = 0; i < v1parts.length; ++i) {
-						if (v2parts.length == i) {
-							//v1 + " is larger"
-							callback(1);
-							return;
-						}
-
-						if (v1parts[i] == v2parts[i]) {
-							continue;
-						} else if (v1parts[i] > v2parts[i]) {
-							//v1 + " is larger";
-							callback(1);
-							return;
-						} else {
-							//v2 + " is larger";
-							callback(2);
-							return;
-						}
-					}
-
-					if (v1parts.length != v2parts.length) {
-						//v2 + " is larger";
-						callback(2);
-						return;
-					}
-					callback(false);
-					return;
-			}
-
-			function loadJquery(url, callback) {
-				var script = document.createElement("script");
-				script.type = "text/javascript";
-				script.src = url;
-
-				var head = document.getElementsByTagName("head")[0],
-					done = false;
-
-				script.onload = script.onreadystatechange = function() {
-					if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-						done = true;
-						callback();
-						script.onload = script.onreadystatechange = null;
-						head.removeChild(script);
-					};
-				};
-				head.appendChild(script);
-			};
 
 			loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
 				if (typeof(jQuery) !=="undefined") {
