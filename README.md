@@ -37,6 +37,10 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 
 [b]Change Log[/b]
 
+[i]Version 1.5.2[/i]
+- Fixes for jquery version compare function
+- Fix for avatar not loading:#18
+
 
 [i]Version 1.5.1[/i]
 - Much better handling for jQuery loading
