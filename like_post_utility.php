@@ -32,7 +32,7 @@
 
 /** 
 * Note - I don't recommend using this file anywhere
-* Use this at your risk. I don't hold any responsibility if anything happens to you wensite by using this file.
+* Use this at your risk. I don't hold any responsibility if anything happens to you website by using this file.
 * This file is completely intended to be use by mod developer as a utility for developing the mod
 */
 
@@ -168,7 +168,7 @@ function addPosts() {
 		);
 		$topic_id = $smcFunc['db_insert_id']('{db_prefix}topics', 'id_topic');
 
-        $smcFunc['db_insert']('',
+		$smcFunc['db_insert']('',
 			'{db_prefix}messages',
 			array(
 				'id_board' => 'int', 'id_topic' => 'int', 'id_member' => 'int', 'subject' => 'string-255', 'body' => (!empty($modSettings['max_messageLength']) && $modSettings['max_messageLength'] > 65534 ? 'string-' . $modSettings['max_messageLength'] : 'string-65534'),
@@ -223,10 +223,10 @@ function rebuildGave() {
 
 	$request = $smcFunc['db_query']('', '
 		SELECT lp.id_msg, m.id_member
-        FROM {db_prefix}like_post as lp
-        INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-        GROUP BY id_msg
-        ORDER BY id_msg'
+		FROM {db_prefix}like_post as lp
+		INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+		GROUP BY id_msg
+		ORDER BY id_msg'
 	);
 
 	while ($row = $smcFunc['db_fetch_assoc']($request)) {
@@ -244,11 +244,45 @@ function rebuildGave() {
 	echo 'Completed';
 }
 
+function gpbpUpVotes() {
+	global $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT id_member, member_name, email_address
+		FROM {db_prefix}members
+		ORDER BY id_member'
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request)) {
+		$request1 = $smcFunc['db_query']('', '
+			SELECT id_msg, id_topic, id_board, id_member
+			FROM {db_prefix}messages
+			ORDER BY RAND()
+			LIMIT 4'
+		);
+		while ($row1 = $smcFunc['db_fetch_assoc']($request1)) {
+			$smcFunc['db_insert']('replace',
+				'{db_prefix}log_gpbp',
+				array(
+					'id_msg' => 'int', 'id_member' => 'int', 'score' => 'int', 'id_poster' => 'int', 'log_time' => 'int'
+				),
+				array(
+					$row1['id_msg'], $row['id_member'], 1, $row1['id_member'], time()
+				),
+				array()
+			);
+		}
+		$smcFunc['db_free_result']($request1);
+	}
+	$smcFunc['db_free_result']($request);
+	echo 'Completed';
+}
+
 $subActions = array(
 	'addposts' => 'addPosts',
 	'addmembers' => 'addMembers',
 	'likeposts' => 'likePosts',
 	'rebuildgave' => 'rebuildGave',
+	'gpbp' => 'gpbpUpVotes',
 );
 
 //wakey wakey, call the func you lazy
