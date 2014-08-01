@@ -33,12 +33,10 @@
 global $txt;
 
 //front end strings strings
-$txt['like_post_string_you'] = 'You';
-$txt['like_post_string_other'] = 'other';
-$txt['like_post_string_s'] = 's';
-$txt['like_post_string_people'] = 'people';
-$txt['like_post_string_part_common'] = 'liked this';
-$txt['like_post_string_part_and'] = '&amp;';
+$txt['like_post_string_you_liked'] = 'You liked this';
+$txt['like_post_string_you_and_liked'] = 'You &amp; %1$d others liked this';
+$txt['like_post_string_people_liked'] = '%1$d people liked this';
+
 $txt['like_post_like'] = 'Like';
 $txt['like_post_unlike'] = 'Unlike';
 $txt['like_post_total_likes'] = 'Total likes';
