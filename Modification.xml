@@ -58,7 +58,7 @@
 			echo '<div class="like_post_box floatleft">';
 			if(!$message['is_message_author'] && LP_isAllowedTo('can_like_posts')) {
 				echo '
-							<a class="like_unlike_link" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event,', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
+							<a class="', $context['like_posts']['single_msg_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event,', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
 			}
 
 			if(LP_isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts'))) {
@@ -86,7 +86,7 @@
 
 				if($context['user']['id'] !== $topic['first_post']['member']['id'] && LP_isAllowedTo('can_like_posts')) {
 					echo '
-								<a class="like_unlike_link" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
+								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
 				}
 		
 				if(LP_isAllowedTo(array('can_view_likes', 'can_view_likes_in_boards'))) {

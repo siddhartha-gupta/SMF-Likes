@@ -140,7 +140,7 @@
 					messageUrl = smf_scripturl + '?topic=' + data.id_topic + '.msg' + data.id_msg;
 
 				likePostStats.jQRef('.like_post_message_data').html('');
-				htmlContent += '<a class="message_title" href="' + messageUrl + '">' + txtStrings.topic + ': ' + data.subject + '</a>' + '<span class="display_none">' + data.body + '</span>';
+				htmlContent += '<a class="message_title" href="' + messageUrl + '">' + txtStrings.topic + ': ' + data.subject + '</a>' + '<span style="display: none;">' + data.body + '</span>';
 
 				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '</div>';
 
@@ -153,15 +153,20 @@
 
 				likePostStats.jQRef('#like_post_current_tab').text(txtStrings.mostLikedMessage);
 				likePostStats.jQRef('.like_post_message_data').append(htmlContent).show();
+
 				likePostStats.jQRef(".message_title").on('mouseenter', function(e) {
 					e.preventDefault();
 					var currText = likePostStats.jQRef(this).next().html();
 
 					likePostStats.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
-				}).on('mouseout', function() {
+				}).on('mouseleave', function(e) {
+					e.preventDefault();
+
 					likePostStats.jQRef(".subject_details").fadeOut("slow");
 					likePostStats.jQRef(".subject_details").remove();
 				}).on('mousemove', function(e) {
+					e.preventDefault();
+
 					var mousex = e.pageX + 20,
 						mousey = e.pageY + 10,
 						width = likePostStats.jQRef("#wrapper").width() - mousex - 50;

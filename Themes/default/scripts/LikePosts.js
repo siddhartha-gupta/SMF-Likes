@@ -91,6 +91,12 @@ likePosts.prototype.onLikeSuccess = function(params) {
 		likeText = params.likeText,
 		newLink = (params.rating === 1) ? '#0' : '#1';
 
+	if(parseInt(likeButtonRef.attr('href').split('#')[1], 10) === 0) {
+		likeButtonRef.removeClass('unlike_link').addClass('like_link');
+	} else {
+		likeButtonRef.removeClass('like_link').addClass('unlike_link');
+	}
+
 	if (likeText.indexOf('&amp;') > 0) {
 		likeText = likeText.replace(/&amp;/g, '&');
 	}
@@ -474,18 +480,17 @@ if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
 
 (function() {
 	lpObj.jQRef(document).ready(function() {
-		lpObj.jQRef(".some_data").on('hover', function(e) {
-			console.log('on hover');
+		lpObj.jQRef(".some_data").on('mouseenter', function(e) {
 			e.preventDefault();
 			var currText = lpObj.jQRef(this).next().html();
 
 			lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
-		}).on('mouseout', function() {
-			console.log('on mouseout');
+		}).on('mouseleave', function(e) {
+			e.preventDefault();
 			lpObj.jQRef(".subject_details").fadeOut("slow");
 			lpObj.jQRef(".subject_details").remove();
 		}).on('mousemove', function(e) {
-			console.log('on mousemove');
+			e.preventDefault();
 			var mousex = e.pageX + 20,
 				mousey = e.pageY + 10,
 				width = lpObj.jQRef("#wrapper").width() - mousex - 50;

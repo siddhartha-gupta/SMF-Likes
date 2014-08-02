@@ -233,7 +233,7 @@ function template_lp_show_own_likes() {
 						<a class="some_data" href="', $data['href'] ,'">
 							', $data['subject'],'
 						</a>
-						<span class="display_none">
+						<span style="display: none;">
 							', $data['body'],'
 						</span>
 						<br />
@@ -288,7 +288,7 @@ function template_lp_show_others_likes() {
 						<a class="some_data" href="', $data['href'] ,'" title="">
 							', $data['subject'],'
 						</a>
-						<span class="display_none">
+						<span style="display: none;">
 							', $data['body'],'
 						</span>
 						<br />
