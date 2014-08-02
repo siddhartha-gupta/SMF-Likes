@@ -74,23 +74,23 @@ function LP_statsMainIndex() {
 		// Load up the guns
 		$context['lp_stats_tabs'] = array(
 			'messagestats' => array(
-				'label' => 'Message',
+				'label' => $txt['like_post_message'],
 				'id' => 'messagestats',
 			),
 			'topicstats' => array(
-				'label' => 'Topic',
+				'label' => $txt['like_post_topic'],
 				'id' => 'topicstats',
 			),
 			'boardstats' => array(
-				'label' => 'Board',
+				'label' => $txt['like_post_board'],
 				'id' => 'boardstats',
 			),
 			'usergivenstats' => array(
-				'label' => 'Most liked User',
+				'label' => $txt['like_post_tab_mlmember'],
 				'id' => 'mostlikesreceiveduserstats',
 			),
 			'userreceivedstats' => array(
-				'label' => 'Most likes giving user',
+				'label' => $txt['like_post_tab_mlgmember'],
 				'id' => 'mostlikesgivenuserstats',
 			),
 		);

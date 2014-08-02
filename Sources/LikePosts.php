@@ -287,9 +287,13 @@ function LP_likePosts() {
 
 		$remaining_likes = (int) ($count - 1);
 		if(!empty($rating)) {
-			$liked_text = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and']. ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+			if ($remaining_likes > 0) {
+				$liked_text = sprintf($txt['like_post_string_you_and_liked'] $remaining_likes);
+			else {
+				$liked_text = $txt['like_post_string_you_liked'];
+			}
 		} else {
-			$liked_text = !empty($count) ? $count . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'] : '';
+			$liked_text = !empty($count) ? sprintf($txt['like_post_string_people_liked'], $count) : '';
 		}
 
 		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);
@@ -373,13 +377,16 @@ function LP_isPostLiked($arr, $id) {
 			$data['text'] = $txt['like_post_unlike'];
 
 			$remaining_likes = (int) ($data['count'] - 1);
-			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+			if ($remaining_likes > 0) {
+				$data['count_text'] = sprintf($txt['like_post_string_you_and_liked'] $remaining_likes);
+			else {
+				$data['count_text'] = $txt['like_post_string_you_liked'];
 
 			//If already liked make it to unlink
 			$data['already_liked'] = 0;
 		} else {
 			$data['text'] = $txt['like_post_like'];
-			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+			$data['count_text'] = sprintf($txt['like_post_string_people_liked'], $data['count']);
 
 			//Give them the option to like
 			$data['already_liked'] = 1;
@@ -466,13 +473,16 @@ function LP_isTopicLiked($arr, $id) {
 			$data['text'] = $txt['like_post_unlike'];
 
 			$remaining_likes = (int) ($data['count'] - 1);
-			$data['count_text'] = $txt['like_post_string_you'] . ($remaining_likes > 0 ? ' ' . $txt['like_post_string_part_and'] . ' '. $remaining_likes . ' '. $txt['like_post_string_other'] . ($remaining_likes > 1 ? $txt['like_post_string_s'] : '')  : '') . ' ' . $txt['like_post_string_part_common'];
+			if ($remaining_likes > 0) {
+				$data['count_text'] = sprintf($txt['like_post_string_you_and_liked'] $remaining_likes);
+			else {
+				$data['count_text'] = $txt['like_post_string_you_liked'];
 
 			//If already liked make it to unlink
 			$data['already_liked'] = 0;
 		} else {
 			$data['text'] = $txt['like_post_like'];
-			$data['count_text'] = $data['count'] . ' ' . $txt['like_post_string_people'] . ' ' . $txt['like_post_string_part_common'];
+			$data['count_text'] = sprintf($txt['like_post_string_people_liked'], $data['count']);
 			//Give them the option to like
 			$data['already_liked'] = 1;
 		}
