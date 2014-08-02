@@ -81,7 +81,7 @@ $txt['like_post_post_info']  = 'Post info';
 $txt['like_post_no_of_likes'] = 'No. of Likes';
 
 $txt['like_post_tab_title'] = 'See likes';
-$txt['like_post_tab_description'] = 'see likes given/taken';
+$txt['like_post_tab_description'] = 'See likes given/taken';
 
 // Like posts stats strings
 $txt['like_post_stats'] = 'Like stats';

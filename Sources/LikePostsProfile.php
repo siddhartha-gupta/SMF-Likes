@@ -52,8 +52,8 @@ function LP_showLikeProfile($memID) {
 	);
 
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => 'See likes',
-		'description' => 'see likes given/taken',
+		'title' => $txt['like_post_tab_title'],
+		'description' => $txt['like_post_tab_description'],
 		'icon' => 'profile_sm.gif',
 		'tabs' => array(
 			'seeownlikes' => array(),
