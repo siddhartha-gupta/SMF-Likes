@@ -202,7 +202,7 @@ function checkVersion1_2Upgrade() {
 		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
-			$result = $smcFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}like_post
 				SET id_member_received = {int:id_member_received}
 				WHERE id_msg = {int:id_msg}',

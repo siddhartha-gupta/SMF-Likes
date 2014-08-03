@@ -271,7 +271,6 @@ likePosts.prototype.showLikeNotification = function() {
 
 				if (checkFloat > window.innerWidth) {
 					leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-					console.log(leftOffset);
 				}
 
 				lpObj.jQRef('.like_posts_notification').css({
