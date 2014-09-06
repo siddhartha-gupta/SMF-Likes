@@ -475,7 +475,7 @@ function LP_DB_getAllNotification() {
 		$notificationData['all'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 			'id' => $row['id_msg'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-			'subject' => $row['subject'],
+			'subject' => utf8_encode($row['subject']),
 			'total_likes' => 1,
 			'member' => array(
 				'name' => $row['real_name'],
@@ -509,7 +509,7 @@ function LP_DB_getAllNotification() {
 		$notificationData['mine'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 			'id' => $row['id_msg'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-			'subject' => $row['subject'],
+			'subject' => utf8_encode($row['subject']),
 			'total_likes' => 1,
 			'member' => array(
 				'name' => $row['real_name'],
