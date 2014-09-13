@@ -568,7 +568,7 @@ function LP_DB_getStatsMostLikedMessage() {
 
 	if(!isset($id_member_gave) || empty($id_member_gave)) {
 		return $mostLikedMessage = array(
-			'noDataMessage' => $txt['like_post_error_no_data']
+			'noDataMessage' => $txt['lp_error_no_data']
 		);
 	}
 
@@ -617,7 +617,7 @@ function LP_DB_getStatsMostLikedTopic() {
 
 	if(!isset($id_msg) || empty($id_msg)) {
 		return $mostLikedTopic = array(
-			'noDataMessage' => $txt['like_post_error_no_data']
+			'noDataMessage' => $txt['lp_error_no_data']
 		);
 	}
 
@@ -675,7 +675,7 @@ function LP_DB_getStatsMostLikedBoard() {
 
 	if(!isset($id_topics) || empty($id_topics)) {
 		return $mostLikedBoard = array(
-			'noDataMessage' => $txt['like_post_error_no_data']
+			'noDataMessage' => $txt['lp_error_no_data']
 		);
 	}
 
@@ -745,7 +745,7 @@ function LP_DB_getStatsMostLikedUser() {
 
 	if(!isset($id_member) || empty($id_member)) {
 		return $mostLikedMember = array(
-			'noDataMessage' => $txt['like_post_error_no_data']
+			'noDataMessage' => $txt['lp_error_no_data']
 		);
 	}
 
@@ -815,7 +815,7 @@ function LP_DB_getStatsMostLikesGivenUser() {
 
 	if(!isset($id_msgs) || empty($id_msgs)) {
 		return $mostLikeGivingMember = array(
-			'noDataMessage' => $txt['like_post_error_no_data']
+			'noDataMessage' => $txt['lp_error_no_data']
 		);
 	}
 

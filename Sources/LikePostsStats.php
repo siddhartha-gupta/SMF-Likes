@@ -40,14 +40,14 @@ function LP_statsMainIndex() {
 	// Check the permission over here itself
 	$context['like_post_stats_error'] = '';
 	if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
-		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+		$context['like_post_stats_error'] = $txt['lp_no_access'];
 	}
 
 	if($user_info['is_guest'] && !LP_isAllowedTo(array('guests_can_view_likes_stats'))) {
-		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+		$context['like_post_stats_error'] = $txt['lp_no_access'];
 	}
 	if(!LP_isAllowedTo(array('can_view_likes_stats'))) {
-		$context['like_post_stats_error'] = $txt['like_post_no_access'];
+		$context['like_post_stats_error'] = $txt['lp_no_access'];
 	}
 
 	if(isset($_REQUEST['area']) && !empty($_REQUEST['area']) && $_REQUEST['area'] === 'ajaxdata' && empty($context['like_post_stats_error'])) {
@@ -68,29 +68,29 @@ function LP_statsMainIndex() {
 		$default_action_func();
 	} else {
 		loadtemplate('LikePostsStats');
-		$context['page_title'] = $txt['like_post_stats'];
+		$context['page_title'] = $txt['lp_stats'];
 		$context['like_posts']['tab_desc'] = $txt['like_posts_stats_desc'];
 
 		// Load up the guns
 		$context['lp_stats_tabs'] = array(
 			'messagestats' => array(
-				'label' => $txt['like_post_message'],
+				'label' => $txt['lp_message'],
 				'id' => 'messagestats',
 			),
 			'topicstats' => array(
-				'label' => $txt['like_post_topic'],
+				'label' => $txt['lp_topic'],
 				'id' => 'topicstats',
 			),
 			'boardstats' => array(
-				'label' => $txt['like_post_board'],
+				'label' => $txt['lp_board'],
 				'id' => 'boardstats',
 			),
 			'usergivenstats' => array(
-				'label' => $txt['like_post_tab_mlmember'],
+				'label' => $txt['lp_tab_mlmember'],
 				'id' => 'mostlikesreceiveduserstats',
 			),
 			'userreceivedstats' => array(
-				'label' => $txt['like_post_tab_mlgmember'],
+				'label' => $txt['lp_tab_mlgmember'],
 				'id' => 'mostlikesgivenuserstats',
 			),
 		);
@@ -110,7 +110,7 @@ function LP_messageStats () {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}
@@ -127,7 +127,7 @@ function LP_topicStats() {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}
@@ -144,7 +144,7 @@ function LP_boardStats() {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}
@@ -161,7 +161,7 @@ function LP_mostLikesReceivedUserStats() {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}
@@ -178,7 +178,7 @@ function LP_mostLikesGivenUserStats() {
 		echo json_encode($resp);
 		die();
 	} else {
-		$resp = array('response' => false, 'error' => $txt['like_post_error_something_wrong']);
+		$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 		echo json_encode($resp);
 		die();
 	}

@@ -42,7 +42,7 @@ function LP_modifySettings($return_config = false) {
 	loadLanguage('LikePosts');
 	loadtemplate('LikePosts');
 
-	$context['page_title'] = $txt['like_post_admin_panel'];
+	$context['page_title'] = $txt['lp_admin_panel'];
 	$default_action_func = 'LP_generalSettings';
 
 	$context['like_posts']['permission_settings'] = array(
@@ -61,18 +61,22 @@ function LP_modifySettings($return_config = false) {
 
 	// Load up the guns
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['like_post_admin_panel'],
+		'title' => $txt['lp_admin_panel'],
 		'tabs' => array(
 			'generalsettings' => array(
-				'label' => $txt['like_post_general_settings'],
+				'label' => $txt['lp_general_settings'],
 				'url' => 'generalsettings',
 			),
 			'permissions' => array(
-				'label' => $txt['like_post_permission_settings'],
+				'label' => $txt['lp_permission_settings'],
 				'url' => 'permissionsettings',
 			),
+			'board_settings' => array(
+				'label' => $txt['lp_board_settings'],
+				'url' => 'boardsettings',
+			),
 			'recountstats' => array(
-				'label' => $txt['like_post_recount_stats'],
+				'label' => $txt['lp_recount_stats'],
 				'url' => 'recountlikestats',
 			),
 		),
@@ -84,6 +88,8 @@ function LP_modifySettings($return_config = false) {
 		'savegeneralsettings' => 'LP_saveGeneralSettings',
 		'permissionsettings' => 'LP_permissionSettings',
 		'savepermissionsettings' => 'LP_savePermissionsettings',
+		'boardsettings' => 'LP_boardsettings',
+		'saveboardsettings' => 'LP_saveBoardsettings',
 		'recountlikestats' => 'LP_recountLikeStats',
 	);
 
@@ -106,16 +112,16 @@ function LP_generalSettings($return_config = false) {
 	require_once($sourcedir . '/ManageServer.php');
 
 	$general_settings = array(
-		array('check', 'like_post_enable', 'subtext' => $txt['like_post_enable_desc']),
+		array('check', 'like_post_enable', 'subtext' => $txt['lp_enable_desc']),
 		array('text', 'like_per_profile_page', 'subtext' => $txt['like_per_profile_page_desc']),
 		array('text', 'like_in_notification', 'subtext' => $txt['like_in_notification_desc']),
 		array('check', 'lp_show_like_on_boards', 'subtext' => $txt['lp_show_like_on_boards_desc']),
 	);
 
-	$context['page_title'] = $txt['like_post_admin_panel'];
+	$context['page_title'] = $txt['lp_admin_panel'];
 	$context['sub_template'] = 'lp_admin_general_settings';
-	$context['like_posts']['tab_name'] = $txt['like_post_general_settings'];
-	$context['like_posts']['tab_desc'] = $txt['like_post_general_settings_desc'];
+	$context['like_posts']['tab_name'] = $txt['lp_general_settings'];
+	$context['like_posts']['tab_desc'] = $txt['lp_general_settings_desc'];
 	prepareDBSettingContext($general_settings);
 }
 
@@ -151,16 +157,16 @@ function LP_permissionSettings() {
 	require_once($sourcedir . '/Subs-Membergroups.php');
 	$context['like_posts']['groups'][0] = array(
 		'id_group' => 0,
-		'group_name' => $txt['like_post_regular_members'],
+		'group_name' => $txt['lp_regular_members'],
 	);
 	$context['like_posts']['groups'] += list_getMembergroups(null, null, 'id_group', 'regular');
 	unset($context['like_posts']['groups'][3]);
 	unset($context['like_posts']['groups'][1]);
 
-	$context['page_title'] = $txt['like_post_admin_panel'];
+	$context['page_title'] = $txt['lp_admin_panel'];
 	$context['sub_template'] = 'lp_admin_permission_settings';
-	$context['like_posts']['tab_name'] = $txt['like_post_permission_settings'];
-	$context['like_posts']['tab_desc'] = $txt['like_post_permission_settings_desc'];
+	$context['like_posts']['tab_name'] = $txt['lp_permission_settings'];
+	$context['like_posts']['tab_desc'] = $txt['lp_permission_settings_desc'];
 }
 
 function LP_savePermissionsettings() {
@@ -229,6 +235,57 @@ function LP_savePermissionsettings() {
 	}
 }
 
+function LP_boardsettings() {
+	global $txt, $context, $sourcedir, $cat_tree, $boards, $boardList;
+
+	isAllowedTo('admin_forum');
+	require_once($sourcedir . '/Subs-Boards.php');
+
+	$context['page_title'] = $txt['lp_admin_panel'];
+	$context['sub_template'] = 'lp_admin_board_settings';
+	$context['like_posts']['tab_name'] = $txt['lp_board_settings'];
+	$context['like_posts']['tab_desc'] = $txt['lp_board_settings_desc'];
+	getBoardTree();
+
+	$context['categories'] = array();
+	foreach ($cat_tree as $catid => $tree)
+	{
+		$context['categories'][$catid] = array(
+			'name' => &$tree['node']['name'],
+			'id' => &$tree['node']['id'],
+			'boards' => array()
+		);
+
+		foreach ($boardList[$catid] as $boardid)
+		{
+			$context['categories'][$catid]['boards'][$boardid] = array(
+				'id' => &$boards[$boardid]['id'],
+				'name' => &$boards[$boardid]['name'],
+				'child_level' => &$boards[$boardid]['level'],
+			);
+		}
+	}
+}
+
+function LP_saveBoardsettings() {
+	global $sourcedir;
+
+	/* I can has Adminz? */
+	isAllowedTo('admin_forum');
+
+	if (isset($_POST['submit'])) {
+		checkSession();
+
+		$activeBoards = $_POST['active_board'];
+		$activeBoards = isset($activeBoards) && !empty($activeBoards) ? implode(',', $activeBoards) : '';
+		$general_settings[] = array('lp_active_boards', $activeBoards);
+
+		require_once($sourcedir . '/Subs-LikePosts.php');
+		LP_DB_updatePermissions($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=boardsettings');
+	}
+}
+
 function LP_recountLikeStats() {
 	global $txt, $context, $sourcedir, $settings;
 
@@ -238,10 +295,10 @@ function LP_recountLikeStats() {
 	require_once($sourcedir . '/LikePosts.php');
 
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
-	$context['page_title'] = $txt['like_post_admin_panel'];
+	$context['page_title'] = $txt['lp_admin_panel'];
 	$context['sub_template'] = 'lp_admin_recount_stats';
-	$context['like_posts']['tab_name'] = $txt['like_post_recount_stats'];
-	$context['like_posts']['tab_desc'] = $txt['like_post_recount_stats_desc'];
+	$context['like_posts']['tab_name'] = $txt['lp_recount_stats'];
+	$context['like_posts']['tab_desc'] = $txt['lp_recount_stats_desc'];
 
 	$subActions = array(
 		'totallikes' => 'LP_recountLikesTotal',

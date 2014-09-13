@@ -42,18 +42,18 @@ function LP_showLikeProfile($memID) {
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 	$default_action_func = 'LP_getOwnLikes';
 	$default_template_func = 'lp_show_own_likes';
-	$default_title = $txt['like_post_you_liked'];
+	$default_title = $txt['lp_you_liked'];
 
 	// array is defined as follow
 	// source func, template func name
 	$subActions = array(
-		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', $txt['like_post_you_liked']),
-		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', $txt['like_post_liked_by_others']),
+		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', $txt['lp_you_liked']),
+		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', $txt['lp_liked_by_others']),
 	);
 
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['like_post_tab_title'],
-		'description' => $txt['like_post_tab_description'],
+		'title' => $txt['lp_tab_title'],
+		'description' => $txt['lp_tab_description'],
 		'icon' => 'profile_sm.gif',
 		'tabs' => array(
 			'seeownlikes' => array(),

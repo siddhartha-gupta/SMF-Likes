@@ -40,7 +40,7 @@ function LP_addAdminPanel(&$admin_areas) {
 	loadtemplate('LikePosts');
 
 	$admin_areas['config']['areas']['likeposts'] = array(
-		'label' => $txt['like_post_menu'],
+		'label' => $txt['lp_menu'],
 		'file' => 'LikePostsAdmin.php',
 		'function' => 'LP_modifySettings',
 		'icon' => 'administration.gif',
@@ -63,12 +63,12 @@ function LP_addProfilePanel(&$profile_areas) {
 	loadtemplate('LikePosts');
 
 	$profile_areas['info']['areas']['likeposts'] = array(
-		'label' => $txt['like_post_menu'],
+		'label' => $txt['lp_menu'],
 		'file' => 'LikePostsProfile.php',
 		'function' => 'LP_showLikeProfile',
 		'subsections' => array(
-			'seeownlikes' => array($txt['like_post_you_liked'], array('profile_view_own', 'profile_view_any')),
-			'seeotherslikes' => array($txt['like_post_liked_by_others'], array('profile_view_own', 'profile_view_any')),
+			'seeownlikes' => array($txt['lp_you_liked'], array('profile_view_own', 'profile_view_any')),
+			'seeotherslikes' => array($txt['lp_liked_by_others'], array('profile_view_own', 'profile_view_any')),
 		),
 		'permission' => array(
 			'own' => 'profile_view_own',
@@ -109,7 +109,7 @@ function LP_addMenu(&$menu_buttons) {
 			array_slice($menu_buttons, 0, $initPos),
 			array(
 				'like_post_stats' => array(
-					'title' => $txt['like_post_stats'],
+					'title' => $txt['lp_stats'],
 					'href' => $scripturl . '?action=likepostsstats',
 					'show' => true,
 				),

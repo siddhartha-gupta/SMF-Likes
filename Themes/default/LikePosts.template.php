@@ -36,7 +36,7 @@ function template_lp_admin_info() {
 	echo '
 	<div class="cat_bar">
 		<h3 class="catbg">
-			<span class="ie6_header floatleft">', $txt['like_post_admin_panel'] ,'</span>
+			<span class="ie6_header floatleft">', $txt['lp_admin_panel'] ,'</span>
 		</h3>
 	</div>
 	<p class="windowbg description">', isset($context['like_posts']['tab_desc']) ? $context['like_posts']['tab_desc'] : $txt['rp_general_desc'] ,'</p>';
@@ -109,7 +109,7 @@ function template_lp_admin_general_settings() {
 
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="submit" value="', $txt['like_post_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 		
 					echo '
 					</div>
@@ -137,7 +137,7 @@ function template_lp_admin_permission_settings() {
 						$permVals = isset($modSettings[$perm]) && strlen($modSettings[$perm]) > 0 ? (explode(',', $modSettings[$perm])) : '';
 
 						echo ' <fieldset>';
-						echo '<legend>' . $txt['like_post_perm_' . $perm] . '</legend>';
+						echo '<legend>' . $txt['lp_perm_' . $perm] . '</legend>';
 					
 						foreach ($context['like_posts']['groups'] as $group) {
 							echo '
@@ -148,17 +148,56 @@ function template_lp_admin_permission_settings() {
 
 
 					echo ' <fieldset>
-						<legend>' . $txt['like_post_guest_permissions'] . '</legend>';
+						<legend>' . $txt['lp_guest_permissions'] . '</legend>';
 
 						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
 							echo '
-								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['like_post_guest_perm_' . $perm] . '</label><br />';
+								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['lp_guest_perm_' . $perm] . '</label><br />';
 						}
 					echo ' </fieldset>';
 
 					echo '
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="submit" value="', $txt['like_post_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
+		
+					echo '
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+	
+		</form>
+	</div>
+	<br class="clear">';
+}
+
+function template_lp_admin_board_settings() {
+	global $context, $txt, $scripturl, $modSettings;
+
+	template_lp_admin_info();
+
+	echo '
+	<div id="admincenter">
+		<form action="'. $scripturl .'?action=admin;area=likeposts;sa=saveboardsettings" method="post" accept-charset="UTF-8">
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">';
+
+					$activeBoards = isset($modSettings['lp_active_boards']) && strlen($modSettings['lp_active_boards']) > 0 ? (explode(',', $modSettings['lp_active_boards'])) : '';
+
+					foreach ($context['categories'] as $key => $category) {
+						echo ' <fieldset>';
+						echo '<legend>' . $category['name'] . '</legend>';
+					
+						foreach ($category['boards'] as $board) {
+							echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
+								<input' . (is_array($activeBoards) && in_array($board['id'], $activeBoards) ? ' checked="checked"' : '') . ' id="' . $board['id'] . '" type="checkbox" name="active_board[]" value="' . $board['id'] . '" /><label for="' . $board['name'] . '">' . $board['name'] . '</label></div>';
+						}
+						echo ' </fieldset>';
+					}
+
+					echo '
+					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
 		
 					echo '
 					</div>
@@ -208,15 +247,15 @@ function template_lp_show_own_likes() {
 	echo '
 	<div class="tborder">
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['like_post_like_you_gave'], '</h3>
+			<h3 class="catbg">', $txt['lp_like_you_gave'], '</h3>
 		</div>';
 
 		echo '
 		<table class="table_grid" width="100%" cellspacing="0">
 			<thead>
 				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">', $txt['like_post_post_info'], '</th>
-					<th class="lefttext last_th" scope="col" width="20%">', $txt['like_post_no_of_likes'], '</th>
+					<th class="lefttext first_th" scope="col" width="80%">', $txt['lp_post_info'], '</th>
+					<th class="lefttext last_th" scope="col" width="20%">', $txt['lp_no_of_likes'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -263,15 +302,15 @@ function template_lp_show_others_likes() {
 	echo '
 	<div class="tborder">
 		<div class="cat_bar">
-			<h3 class="catbg">', $txt['like_post_like_you_obtained'], '</h3>
+			<h3 class="catbg">', $txt['lp_like_you_obtained'], '</h3>
 		</div>';
 
 		echo '
 		<table class="table_grid" width="100%" cellspacing="0">
 			<thead>
 				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">', $txt['like_post_post_info'], '</th>
-					<th class="lefttext last_th" scope="col" width="20%">', $txt['like_post_no_of_likes'], '</th>
+					<th class="lefttext first_th" scope="col" width="80%">', $txt['lp_post_info'], '</th>
+					<th class="lefttext last_th" scope="col" width="20%">', $txt['lp_no_of_likes'], '</th>
 				</tr>
 			</thead>
 			<tbody>';
