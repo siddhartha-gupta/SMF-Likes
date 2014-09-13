@@ -537,6 +537,18 @@ function LP_isAllowedTo($permissions) {
 	return $result;
 }
 
+function LP_isBoardIncluded($boardId) {
+	global $modSettings;
+
+	$activeBoards = isset($modSettings['lp_active_boards']) && strlen($modSettings['lp_active_boards']) > 0 ? (explode(',', $modSettings['lp_active_boards'])) : '';
+
+	if(is_array($activeBoards) && in_array($boardId, $activeBoards)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function LP_getAllNotification() {
 	global $sourcedir, $user_info;
 
