@@ -26,13 +26,16 @@ This mod provides and interface to like/unlike posts.
 - Enable the permission "Can view stats of liked posts" for those groups who can view like posts stats
 - Enable the permissions for guests about where they can see likes i.e in posts/topics, boards, profiles & whether or not they can see the liked posts stats
 
+[i]Board Settings[/i]
+- Select on which boards you want to enable the mod
+- If you want to select all boards in a category, just click on the category name
+
 [i]Recount Like Stats[/i]
 - To recount the total likes user has received so far. One should run this once a month at least.
 
 
 [b]Note[/b] - If you are upgrading from version < 1.2, please recount the total like of the users from:
 My Community » Administration Center » Like Posts  » Recount Like stats
-
 
 
 [b]Change Log[/b]
