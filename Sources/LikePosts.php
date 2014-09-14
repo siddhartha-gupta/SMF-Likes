@@ -219,6 +219,7 @@ function LP_checkJsonEncode() {
 		}
 	}
 }
+
 /*
  * Our main function which decides which sub-function will be utilized
 */

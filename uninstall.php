@@ -40,7 +40,7 @@ elseif (!defined('SMF'))
 
 global $sourcedir, $smcFunc;
 
-$like_post_permissions = array('like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards');
+$like_post_permissions = array('like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
 
 $smcFunc['db_query']('', '
     DELETE FROM {db_prefix}settings

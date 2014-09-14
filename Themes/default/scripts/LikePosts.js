@@ -91,7 +91,7 @@ likePosts.prototype.onLikeSuccess = function(params) {
 		likeText = params.likeText,
 		newLink = (params.rating === 1) ? '#0' : '#1';
 
-	if(parseInt(likeButtonRef.attr('href').split('#')[1], 10) === 0) {
+	if (parseInt(likeButtonRef.attr('href').split('#')[1], 10) === 0) {
 		likeButtonRef.removeClass('unlike_link').addClass('like_link');
 	} else {
 		likeButtonRef.removeClass('like_link').addClass('unlike_link');
@@ -170,7 +170,7 @@ likePosts.prototype.showMessageLikedInfo = function(messageId) {
 						height += lpObj.jQRef(this).outerHeight();
 					});
 
-					if(height >= (window.innerHeight - 100)) {
+					if (height >= (window.innerHeight - 100)) {
 						height = window.innerHeight - 200;
 					}
 					lpObj.jQRef('.like_posts_member_info_box').css({
@@ -469,6 +469,21 @@ likePosts.prototype.removeOverlay = function(e) {
 		lpObj.jQRef('.like_posts_overlay').unbind('click');
 		lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
 		lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
+	}
+};
+
+likePosts.prototype.selectInputByLegend = function(event, elem) {
+	event.preventDefault();
+
+	var elemRef = lpObj.jQRef(elem),
+		parent = elemRef.parent();
+
+	if (elemRef.data('allselected') === false) {
+		parent.find('input:checkbox').prop('checked', true);
+		elemRef.data('allselected', true);
+	} else {
+		parent.find('input:checkbox').prop('checked', false);
+		elemRef.data('allselected', false);
 	}
 };
 
