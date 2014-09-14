@@ -37,6 +37,14 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 
 [b]Change Log[/b]
 
+[i]Version 1.6[/i]
+- Added new permission to enable disable mod for specific boards
+- Fix for notification UTF8 chars
+- Fixes for mouse/hover events
+- Like/unlike css classes separated out
+- Missing text strings added. Thanks to emanuele45
+
+
 [i]Version 1.5.2[/i]
 - Fixes for jquery version compare function
 - Fix for avatar not loading:#18

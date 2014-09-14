@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.5.2
+* @version 1.6
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -41,6 +41,7 @@ global $smcFunc, $db_prefix, $sourcedir;
 if (!array_key_exists('db_add_column', $smcFunc))
 	db_extend('packages');
 
+// Table structure for like posts
 $tables = array(
 	'like_post' => array (
 		'columns' => array (
@@ -134,17 +135,22 @@ $tables = array(
 	)
 );
 
+// create the tables if not created
 foreach ($tables as $table => $data) {
 	$smcFunc['db_create_table']('{db_prefix}' . $table, $data['columns'], $data['indexes']);
 }
 	
 // Upgrade thinggy
+// Changes made in v1.2
 checkVersion1_2Upgrade();
+
+// Changes made in v1.5
 checkVersion1_5Upgrade();
 
 // For all general settings add 'like_post_' as prefix
-updateSettings(array('like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1));
+updateSettings(array('like_post_mod_version' => '1.6', 'like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 
+// Add hooks and plugin the mod
 add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
 add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
 add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
