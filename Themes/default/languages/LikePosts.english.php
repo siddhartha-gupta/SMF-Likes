@@ -128,6 +128,7 @@ $txt['lp_total_posts'] = 'Total posts';
 $txt['lp_posted_at'] = 'Posted at';
 $txt['lp_read_more'] = 'read more...';
 $txt['lp_submit'] = 'Submit';
+$txt['lp_select_all_boards'] = 'Select all boards';
 
 // Error msgs
 $txt['lp_cannot_like_posts'] = 'You do not have the permissions to like posts.';

@@ -180,28 +180,27 @@ function template_lp_admin_board_settings() {
 		<form action="'. $scripturl .'?action=admin;area=likeposts;sa=saveboardsettings" method="post" accept-charset="UTF-8">
 			<div class="windowbg2">
 				<span class="topslice"><span></span></span>
-					<div class="content">';
+				<div class="content" id="lp_board_settings">';
 
-					$activeBoards = isset($modSettings['lp_active_boards']) && strlen($modSettings['lp_active_boards']) > 0 ? (explode(',', $modSettings['lp_active_boards'])) : '';
+				$activeBoards = isset($modSettings['lp_active_boards']) && strlen($modSettings['lp_active_boards']) > 0 ? (explode(',', $modSettings['lp_active_boards'])) : '';
 
-					foreach ($context['categories'] as $key => $category) {
-						echo ' <fieldset>';
-						echo '<legend onclick="lpObj.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
-					
-						foreach ($category['boards'] as $board) {
-							echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
-								<input' . (is_array($activeBoards) && in_array($board['id'], $activeBoards) ? ' checked="checked"' : '') . ' id="' . $board['id'] . '" type="checkbox" name="active_board[]" value="' . $board['id'] . '" /><label for="' . $board['name'] . '">' . $board['name'] . '</label></div>';
-						}
-						echo ' </fieldset>';
+				foreach ($context['categories'] as $key => $category) {
+					echo ' <fieldset>';
+					echo '<legend onclick="lpObj.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
+				
+					foreach ($category['boards'] as $board) {
+						echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
+							<input' . (is_array($activeBoards) && in_array($board['id'], $activeBoards) ? ' checked="checked"' : '') . ' id="' . $board['id'] . '" type="checkbox" name="active_board[]" value="' . $board['id'] . '" /><label for="' . $board['name'] . '">' . $board['name'] . '</label></div>';
 					}
-
-					echo '
+					echo ' </fieldset>';
+				}
+				echo '
+				</div>
+				<div style="padding: 0 10px 10px;">
+					<input type="checkbox" value="0" onclick="lpObj.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />';
-		
-					echo '
-					</div>
-				<span class="botslice"><span></span></span>
+					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
+				</div>
 			</div>
 	
 		</form>

@@ -495,6 +495,16 @@ likePosts.prototype.selectInputByLegend = function(event, elem) {
 	}
 };
 
+likePosts.prototype.selectAllBoards = function(event) {
+	var elemRef = lpObj.jQRef('#lp_board_settings fieldset');
+
+	if (lpObj.jQRef(event.target).is(':checked')) {
+		elemRef.find('input:checkbox').prop('checked', true);
+	} else {
+		elemRef.find('input:checkbox').prop('checked', false);
+	}
+};
+
 likePosts.prototype.isMobileDevice = function() {
 	if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
 		return true;
