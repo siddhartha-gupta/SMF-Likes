@@ -269,9 +269,17 @@ likePosts.prototype.showLikeNotification = function() {
 				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
 					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
 
-				if (checkFloat > window.innerWidth) {
-					leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+				// changed from window.innerWidth for mobile devices
+				if (lpObj.isMobileDevice()) {
+					if (checkFloat > document.documentElement.clientWidth) {
+						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+					}
+				} else {
+					if (checkFloat > window.innerWidth) {
+						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+					}
 				}
+
 
 				lpObj.jQRef('.like_posts_notification').css({
 					'top': lpObj.jQRef('.showLikeNotification').offset().top,
@@ -484,6 +492,14 @@ likePosts.prototype.selectInputByLegend = function(event, elem) {
 	} else {
 		parent.find('input:checkbox').prop('checked', false);
 		elemRef.data('allselected', false);
+	}
+};
+
+likePosts.prototype.isMobileDevice = function() {
+	if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+		return true;
+	} else {
+		return false;
 	}
 };
 
