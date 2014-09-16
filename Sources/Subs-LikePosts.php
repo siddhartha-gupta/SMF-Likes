@@ -450,7 +450,7 @@ function LP_DB_updatePermissions($replaceArray) {
 }
 
 function LP_DB_getAllNotification() {
-	global $smcFunc, $scripturl, $settings, $user_info, $modSettings;
+	global $context, $smcFunc, $scripturl, $settings, $user_info, $modSettings;
 
 	$notificationData = array(
 		'all' => array(),
@@ -475,7 +475,7 @@ function LP_DB_getAllNotification() {
 		$notificationData['all'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 			'id' => $row['id_msg'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-			'subject' => utf8_encode($row['subject']),
+			'subject' => (!$context['utf8']) ? utf8_encode($row['subject']) : $row['subject'],
 			'total_likes' => 1,
 			'member' => array(
 				'name' => $row['real_name'],
@@ -509,7 +509,7 @@ function LP_DB_getAllNotification() {
 		$notificationData['mine'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 			'id' => $row['id_msg'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
-			'subject' => utf8_encode($row['subject']),
+			'subject' => (!$context['utf8']) ? utf8_encode($row['subject']) : $row['subject'],
 			'total_likes' => 1,
 			'member' => array(
 				'name' => $row['real_name'],
