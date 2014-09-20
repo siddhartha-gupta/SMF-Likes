@@ -40,6 +40,14 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 
 [b]Change Log[/b]
 
+[i]Version 1.6.1[/i]
+- Fixes for UTF8 encoding on notifications
+- Fixes for notification panel for smart devices
+- Select all board functionality
+- Persist settings on mod update
+- Acknowledging contributors
+
+
 [i]Version 1.6[/i]
 - Added new permission to enable disable mod for specific boards
 - Fix for notification UTF8 chars
