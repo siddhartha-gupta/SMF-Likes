@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.6
+* @version 1.6.1
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -40,15 +40,15 @@ elseif (!defined('SMF'))
 
 global $sourcedir, $smcFunc;
 
-$like_post_permissions = array('like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
+// $like_post_permissions = array('like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
 
-$smcFunc['db_query']('', '
-    DELETE FROM {db_prefix}settings
-    WHERE variable IN ({array_string:like_post_permissions})',
-    array(
-        'like_post_permissions' => $like_post_permissions,
-    )
-);
+// $smcFunc['db_query']('', '
+//     DELETE FROM {db_prefix}settings
+//     WHERE variable IN ({array_string:like_post_permissions})',
+//     array(
+//         'like_post_permissions' => $like_post_permissions,
+//     )
+// );
 
 remove_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php', true);
 remove_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php', true);

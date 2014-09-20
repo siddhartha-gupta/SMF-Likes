@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.6
+* @version 1.6.1
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2012, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -147,8 +147,43 @@ checkVersion1_2Upgrade();
 // Changes made in v1.5
 checkVersion1_5Upgrade();
 
-// For all general settings add 'like_post_' as prefix
-updateSettings(array('like_post_mod_version' => '1.6', 'like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+// add update settings
+
+lpAddUpdateSettings();
+
+function lpAddUpdateSettings() {
+	global $smcFunc;
+
+	$request = $smcFunc['db_query']('', '
+		SELECT * 
+		FROM {db_prefix}settings
+		WHERE variable =  {string:like_post_mod_version}
+		LIMIT 1',
+		array(
+			'like_post_mod_version' => 'like_post_mod_version',
+		)
+	);
+
+	if ($smcFunc['db_num_rows']($request) == 0) {
+		// For all general settings add 'like_post_' as prefix
+		updateSettings(array('like_post_mod_version' => '1.6.1', 'like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+	} else {
+		list ($last_version) = $smcFunc['db_fetch_row']($request);
+
+		if (version_compare('1.6.1', $last_version) >= 0) {
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}settings
+				SET value = {string:current_version}
+				WHERE variable = {string:like_post_mod_version}',
+				array(
+					'current_version' => '1.6.1',
+					'like_post_mod_version' => 'like_post_mod_version'
+				)
+			);
+		}
+	}
+	$smcFunc['db_free_result']($request);
+}
 
 // Add hooks and plugin the mod
 add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
