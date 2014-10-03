@@ -35,7 +35,7 @@ if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
-class LikePostsAdmin {
+class LikePostsDB {
 	public function __construct() {
 		loadLanguage('LikePosts');
 		loadtemplate('LikePosts');

@@ -1,123 +1,93 @@
 <?php
 
 /**
-* @package manifest file for Like Posts
-* @version 1.6.1
-* @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-* @copyright Copyright (c) 2014, Siddhartha Gupta
-* @license http://www.mozilla.org/MPL/MPL-1.1.html
-*/
+ * @package manifest file for Like Posts
+ * @version 1.6.1
+ * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+ * @copyright Copyright (c) 2014, Siddhartha Gupta
+ * @license http://www.mozilla.org/MPL/MPL-1.1.html
+ */
 
 /*
-* Version: MPL 1.1
-*
-* The contents of this file are subject to the Mozilla Public License Version
-* 1.1 (the "License"); you may not use this file except in compliance with
-* the License. You may obtain a copy of the License at
-* http://www.mozilla.org/MPL/
-*
-* Software distributed under the License is distributed on an "AS IS" basis,
-* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-* for the specific language governing rights and limitations under the
-* License.
-*
-* The Initial Developer of the Original Code is
-*  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-* Portions created by the Initial Developer are Copyright (C) 2012
-* the Initial Developer. All Rights Reserved.
-*
-* Contributor(s): Big thanks to all contributor(s)
-* emanuele45 (https://github.com/emanuele45)
-*
-*/
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Initial Developer of the Original Code is
+ *  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+ * Portions created by the Initial Developer are Copyright (C) 2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s): Big thanks to all contributor(s)
+ * emanuele45 (https://github.com/emanuele45)
+ *
+ */
 
-if (!defined('SMF'))
+if (!defined('SMF')) {
 	die('Hacking attempt...');
-
-function LP_addAdminPanel(&$admin_areas) {
-	global $txt;
-
-	loadLanguage('LikePosts');
-	loadtemplate('LikePosts');
-
-	$admin_areas['config']['areas']['likeposts'] = array(
-		'label' => $txt['lp_menu'],
-		'file' => 'LikePostsAdmin.php',
-		'function' => 'LP_modifySettings',
-		'icon' => 'administration.gif',
-		'subsections' => array(),
-	);
 }
 
-function LP_addProfilePanel(&$profile_areas) {
-	global $txt, $user_info, $modSettings;
+class LikePostsUtils {
+	public function __construct() {
+		loadLanguage('LikePosts');
+		loadtemplate('LikePosts');
+	}
 
-	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) return false;
+	function isAllowedTo($permissions) {
+		global $modSettings, $user_info;
 
-	if(isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) {
-		if($user_info['id'] !== $_REQUEST['u']) {
-			if (!(LP_isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))))
-				return false;
+		if ($user_info['is_admin']) {return true;
 		}
-	}
-	loadLanguage('LikePosts');
-	loadtemplate('LikePosts');
 
-	$profile_areas['info']['areas']['likeposts'] = array(
-		'label' => $txt['lp_menu'],
-		'file' => 'LikePostsProfile.php',
-		'function' => 'LP_showLikeProfile',
-		'subsections' => array(
-			'seeownlikes' => array($txt['lp_you_liked'], array('profile_view_own', 'profile_view_any')),
-			'seeotherslikes' => array($txt['lp_liked_by_others'], array('profile_view_own', 'profile_view_any')),
-		),
-		'permission' => array(
-			'own' => 'profile_view_own',
-			'any' => 'profile_view_any',
-		),
-	);
-}
+		if (!is_array($permissions)) {
+			$permissions = array($permissions);
+		}
 
-function LP_addAction(&$actionArray) {
-	$actionArray['likeposts'] = array('LikePosts.php', 'LP_mainIndex');
-	$actionArray['likepostsstats'] = array('LikePostsStats.php', 'LP_statsMainIndex');
-}
+		$result = true;
 
-function LP_addMenu(&$menu_buttons) {
-	global $scripturl, $txt, $user_info, $modSettings;
-
-	$isAllowedToAccess = true;
-
-	if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
-		$isAllowedToAccess = false;
-	}
-
-	if($user_info['is_guest'] && !LP_isAllowedTo(array('guests_can_view_likes_stats'))) {
-		$isAllowedToAccess = false;
-	}
-	if(!LP_isAllowedTo(array('can_view_likes_stats'))) {
-		$isAllowedToAccess = false;
-	}
-
-	if($isAllowedToAccess) {
-		// insert before logout
-		$initPos = 0;
-		reset($menu_buttons);
-		while((list($key, $val) = each($menu_buttons)) && $key != 'logout')
-			$initPos++;
-
-		$menu_buttons = array_merge(
-			array_slice($menu_buttons, 0, $initPos),
-			array(
-				'like_post_stats' => array(
-					'title' => $txt['lp_stats'],
-					'href' => $scripturl . '?action=likepostsstats',
-					'show' => true,
-				),
-			),
-			array_slice($menu_buttons, $initPos, count($menu_buttons) - $initPos)
+		$guestPermission = array(
+			'can_view_likes_in_posts',
+			'can_view_likes_in_boards',
+			'can_view_likes_in_profiles',
 		);
+
+		if ($user_info['is_guest']) {
+			$result = false;
+			$permToCheck = array_intersect($guestPermission, $permissions);
+			foreach ($permToCheck as $permission) {
+				if (in_array($permission, $guestPermission) && isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
+					$result = true;
+				} else {
+					$result = false;
+				}
+			}
+		} else {
+			$permToCheck = array_diff($permissions, $guestPermission);
+			foreach ($permToCheck as $permission) {
+				if (!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
+					$result = false;
+				} else {
+					$allowedGroups = explode(',', $modSettings[$permission]);
+					$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+
+					if (empty($groupsPassed)) {
+						$result = false;
+						break;
+					}
+				}
+			}
+		}
+		return $result;
 	}
+
 }
 
 ?>

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ *
+ *
  * @package manifest file for Like Posts
  * @version 1.6.1
  * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
@@ -35,7 +37,7 @@ if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
-class LikePostsAdmin {
+class LikeUnlikePosts {
 	public function __construct() {
 		loadLanguage('LikePosts');
 		loadtemplate('LikePosts');
