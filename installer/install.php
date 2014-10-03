@@ -186,15 +186,6 @@ function lpAddUpdateSettings() {
 	$smcFunc['db_free_result']($request);
 }
 
-// Add hooks and plugin the mod
-add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
-add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
-add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
-add_integration_function('integrate_profile_areas', 'LP_addProfilePanel');
-add_integration_function('integrate_actions', 'LP_addAction', true);
-add_integration_function('integrate_load_theme', 'LP_includeAssets', true);
-add_integration_function('integrate_menu_buttons', 'LP_addMenu');
-
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';
 
