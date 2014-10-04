@@ -19,7 +19,7 @@
 	<uninstall for="2.0 - 2.0.99">
 	    <code>installer/uninstall.php</code>
 		<remove-dir name="$sourcedir/LikePosts" />
-		<remove-dir name="$imagesdir/breeze" />
+		<remove-dir name="$imagesdir/LikePosts" />
 		<remove-dir name="$themedir/scripts/LikePosts" />
 		<remove-dir name="$themedir/images/LikePosts" />
 		<remove-file name="$themedir/LikePosts.template.php" />

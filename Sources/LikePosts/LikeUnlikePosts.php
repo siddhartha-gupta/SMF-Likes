@@ -1,4 +1,4 @@
-// <?php
+<?php
 
 // /**
 //  *
@@ -33,15 +33,14 @@
 //  *
  
 
-// if (!defined('SMF')) {
-// 	die('Hacking attempt...');
-// }
+if (!defined('SMF')) {
+	die('Hacking attempt...');
+}
 
-// class LikeUnlikePosts {
-// 	public function __construct() {
-// 		loadLanguage('LikePosts');
-// 		loadtemplate('LikePosts');
-// 	}
-// }
+class LikeUnlikePosts {
+	public function __construct() {
+		// echo 'in const';
+	}
+}
 
-// ?>
+?>

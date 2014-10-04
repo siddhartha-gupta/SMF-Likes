@@ -1,4 +1,4 @@
-// <?php
+<?php
 
 // /**
 //  * @package manifest file for Like Posts
@@ -31,15 +31,18 @@
 //  *
  
 
-// if (!defined('SMF')) {
-// 	die('Hacking attempt...');
-// }
+if (!defined('SMF')) {
+	die('Hacking attempt...');
+}
 
-// class LikePostsStats {
-// 	public function __construct() {
-// 		loadLanguage('LikePosts');
-// 		loadtemplate('LikePosts');
-// 	}
-// }
+class LikePostsStats {
+	public function __construct() {
+		// echo 'in stats const';
+	}
 
-// ?>
+	public function test() {
+		// return 'test';
+	}
+}
+
+?>
