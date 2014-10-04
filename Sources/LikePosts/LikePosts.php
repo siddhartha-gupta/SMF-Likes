@@ -39,15 +39,13 @@ if (!defined('SMF'))
 class LikePosts {
 	protected static $instance;
 
-	// protected static $sourcedir;
-	// protected static $settings;
-	// protected static $context;
 	public static $sourceFolder = '/LikePosts/';
 
 	public static $LikePostsUtils;
+	public static $LikePostsDB;
 	public static $LikePostsDispatcher;
-	// public static $LikeUnlikePosts;
-	// public static $LikePostsStats;
+	public static $LikeUnlikePosts;
+	public static $LikePostsStats;
 
 	/**
 	 * Singleton method
@@ -58,19 +56,15 @@ class LikePosts {
 		if (self::$instance === null) {
 			self::$instance = new LikePosts();
 			loadLanguage('LikePosts');
-			loadtemplate('LikePosts');
 			self::loadClass('LikePostsUtils');
+			self::loadClass('LikePostsDB');
 		}
-		return $instance;
+		return self::$instance;
+
+		// loadtemplate('LikePosts');
 	}
 
-	public function __construct() {
-		// global $sourcedir, $settings, $context;
-
-		// $sourcedir = $sourcedir;
-		// self::$settings = $settings;
-		// self::$context = $context;
-	}
+	public function __construct() {}
 
 	public static function loadClass($className) {
 		global $sourcedir;
@@ -80,6 +74,13 @@ class LikePosts {
 				if (self::$LikePostsUtils === null) {
 					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
 					self::$LikePostsUtils = new LikePostsUtils();
+				}
+				break;
+
+			case 'LikePostsDB':
+				if (self::$LikePostsDB === null) {
+					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
+					self::$LikePostsDB = new LikePostsDB();
 				}
 				break;
 
@@ -231,7 +232,7 @@ class LikePosts {
 			function loadLPScript() {
 				var js = document.createElement("script");
 				js.type = "text/javascript";
-				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts.js";
+				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePosts.js";
 				document.body.appendChild(js);
 
 				var isLPStatsPage = (window.location.href.indexOf("likepostsstats") >= 0) ? true : false;
@@ -239,13 +240,13 @@ class LikePosts {
 				if(isLPStatsPage) {
 					var statsJS = document.createElement("script");
 					statsJS.type = "text/javascript";
-					statsJS.src = "' . $settings['default_theme_url'] . '/scripts/LikePostStats.js";
+					statsJS.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePostStats.js";
 					document.body.appendChild(statsJS);
 				}
 			}
 		// ]]></script>';
 
-		// self::$checkJsonEncodeDecode;
+		self::$LikePostsUtils->checkJsonEncodeDecode();
 	}
 
 	public static function addMenuItems(&$menu_buttons) {
@@ -326,8 +327,6 @@ class LikePosts {
 		);
 	}
 }
-
-if (defined('SMF'))
-	LikePosts::getInstance();
+LikePosts::getInstance();
 
 ?>

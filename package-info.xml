@@ -23,6 +23,7 @@
 		<remove-dir name="$themedir/scripts/LikePosts" />
 		<remove-dir name="$themedir/images/LikePosts" />
 		<remove-file name="$themedir/LikePosts.template.php" />
+		<remove-file name="$themedir/LikePostsAdmin.template.php" />
 		<remove-file name="$themedir/LikePostsStats.template.php" />
 		<remove-file name="$themedir/css/likeposts.css" />
 		<remove-file name="$languagedir/LikePosts.english.php" />

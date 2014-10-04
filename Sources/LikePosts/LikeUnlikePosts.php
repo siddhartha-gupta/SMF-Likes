@@ -39,7 +39,6 @@ if (!defined('SMF')) {
 
 class LikeUnlikePosts {
 	public function __construct() {
-		// echo 'in const';
 	}
 }
 

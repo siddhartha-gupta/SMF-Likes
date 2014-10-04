@@ -1,34 +1,35 @@
-// <?php
+<?php
 
-// /**
-//  * @package manifest file for Like Posts
-//  * @version 1.6.1
-//  * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-//  * @copyright Copyright (c) 2014, Siddhartha Gupta
-//  * @license http://www.mozilla.org/MPL/MPL-1.1.html
-//  */
+/**
+* @package manifest file for Like Posts
+* @version 1.6.1
+* @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* @copyright Copyright (c) 2014, Siddhartha Gupta
+* @license http://www.mozilla.org/MPL/MPL-1.1.html
+*/
 
-
-//  * Version: MPL 1.1
-//  *
-//  * The contents of this file are subject to the Mozilla Public License Version
-//  * 1.1 (the "License"); you may not use this file except in compliance with
-//  * the License. You may obtain a copy of the License at
-//  * http://www.mozilla.org/MPL/
-//  *
-//  * Software distributed under the License is distributed on an "AS IS" basis,
-//  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  * for the specific language governing rights and limitations under the
-//  * License.
-//  *
-//  * The Initial Developer of the Original Code is
-//  *  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-//  * Portions created by the Initial Developer are Copyright (C) 2012
-//  * the Initial Developer. All Rights Reserved.
-//  *
-//  * Contributor(s): Big thanks to all contributor(s)
-//  * emanuele45 (https://github.com/emanuele45)
-//  *
+/*
+* Version: MPL 1.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Initial Developer of the Original Code is
+*  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* Portions created by the Initial Developer are Copyright (C) 2012
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s): Big thanks to all contributor(s)
+* emanuele45 (https://github.com/emanuele45)
+*
+*/
  
 
 if (!defined('SMF'))
@@ -39,15 +40,15 @@ function LikePostsAdminIndex($return_config = false) {
 
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
-	$LikePostsAdmin = LikePostsAdmin::getInstance();
 
-	loadLanguage('LikePosts');
-	loadtemplate('LikePosts');
+	$LikePostsAdmin = LikePostsAdmin::getInstance();
+	loadtemplate('LikePostsAdmin');
 
 	$context['page_title'] = $txt['lp_admin_panel'];
-	$default_action_func = 'LP_generalSettings';
+	$defaultActionFunc = 'generalSettings';
 
-	$context['like_posts']['permission_settings'] = array(
+	// set up the vars for groups and guests permissions
+	$context['like_posts']['groups_permission_settings'] = array(
 		'can_like_posts',
 		'can_view_likes',
 		'can_view_others_likes_profile',
@@ -61,7 +62,7 @@ function LikePostsAdminIndex($return_config = false) {
 		'guests_can_view_likes_stats'
 	);
 
-	// Load up the guns
+	// Load tabs menu, text etc for the admin panel
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['lp_admin_panel'],
 		'tabs' => array(
@@ -86,22 +87,21 @@ function LikePostsAdminIndex($return_config = false) {
 	$context[$context['admin_menu_name']]['tab_data']['active_button'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : 'generalsettings';
 
 	$subActions = array(
-		'generalsettings' => 'LP_generalSettings',
-		'savegeneralsettings' => 'LP_saveGeneralSettings',
-		'permissionsettings' => 'LP_permissionSettings',
-		'savepermissionsettings' => 'LP_savePermissionsettings',
-		'boardsettings' => 'LP_boardsettings',
-		'saveboardsettings' => 'LP_saveBoardsettings',
-		'recountlikestats' => 'LP_recountLikeStats',
+		'generalsettings' => 'generalSettings',
+		'savegeneralsettings' => 'saveGeneralSettings',
+		'permissionsettings' => 'permissionSettings',
+		'savepermissionsettings' => 'savePermissionsettings',
+		'boardsettings' => 'boardsettings',
+		'saveboardsettings' => 'saveBoardsettings',
+		'recountlikestats' => 'recountLikeStats',
 	);
 
 	//wakey wakey, call the func you lazy
-	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']])) {
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists($LikePostsAdmin, $subActions[$_REQUEST['sa']]))
 		return $LikePostsAdmin->$subActions[$_REQUEST['sa']]();
-	}
 
 	// At this point we can just do our default.
-	$LikePostsAdmin->$default_action_func();
+	$LikePostsAdmin->$defaultActionFunc();
 }
 
 /*
@@ -118,22 +118,19 @@ class LikePostsAdmin {
 	 * @return void
 	 */
 	public static function getInstance() {
-		if (null === $instance) {
-			$instance = new static ();
+		if (self::$instance === null) {
+			self::$instance = new static ();
 		}
-		return $instance;
+		return self::$instance;
 	}
 
 	public function __construct() {}
 
 
-	public function LP_generalSettings($return_config = false) {
+	public function generalSettings($return_config = false) {
 		global $txt, $context, $sourcedir;
 
-		/* I can has Adminz? */
-		isAllowedTo('admin_forum');
 		require_once($sourcedir . '/ManageServer.php');
-
 		$general_settings = array(
 			array('check', 'like_post_enable', 'subtext' => $txt['lp_enable_desc']),
 			array('text', 'like_per_profile_page', 'subtext' => $txt['like_per_profile_page_desc']),
@@ -148,36 +145,31 @@ class LikePostsAdmin {
 		prepareDBSettingContext($general_settings);
 	}
 
-	public function LP_saveGeneralSettings() {
+	public function saveGeneralSettings() {
 		global $sourcedir;
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
+		checkSession('request', '', true);
 
-		if (isset($_POST['submit'])) {
-			checkSession();
+		$general_settings = array(
+			array('check', 'like_post_enable'),
+			array('text', 'like_per_profile_page'),
+			array('text', 'like_in_notification'),
+			array('check', 'lp_show_like_on_boards'),
+		);
 
-			$general_settings = array(
-				array('check', 'like_post_enable'),
-				array('text', 'like_per_profile_page'),
-				array('text', 'like_in_notification'),
-				array('check', 'lp_show_like_on_boards'),
-			);
-
-			require_once($sourcedir . '/ManageServer.php');
-			saveDBSettings($general_settings);
-			redirectexit('action=admin;area=likeposts;sa=generalsettings');
-		}
+		require_once($sourcedir . '/ManageServer.php');
+		saveDBSettings($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=generalsettings');
 	}
 
-	public function LP_permissionSettings() {
+	public function permissionSettings() {
 		global $txt, $context, $sourcedir;
 
-		/* I can has Adminz? */
-		isAllowedTo('admin_forum');
 		require_once($sourcedir . '/ManageServer.php');
-
 		require_once($sourcedir . '/Subs-Membergroups.php');
+
 		$context['like_posts']['groups'][0] = array(
 			'id_group' => 0,
 			'group_name' => $txt['lp_regular_members'],
@@ -192,78 +184,73 @@ class LikePostsAdmin {
 		$context['like_posts']['tab_desc'] = $txt['lp_permission_settings_desc'];
 	}
 
-	public function LP_savePermissionsettings() {
+	public function savePermissionsettings() {
 		global $context, $sourcedir;
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
+		checkSession('request', '', true);
+		unset($_POST['submit']);
 
-		if (isset($_POST['submit'])) {
-			checkSession();
-			unset($_POST['submit']);
+		$permissionKeys = array(
+			'can_like_posts',
+			'can_view_likes',
+			'can_view_others_likes_profile',
+			'can_view_likes_stats'
+		);
 
-			$permissionKeys = array(
-				'can_like_posts',
-				'can_view_likes',
-				'can_view_others_likes_profile',
-				'can_view_likes_stats'
-			);
+		$guestPermissionKeys = array(
+			'can_view_likes_in_posts',
+			'can_view_likes_in_boards',
+			'can_view_likes_in_profiles',
+			'guests_can_view_likes_stats'
+		);
 
-			$guestPermissionKeys = array(
-				'can_view_likes_in_posts',
-				'can_view_likes_in_boards',
-				'can_view_likes_in_profiles',
-				'guests_can_view_likes_stats'
-			);
-
-			// Array to be saved to DB
-			$general_settings = array();
-			// Array to be submitted to DB
-			foreach($_POST as $key => $val) {
-				if(in_array($key, $context['like_posts']['permission_settings'])) {
-					// Extract the user permissions first
-					if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
-						if(($key1 = array_search($key, $permissionKeys)) !== false) {
-							unset($permissionKeys[$key1]);
-						}
-						$_POST[$key] = implode(',', $_POST[$key]);
-						$general_settings[] = array($key, $_POST[$key]);
+		// Array to be saved to DB
+		$general_settings = array();
+		// Array to be submitted to DB
+		foreach($_POST as $key => $val) {
+			if(in_array($key, $context['like_posts']['groups_permission_settings'])) {
+				// Extract the user permissions first
+				if(array_filter($_POST[$key], 'is_numeric') === $_POST[$key]) {
+					if(($key1 = array_search($key, $permissionKeys)) !== false) {
+						unset($permissionKeys[$key1]);
 					}
-				} elseif(in_array($key, $context['like_posts']['guest_permission_settings'])) {
-					// Extract the guest permissions as well
-					if(is_numeric($_POST[$key])) {
-						if(($key1 = array_search($key, $guestPermissionKeys)) !== false) {
-							unset($guestPermissionKeys[$key1]);
-						}
-						$general_settings[] = array($key, $_POST[$key]);
+					$_POST[$key] = implode(',', $_POST[$key]);
+					$general_settings[] = array($key, $_POST[$key]);
+				}
+			} elseif(in_array($key, $context['like_posts']['guest_permission_settings'])) {
+				// Extract the guest permissions as well
+				if(is_numeric($_POST[$key])) {
+					if(($key1 = array_search($key, $guestPermissionKeys)) !== false) {
+						unset($guestPermissionKeys[$key1]);
 					}
+					$general_settings[] = array($key, $_POST[$key]);
 				}
 			}
-
-			// Remove the keys which were saved previously but removed this time
-			if(!empty($permissionKeys)) {
-				foreach ($permissionKeys as $value) {
-					$general_settings[] = array($value, '');
-				}
-			}
-
-			if(!empty($guestPermissionKeys)) {
-				foreach ($guestPermissionKeys as $value) {
-					$general_settings[] = array($value, '');
-				}
-			}
-			require_once($sourcedir . '/Subs-LikePosts.php');
-			LP_DB_updatePermissions($general_settings);
-			redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 		}
+
+		// Remove the keys which were saved previously but removed this time
+		if(!empty($permissionKeys)) {
+			foreach ($permissionKeys as $value) {
+				$general_settings[] = array($value, '');
+			}
+		}
+
+		if(!empty($guestPermissionKeys)) {
+			foreach ($guestPermissionKeys as $value) {
+				$general_settings[] = array($value, '');
+			}
+		}
+		// require_once($sourcedir . '/Subs-LikePosts.php');
+		LikePosts::$LikePostsDB->updatePermissions($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 	}
 
-	public function LP_boardsettings() {
+	public function boardsettings() {
 		global $txt, $context, $sourcedir, $cat_tree, $boards, $boardList;
 
-		isAllowedTo('admin_forum');
 		require_once($sourcedir . '/Subs-Boards.php');
-
 		$context['page_title'] = $txt['lp_admin_panel'];
 		$context['sub_template'] = 'lp_admin_board_settings';
 		$context['like_posts']['tab_name'] = $txt['lp_board_settings'];
@@ -271,16 +258,14 @@ class LikePostsAdmin {
 		getBoardTree();
 
 		$context['categories'] = array();
-		foreach ($cat_tree as $catid => $tree)
-		{
+		foreach ($cat_tree as $catid => $tree) {
 			$context['categories'][$catid] = array(
 				'name' => &$tree['node']['name'],
 				'id' => &$tree['node']['id'],
 				'boards' => array()
 			);
 
-			foreach ($boardList[$catid] as $boardid)
-			{
+			foreach ($boardList[$catid] as $boardid) {
 				$context['categories'][$catid]['boards'][$boardid] = array(
 					'id' => &$boards[$boardid]['id'],
 					'name' => &$boards[$boardid]['name'],
@@ -290,32 +275,26 @@ class LikePostsAdmin {
 		}
 	}
 
-	public function LP_saveBoardsettings() {
+	public function saveBoardsettings() {
 		global $sourcedir;
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
+		checkSession('request', '', true);
 
-		if (isset($_POST['submit'])) {
-			checkSession();
+		$activeBoards = $_POST['active_board'];
+		$activeBoards = isset($activeBoards) && !empty($activeBoards) ? implode(',', $activeBoards) : '';
+		$general_settings[] = array('lp_active_boards', $activeBoards);
 
-			$activeBoards = $_POST['active_board'];
-			$activeBoards = isset($activeBoards) && !empty($activeBoards) ? implode(',', $activeBoards) : '';
-			$general_settings[] = array('lp_active_boards', $activeBoards);
-
-			require_once($sourcedir . '/Subs-LikePosts.php');
-			LP_DB_updatePermissions($general_settings);
-			redirectexit('action=admin;area=likeposts;sa=boardsettings');
-		}
+		LikePosts::$LikePostsDB->updatePermissions($general_settings);
+		redirectexit('action=admin;area=likeposts;sa=boardsettings');
 	}
 
-	function LP_recountLikeStats() {
+	function recountLikeStats() {
 		global $txt, $context, $sourcedir, $settings;
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
-		require_once($sourcedir . '/Subs-LikePosts.php');
-		require_once($sourcedir . '/LikePosts.php');
 
 		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 		$context['page_title'] = $txt['lp_admin_panel'];
@@ -324,15 +303,15 @@ class LikePostsAdmin {
 		$context['like_posts']['tab_desc'] = $txt['lp_recount_stats_desc'];
 
 		$subActions = array(
-			'totallikes' => 'LP_recountLikesTotal',
+			'totallikes' => 'recountLikesTotal',
 		);
 
 		//wakey wakey, call the func you lazy
-		if (isset($_REQUEST['activity']) && isset($subActions[$_REQUEST['activity']]) && function_exists($subActions[$_REQUEST['activity']]))
-			return $subActions[$_REQUEST['activity']]();
+		if (isset($_REQUEST['activity']) && isset($subActions[$_REQUEST['activity']]) && method_exists($this, $subActions[$_REQUEST['activity']]))
+			return $this->$subActions[$_REQUEST['activity']]();
 	}
 
-	public function LP_recountLikesTotal() {
+	private function recountLikesTotal() {
 		global $txt, $context, $smcFunc;
 
 		isAllowedTo('admin_forum');

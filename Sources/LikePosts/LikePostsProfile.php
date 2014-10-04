@@ -1,4 +1,4 @@
-// <?php
+<?php
 
 // /**
 //  * @package manifest file for Like Posts
@@ -42,4 +42,4 @@
 // 	}
 // }
 
-// ?>
+?>

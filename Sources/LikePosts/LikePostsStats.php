@@ -37,11 +37,9 @@ if (!defined('SMF')) {
 
 class LikePostsStats {
 	public function __construct() {
-		// echo 'in stats const';
 	}
 
 	public function test() {
-		// return 'test';
 	}
 }
 

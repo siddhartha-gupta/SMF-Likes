@@ -36,9 +36,7 @@ if (!defined('SMF'))
 
 class LikePostsUtils {
 
-	public function __construct() {
-		// echo 'in const';
-	}
+	public function __construct() {}
 
 	public function checkJsonEncodeDecode() {
 		global $sourcedir;
