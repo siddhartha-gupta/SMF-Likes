@@ -295,8 +295,6 @@ class LikePostsAdmin {
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
-
-		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
 		$context['page_title'] = $txt['lp_admin_panel'];
 		$context['sub_template'] = 'lp_admin_recount_stats';
 		$context['like_posts']['tab_name'] = $txt['lp_recount_stats'];

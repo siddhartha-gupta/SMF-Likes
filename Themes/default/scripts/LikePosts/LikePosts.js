@@ -392,6 +392,7 @@ likePosts.prototype.recountStats = function(options) {
 		startLimit = options.startLimit || 0,
 		increment = options.increment || 100,
 		endLimit = options.endLimit || 100;
+
 	lpObj.jQRef.ajax({
 		type: "POST",
 		url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
