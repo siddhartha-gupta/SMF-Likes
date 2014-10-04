@@ -31,14 +31,23 @@
  *
  */
 
-if (!defined('SMF')) {
-	die('Hacking attempt...');
-}
-
 class LikePostsUtils {
+	protected static $instance;
+
+	/**
+	 * Singleton method
+	 *
+	 * @return void
+	 */
+	public static function getInstance() {
+		if (null === $instance) {
+			$instance = new static ();
+		}
+
+		return $instance;
+	}
+
 	public function __construct() {
-		loadLanguage('LikePosts');
-		loadtemplate('LikePosts');
 	}
 
 	function isAllowedTo($permissions) {
@@ -88,6 +97,33 @@ class LikePostsUtils {
 		return $result;
 	}
 
+	public static function checkJsonEncodeDecode() {
+		global $sourcedir;
+
+		echo 'checkJsonEncodeDecode';
+		if (!function_exists('json_decode')) {
+			function json_decode($content, $assoc = false) {
+				require_once ($sourcedir . '/JSON.php');
+				if ($assoc) {
+					$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+				} else {
+					$json = new Services_JSON;
+				}
+				return $json->decode($content);
+			}
+		}
+
+		if (!function_exists('json_encode')) {
+			function json_encode($content) {
+				require_once ($sourcedir . '/JSON.php');
+				$json = new Services_JSON;
+				return $json->encode($content);
+			}
+		}
+	}
 }
+
+if (defined('SMF'))
+	LikePostsUtils::getInstance();
 
 ?>

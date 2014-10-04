@@ -39,11 +39,12 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 elseif (!defined('SMF'))
 	die('<b>Error:</b> Cannot uninstall - please verify you put this in the same place as SMF\'s index.php.');
 
-remove_integration_function('integrate_pre_include', '$sourcedir/LikePosts/LikePosts.php');
-remove_integration_function('integrate_admin_areas', 'LikePosts::LP_addAdminPanel');
-remove_integration_function('integrate_profile_areas', 'LikePosts::LP_addProfilePanel');
-remove_integration_function('integrate_actions', 'LikePosts::LP_addAction', true);
-remove_integration_function('integrate_load_theme', 'LikePosts::LP_includeAssets', true);
-remove_integration_function('integrate_menu_buttons', 'LikePosts::LP_addMenu');
+remove_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
+remove_integration_function('integrate_pre_load', 'LP_setVars', true);
+remove_integration_function('integrate_actions', 'LP_addActionContext', true);
+remove_integration_function('integrate_load_theme', 'LP_includeAssets', true);
+remove_integration_function('integrate_menu_buttons', 'LP_addMenuItems');
+remove_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
+remove_integration_function('integrate_profile_areas', 'LP_addProfilePanel');
 
 ?>

@@ -38,12 +38,12 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF')) {
 }
 
 // Add hooks and plugin the mod
-add_integration_function('integrate_pre_include', '$sourcedir/LikePosts/LikePosts.php');
-
-add_integration_function('integrate_actions', 'LikePosts::addActionContext', true);
-add_integration_function('integrate_load_theme', 'LikePosts::includeAssets', true);
-add_integration_function('integrate_menu_buttons', 'LikePosts::addMenuItems');
-add_integration_function('integrate_admin_areas', 'LikePosts::addAdminPanel');
-add_integration_function('integrate_profile_areas', 'LikePosts::addProfilePanel');
+add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
+add_integration_function('integrate_pre_load', 'LP_setVars', true);
+add_integration_function('integrate_actions', 'LP_addActionContext', true);
+add_integration_function('integrate_load_theme', 'LP_includeAssets', true);
+add_integration_function('integrate_menu_buttons', 'LP_addMenuItems');
+add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
+add_integration_function('integrate_profile_areas', 'LP_addProfilePanel');
 
 ?>

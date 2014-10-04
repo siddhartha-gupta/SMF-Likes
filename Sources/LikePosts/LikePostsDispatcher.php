@@ -33,13 +33,8 @@
  *
  */
 
-if (!defined('SMF')) {
-	die('Hacking attempt...');
-}
-
-class LikePosts {
+class LikePostsDispatcher {
 	protected static $instance;
-	private $LikePostsUtilsInstance;
 
 	/**
 	 * Singleton method
@@ -50,13 +45,19 @@ class LikePosts {
 		if (null === $instance) {
 			$instance = new static ();
 		}
+
 		return $instance;
 	}
 
-	public function __construct() {}
+	public function __construct() {
+	}
+
+	public function statsIndex() {
+		// echo 'test';
+	}
 }
 
-if (defined('SMF'))
-	LikePosts::getInstance();
-  
+// if (defined('SMF'))
+// 	LikePostsDispatcher::getInstance();
+
 ?>
