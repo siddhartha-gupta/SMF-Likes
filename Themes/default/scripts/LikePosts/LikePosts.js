@@ -29,109 +29,195 @@
  *
  */
 
-var likePosts = function() {
-	this.timeoutTimer = null;
-	this.isLikeAjaxInProgress = false;
-};
-
-likePosts.prototype.likeUnlikePosts = function(e, mId, tId, bId, aId) {
-	if (this.isLikeAjaxInProgress === true) return false;
-
-	var userRating = e.target.href.split('#')[1],
-		msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
-		topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
-		boardId = (bId !== undefined) ? parseInt(bId, 10) : 0,
-		authorId = (aId !== undefined) ? parseInt(aId, 10) : 0,
-		rating = (userRating !== undefined) ? parseInt(userRating, 10) : 0;
-
-	if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId) || isNaN(authorId)) {
-		return false;
+// Root JS object of the mod
+(function(win) {
+	win.lpObj = win.lpObj || {};
+	if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
+		lpObj.jQRef = lp_jquery2_0_3;
 	}
 
-	this.isLikeAjaxInProgress = true;
-	lpObj.jQRef.ajax({
-		type: "POST",
-		url: smf_scripturl + '?action=likeposts;sa=like_post',
-		context: document.body,
-		dataType: "json",
-		data: {
-			msg: msgId,
-			topic: topicId,
-			board: boardId,
-			rating: rating,
-			author: authorId
-		},
-		success: function(resp) {
-			if (resp.response) {
-				var params = {
-					msgId: msgId,
-					count: (resp.count !== undefined) ? resp.count : '',
-					newText: resp.newText,
-					likeText: resp.likeText,
-					rating: rating
-				};
-				lpObj.onLikeSuccess(params);
-			} else {
-				//NOTE: Make an error callback over here
-			}
-		}
-	});
-	return true;
-};
+	lpObj.jQRef(document).ready(function() {
+		lpObj.jQRef(".some_data").on('mouseenter', function(e) {
+			e.preventDefault();
+			var currText = lpObj.jQRef(this).next().html();
 
-likePosts.prototype.onLikeSuccess = function(params) {
-	var _this = this,
-		count = parseInt(params.count, 10);
+			lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+		}).on('mouseleave', function(e) {
+			e.preventDefault();
+			lpObj.jQRef(".subject_details").fadeOut("slow");
+			lpObj.jQRef(".subject_details").remove();
+		}).on('mousemove', function(e) {
+			e.preventDefault();
+			var mousex = e.pageX + 20,
+				mousey = e.pageY + 10,
+				width = lpObj.jQRef("#wrapper").width() - mousex - 50;
 
-	if (isNaN(count)) {
-		this.isLikeAjaxInProgress = false;
-		return false;
-	}
-
-	var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
-		likeText = params.likeText,
-		newLink = (params.rating === 1) ? '#0' : '#1';
-
-	if (parseInt(likeButtonRef.attr('href').split('#')[1], 10) === 0) {
-		likeButtonRef.removeClass('unlike_link').addClass('like_link');
-	} else {
-		likeButtonRef.removeClass('like_link').addClass('unlike_link');
-	}
-
-	if (likeText.indexOf('&amp;') > 0) {
-		likeText = likeText.replace(/&amp;/g, '&');
-	}
-
-	lpObj.jQRef(likeButtonRef).attr('href', newLink);
-	lpObj.jQRef(likeButtonRef).animate({
-		left: '-40px',
-		opacity: 'toggle'
-	}, 1000, '', function() {
-		lpObj.jQRef(likeButtonRef).text(params.newText);
-
-		lpObj.jQRef(likeButtonRef).animate({
-			left: '0px',
-			opacity: 'toggle'
-		}, 1000);
-	});
-
-	if (lpObj.jQRef('#like_count_' + params.msgId).length) {
-		if (likeText === '') {
-			lpObj.jQRef('#like_count_' + params.msgId).fadeOut(2000).remove();
-		} else {
-			lpObj.jQRef('#like_count_' + params.msgId).fadeOut(1000, function() {
-				lpObj.jQRef(this).text('(' + likeText + ')').fadeIn(1000);
+			lpObj.jQRef(".subject_details").css({
+				top: mousey,
+				left: mousex,
+				width: width + "px"
 			});
-		}
-	} else {
-		lpObj.jQRef('<span class="display_inline" id="like_count_' + params.msgId + '">(' + likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
-	}
+		});
+	});
+})(window);
 
-	this.timeoutTimer = setTimeout(function() {
-		_this.isLikeAjaxInProgress = false;
-		lpObj.removeOverlay();
-	}, 2000);
-};
+
+(function() {
+	function likePostsUtils() {}
+
+	likePostsUtils.prototype = function() {
+		var getType = function(obj) {
+				return ({}).toString.call(obj).toLowerCase();
+			},
+
+			isNullUndefined = function(val, validateZeroNaN) {
+				var isNull = false,
+					type = getType(val);
+
+				switch (type) {
+					case '[object array]':
+						if (val.length === 0) {
+							isNull = true;
+						}
+						break;
+
+					case '[object object]':
+						if (Object.keys(val).length === 0) {
+							isNull = true;
+						}
+						break;
+
+					default:
+						if (typeof(val) === "undefined" || val === null || val === "" || val === "null" || val === "undefined") {
+							isNull = true;
+						} else if (validateZeroNaN && (val === 0 || isNaN(val))) {
+							isNull = true;
+						}
+				}
+				return isNull;
+			};
+
+		return {
+			'isNullUndefined': isNullUndefined
+		};
+	}();
+	lpObj.likePostsUtils = likePostsUtils;
+})();
+
+(function() {
+	function likeHandler() {}
+
+	likeHandler.prototype = function() {
+		var timeoutTimer = null,
+			isLikeAjaxInProgress = false,
+
+			likeUnlikePosts = function(e, mId, tId, bId, aId) {
+				if (isLikeAjaxInProgress === true) return false;
+
+				var userRating = e.target.href.split('#')[1],
+					msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
+					topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
+					boardId = (bId !== undefined) ? parseInt(bId, 10) : 0,
+					authorId = (aId !== undefined) ? parseInt(aId, 10) : 0,
+					rating = (userRating !== undefined) ? parseInt(userRating, 10) : 0;
+
+				if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId) || isNaN(authorId)) {
+					return false;
+				}
+
+				isLikeAjaxInProgress = true;
+				lpObj.jQRef.ajax({
+					type: "POST",
+					url: smf_scripturl + '?action=likeposts;sa=like_post',
+					context: document.body,
+					dataType: "json",
+					data: {
+						msg: msgId,
+						topic: topicId,
+						board: boardId,
+						rating: rating,
+						author: authorId
+					},
+					success: function(resp) {
+						if (resp.response) {
+							var params = {
+								msgId: msgId,
+								count: (resp.count !== undefined) ? resp.count : '',
+								newText: resp.newText,
+								likeText: resp.likeText,
+								rating: rating
+							};
+							lpObj.onLikeSuccess(params);
+						} else {
+							//NOTE: Make an error callback over here
+						}
+					}
+				});
+				return true;
+			},
+
+			onLikeSuccess = function(params) {
+				var count = parseInt(params.count, 10);
+
+				if (isNaN(count)) {
+					isLikeAjaxInProgress = false;
+					return false;
+				}
+
+				var likeButtonRef = lpObj.jQRef('#like_' + params.msgId),
+					likeText = params.likeText,
+					newLink = (params.rating === 1) ? '#0' : '#1';
+
+				if (parseInt(likeButtonRef.attr('href').split('#')[1], 10) === 0) {
+					likeButtonRef.removeClass('unlike_link').addClass('like_link');
+				} else {
+					likeButtonRef.removeClass('like_link').addClass('unlike_link');
+				}
+
+				if (likeText.indexOf('&amp;') > 0) {
+					likeText = likeText.replace(/&amp;/g, '&');
+				}
+
+				lpObj.jQRef(likeButtonRef).attr('href', newLink);
+				lpObj.jQRef(likeButtonRef).animate({
+					left: '-40px',
+					opacity: 'toggle'
+				}, 1000, '', function() {
+					lpObj.jQRef(likeButtonRef).text(params.newText);
+
+					lpObj.jQRef(likeButtonRef).animate({
+						left: '0px',
+						opacity: 'toggle'
+					}, 1000);
+				});
+
+				if (lpObj.jQRef('#like_count_' + params.msgId).length) {
+					if (likeText === '') {
+						lpObj.jQRef('#like_count_' + params.msgId).fadeOut(2000).remove();
+					} else {
+						lpObj.jQRef('#like_count_' + params.msgId).fadeOut(1000, function() {
+							lpObj.jQRef(this).text('(' + likeText + ')').fadeIn(1000);
+						});
+					}
+				} else {
+					lpObj.jQRef('<span class="display_inline" id="like_count_' + params.msgId + '">(' + likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
+				}
+
+				timeoutTimer = setTimeout(function() {
+					_this.isLikeAjaxInProgress = false;
+					lpObj.removeOverlay();
+				}, 2000);
+			};
+
+		return {
+			'likeUnlikePosts': likeUnlikePosts
+		};
+	}();
+
+	lpObj.likeHandler = likeHandler;
+})();
+
+
 
 likePosts.prototype.showMessageLikedInfo = function(messageId) {
 	if (isNaN(messageId)) {
@@ -514,34 +600,3 @@ likePosts.prototype.isMobileDevice = function() {
 		return false;
 	}
 };
-
-var lpObj = window.lpObj = new likePosts();
-if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
-	lpObj.jQRef = lp_jquery2_0_3;
-}
-
-(function() {
-	lpObj.jQRef(document).ready(function() {
-		lpObj.jQRef(".some_data").on('mouseenter', function(e) {
-			e.preventDefault();
-			var currText = lpObj.jQRef(this).next().html();
-
-			lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
-		}).on('mouseleave', function(e) {
-			e.preventDefault();
-			lpObj.jQRef(".subject_details").fadeOut("slow");
-			lpObj.jQRef(".subject_details").remove();
-		}).on('mousemove', function(e) {
-			e.preventDefault();
-			var mousex = e.pageX + 20,
-				mousey = e.pageY + 10,
-				width = lpObj.jQRef("#wrapper").width() - mousex - 50;
-
-			lpObj.jQRef(".subject_details").css({
-				top: mousey,
-				left: mousex,
-				width: width + "px"
-			});
-		});
-	});
-})();
