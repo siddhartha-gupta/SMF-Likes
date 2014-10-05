@@ -32,6 +32,8 @@
 // Root JS object of the mod
 (function(win) {
 	win.lpObj = win.lpObj || {};
+
+	lpObj.timeoutTimer = null;
 	if (typeof(lpObj.jQRef) !== 'function' && typeof(lpObj.jQRef) === 'undefined') {
 		lpObj.jQRef = lp_jquery2_0_3;
 	}
@@ -67,11 +69,11 @@
 
 	likePostsUtils.prototype = function() {
 		var removeOverlay = function(e) {
-				if (typeof(e) === 'undefined' && this.timeoutTimer === null) return false;
+				if (typeof(e) === 'undefined' && lpObj.timeoutTimer === null) return false;
 
-				else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
-					clearTimeout(_this.timeoutTimer);
-					_this.timeoutTimer = null;
+				else if (lpObj.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
+					clearTimeout(lpObj.timeoutTimer);
+					lpObj.timeoutTimer = null;
 					lpObj.jQRef('.like_posts_overlay').remove();
 					lpObj.jQRef('.like_posts_overlay').unbind('click');
 					lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
@@ -131,8 +133,7 @@
 	function likeHandler() {}
 
 	likeHandler.prototype = function() {
-		var timeoutTimer = null,
-			isLikeAjaxInProgress = false,
+		var isLikeAjaxInProgress = false,
 
 			likeUnlikePosts = function(e, mId, tId, bId, aId) {
 				if (isLikeAjaxInProgress === true) return false;
@@ -169,7 +170,7 @@
 							likeText: resp.likeText,
 							rating: rating
 						};
-						lpObj.onLikeSuccess(params);
+						onLikeSuccess(params);
 					} else {
 						//NOTE: Make an error callback over here
 					}
@@ -227,7 +228,7 @@
 					lpObj.jQRef('<span class="display_inline" id="like_count_' + params.msgId + '">(' + likeText + ')</span>').hide().appendTo('#like_post_info_' + params.msgId).fadeIn(2000);
 				}
 
-				timeoutTimer = setTimeout(function() {
+				lpObj.timeoutTimer = setTimeout(function() {
 					isLikeAjaxInProgress = false;
 					lpObj.likePostsUtils.removeOverlay();
 				}, 2000);

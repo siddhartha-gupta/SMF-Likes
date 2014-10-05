@@ -346,9 +346,6 @@ class LikePostsDB {
 				}
 			}
 		}
-		echo 'topicsLikeInfo';
-		print_r($topicsLikeInfo);
-		die();
 		return $topicsLikeInfo;
 	}
 
