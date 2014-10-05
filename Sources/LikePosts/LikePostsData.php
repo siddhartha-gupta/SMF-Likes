@@ -34,26 +34,26 @@ if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
-class LikePostsDispatcher {
+class LikePostsData {
 	public function __construct() {}
 
-	public function dispatchLikes() {
-		LikePosts::loadClass('LikeUnlikePosts');
+	public function getAllTopicsInfo($topicsArr = array(), $boardId = '') {
+		global $context, $user_info;
 
-		$subActions = array(
-			'like_post' => 'likeUnlikePostsHandler',
-			'get_message_like_info' => 'LP_getMessageLikeInfo',
-			'get_all_messages_info' => 'LP_getAllMessagesInfo',
-			'get_all_topics_info' => 'LP_getAllTopicsInfo',
-			'like_posts_notification'=> 'LP_getAllNotification',
-		);
+		if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_boards'))) {
+			return false;
+		}
 
-		if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikeUnlikePosts, $subActions[$_REQUEST['sa']]))
-			return LikePosts::$LikeUnlikePosts->$subActions[$_REQUEST['sa']]();
-	}
+		if (!is_array($topicsArr)) {
+			$topicsArr = array($topicsArr);
+		}
+		$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
 
-	public function dispatchLikeStats() {
-
+		if (empty($boardId)) {
+			return false;
+		}
+		$result = LikePosts::$LikePostsDB->getAllTopicsInfo($topicsArr, $boardId);
+		return $result;
 	}
 }
 

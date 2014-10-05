@@ -66,7 +66,28 @@
 	function likePostsUtils() {}
 
 	likePostsUtils.prototype = function() {
-		var getType = function(obj) {
+		var removeOverlay = function(e) {
+				if (typeof(e) === 'undefined' && this.timeoutTimer === null) return false;
+
+				else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
+					clearTimeout(_this.timeoutTimer);
+					_this.timeoutTimer = null;
+					lpObj.jQRef('.like_posts_overlay').remove();
+					lpObj.jQRef('.like_posts_overlay').unbind('click');
+					lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
+					lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
+				}
+			},
+
+			isMobileDevice = function() {
+				if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+
+			getType = function(obj) {
 				return ({}).toString.call(obj).toLowerCase();
 			},
 
@@ -98,10 +119,12 @@
 			};
 
 		return {
+			'removeOverlay': removeOverlay,
+			'isMobileDevice': isMobileDevice,
 			'isNullUndefined': isNullUndefined
 		};
 	}();
-	lpObj.likePostsUtils = likePostsUtils;
+	lpObj.likePostsUtils = likePostsUtils.prototype;
 })();
 
 (function() {
@@ -129,7 +152,6 @@
 				lpObj.jQRef.ajax({
 					type: "POST",
 					url: smf_scripturl + '?action=likeposts;sa=like_post',
-					context: document.body,
 					dataType: "json",
 					data: {
 						msg: msgId,
@@ -137,23 +159,25 @@
 						board: boardId,
 						rating: rating,
 						author: authorId
-					},
-					success: function(resp) {
-						if (resp.response) {
-							var params = {
-								msgId: msgId,
-								count: (resp.count !== undefined) ? resp.count : '',
-								newText: resp.newText,
-								likeText: resp.likeText,
-								rating: rating
-							};
-							lpObj.onLikeSuccess(params);
-						} else {
-							//NOTE: Make an error callback over here
-						}
 					}
+				}).done(function(resp) {
+					if (resp.response) {
+						var params = {
+							msgId: msgId,
+							count: (resp.count !== undefined) ? resp.count : '',
+							newText: resp.newText,
+							likeText: resp.likeText,
+							rating: rating
+						};
+						lpObj.onLikeSuccess(params);
+					} else {
+						//NOTE: Make an error callback over here
+					}
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function(resp) {
+					console.log(resp);
 				});
-				return true;
 			},
 
 			onLikeSuccess = function(params) {
@@ -204,8 +228,8 @@
 				}
 
 				timeoutTimer = setTimeout(function() {
-					_this.isLikeAjaxInProgress = false;
-					lpObj.removeOverlay();
+					isLikeAjaxInProgress = false;
+					lpObj.likePostsUtils.removeOverlay();
 				}, 2000);
 			};
 
@@ -214,389 +238,366 @@
 		};
 	}();
 
-	lpObj.likeHandler = likeHandler;
+	lpObj.likeHandler = likeHandler.prototype;
 })();
 
+// likePosts.prototype.showMessageLikedInfo = function(messageId) {
+// 	if (isNaN(messageId)) {
+// 		return false;
+// 	}
+
+// 	lpObj.jQRef.ajax({
+// 		type: "GET",
+// 		url: smf_scripturl + '?action=likeposts;sa=get_message_like_info',
+// 		context: document.body,
+// 		dataType: "json",
+// 		data: {
+// 			msg_id: messageId
+// 		},
+
+// 		success: function(resp) {
+// 			if (resp.response) {
+// 				if (resp.data.length <= 0) {
+// 					return false;
+// 				}
+
+// 				var data = resp.data,
+// 					i,
+// 					height = 0,
+// 					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
+
+// 				for (i in data) {
+// 					if (data.hasOwnProperty(i)) {
+// 						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
+// 					}
+// 				}
+// 				completeString += '</div></div>';
+// 				lpObj.jQRef('body').append(completeString);
+
+// 				setTimeout(function() {
+// 					lpObj.jQRef('.like_posts_member_info').each(function() {
+// 						height += lpObj.jQRef(this).outerHeight();
+// 					});
+
+// 					if (height >= (window.innerHeight - 100)) {
+// 						height = window.innerHeight - 200;
+// 					}
+// 					lpObj.jQRef('.like_posts_member_info_box').css({
+// 						'height': height,
+// 						'visibility': 'visible'
+// 					});
+// 				}, 50);
+
+// 				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+
+// 				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
+// 					e.stopPropagation();
+// 				});
+// 			} else {
+// 				//NOTE: Make an error callback over here
+// 				return false;
+// 			}
+// 		}
+// 	});
+// };
+
+// likePosts.prototype.showLikeNotification = function() {
+// 	lpObj.jQRef.ajax({
+// 		type: "GET",
+// 		url: smf_scripturl + '?action=likeposts;sa=like_posts_notification',
+// 		context: document.body,
+// 		dataType: "json",
+
+// 		success: function(resp) {
+// 			if (resp.response) {
+// 				if (resp.data.length <= 0) {
+// 					return false;
+// 				}
+
+// 				var data = resp.data,
+// 					notificationInfo = '',
+// 					i, j, k,
+// 					dataLengthAll = 0,
+// 					dataLengthMine = 0,
+// 					completeString = '';
+
+// 				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+
+// 				for (i in data) {
+// 					if (data.hasOwnProperty(i)) {
+// 						if (i === 'all') {
+// 							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
+// 							var len = 0;
+// 							if (data[i].length === 0) {
+// 								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+// 							} else {
+// 								for (j in data[i]) {
+// 									if (data[i].hasOwnProperty(j)) {
+// 										len++;
+// 										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+// 									}
+// 								}
+// 							}
+// 							dataLengthAll = len;
+// 							notificationInfo += '</div>';
+// 						} else if (i === 'mine') {
+// 							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
+// 							var len = 0;
+// 							if (data[i].length === 0) {
+// 								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+// 							} else {
+// 								for (k in data[i]) {
+// 									if (data[i].hasOwnProperty(k)) {
+// 										len++;
+// 										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+// 									}
+// 								}
+// 							}
+// 							dataLengthMine = len;
+// 							notificationInfo += '</div>';
+// 						}
+// 					}
+// 				}
+// 				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
+
+// 				dataLengthAll = dataLengthAll * 50;
+// 				if (dataLengthAll > 200) {
+// 					dataLengthAll = 200;
+// 				} else if (dataLengthAll < 100) {
+// 					dataLengthAll = 100;
+// 				}
+
+// 				dataLengthMine = dataLengthMine * 50;
+// 				if (dataLengthMine > 200) {
+// 					dataLengthMine = 200;
+// 				} else if (dataLengthMine < 100) {
+// 					dataLengthMine = 100;
+// 				}
+// 				lpObj.jQRef('body').append(completeString);
+
+// 				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
+// 					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+
+// 				// changed from window.innerWidth for mobile devices
+// 				if (lpObj.isMobileDevice()) {
+// 					if (checkFloat > document.documentElement.clientWidth) {
+// 						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+// 					}
+// 				} else {
+// 					if (checkFloat > window.innerWidth) {
+// 						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+// 					}
+// 				}
 
 
-likePosts.prototype.showMessageLikedInfo = function(messageId) {
-	if (isNaN(messageId)) {
-		return false;
-	}
+// 				lpObj.jQRef('.like_posts_notification').css({
+// 					'top': lpObj.jQRef('.showLikeNotification').offset().top,
+// 					'left': leftOffset
+// 				});
+// 				lpObj.jQRef('.lp_all_notifications_data').css({
+// 					'height': dataLengthAll + 'px'
+// 				});
+// 				lpObj.jQRef('.lp_my_notifications_data').css({
+// 					'height': dataLengthMine + 'px'
+// 				});
 
-	lpObj.jQRef.ajax({
-		type: "GET",
-		url: smf_scripturl + '?action=likeposts;sa=get_message_like_info',
-		context: document.body,
-		dataType: "json",
-		data: {
-			msg_id: messageId
-		},
+// 				lpObj.jQRef('#lp_all_notifications').css({
+// 					'font-weight': 'bold'
+// 				});
 
-		success: function(resp) {
-			if (resp.response) {
-				if (resp.data.length <= 0) {
-					return false;
-				}
+// 				lpObj.jQRef('.lp_notification_header').on('click', function(e) {
+// 					e.preventDefault();
+// 					switch (e.target.id) {
+// 						case 'lp_all_notifications':
+// 							lpObj.jQRef('#lp_all_notifications').css({
+// 								'font-weight': 'bold'
+// 							});
+// 							lpObj.jQRef('#lp_my_notifications').css({
+// 								'font-weight': 'normal'
+// 							});
+// 							lpObj.jQRef('.lp_my_notifications_data').hide();
+// 							lpObj.jQRef('.lp_all_notifications_data').show();
+// 							break;
 
-				var data = resp.data,
-					i,
-					height = 0,
-					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
+// 						case 'lp_my_notifications':
+// 							lpObj.jQRef('#lp_all_notifications').css({
+// 								'font-weight': 'normal'
+// 							});
+// 							lpObj.jQRef('#lp_my_notifications').css({
+// 								'font-weight': 'bold'
+// 							});
+// 							lpObj.jQRef('.lp_all_notifications_data').hide();
+// 							lpObj.jQRef('.lp_my_notifications_data').show();
+// 							break;
 
-				for (i in data) {
-					if (data.hasOwnProperty(i)) {
-						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
-					}
-				}
-				completeString += '</div></div>';
-				lpObj.jQRef('body').append(completeString);
+// 						case 'close_notifications':
+// 							lpObj.removeNotification(e);
+// 							break;
 
-				setTimeout(function() {
-					lpObj.jQRef('.like_posts_member_info').each(function() {
-						height += lpObj.jQRef(this).outerHeight();
-					});
+// 						default:
+// 							break;
+// 					}
+// 				});
+// 				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
+// 			} else {
+// 				//NOTE: Make an error callback over here
+// 				return false;
+// 			}
+// 		}
+// 	});
+// };
 
-					if (height >= (window.innerHeight - 100)) {
-						height = window.innerHeight - 200;
-					}
-					lpObj.jQRef('.like_posts_member_info_box').css({
-						'height': height,
-						'visibility': 'visible'
-					});
-				}, 50);
+// likePosts.prototype.removeNotification = function(e) {
+// 	if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
+// 		var container = lpObj.jQRef('#lp_all_notifications, #lp_my_notifications');
+// 		if (!container.is(e.target) && container.has(e.target).length === 0) {
+// 			lpObj.jQRef('.like_posts_notification').unbind('click');
+// 			lpObj.jQRef('.like_posts_notification').unbind('keyup');
+// 			lpObj.jQRef('.lp_notification_header').unbind('click');
+// 			lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
+// 			lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
+// 			lpObj.jQRef('.like_posts_notification').remove();
+// 		}
+// 	}
+// };
 
-				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+// likePosts.prototype.bouncEffect = function(element, direction, times, distance, speed) {
+// 	var dir = 'marginLeft',
+// 		anim1 = {},
+// 		anim2 = {},
+// 		i = 0;
 
-				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
-					e.stopPropagation();
-				});
-			} else {
-				//NOTE: Make an error callback over here
-				return false;
-			}
-		}
-	});
-};
+// 	switch (direction) {
+// 		case 'rl':
+// 			dir = 'marginRight';
+// 			break;
 
-likePosts.prototype.showLikeNotification = function() {
-	lpObj.jQRef.ajax({
-		type: "GET",
-		url: smf_scripturl + '?action=likeposts;sa=like_posts_notification',
-		context: document.body,
-		dataType: "json",
+// 		case 'tb':
+// 			dir = 'marginTop';
+// 			break;
 
-		success: function(resp) {
-			if (resp.response) {
-				if (resp.data.length <= 0) {
-					return false;
-				}
+// 		case 'bt':
+// 			dir = 'marginBottom';
+// 			break;
 
-				var data = resp.data,
-					notificationInfo = '',
-					i, j, k,
-					dataLengthAll = 0,
-					dataLengthMine = 0,
-					completeString = '';
+// 		default:
+// 			break;
+// 	}
+// 	anim1[dir] = '+=' + distance;
+// 	anim2[dir] = '-=' + distance;
 
-				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+// 	for (; i < times; i++) {
+// 		element.animate(anim1, speed).animate(anim2, speed);
+// 	}
+// };
 
-				for (i in data) {
-					if (data.hasOwnProperty(i)) {
-						if (i === 'all') {
-							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
-							var len = 0;
-							if (data[i].length === 0) {
-								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-							} else {
-								for (j in data[i]) {
-									if (data[i].hasOwnProperty(j)) {
-										len++;
-										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
-									}
-								}
-							}
-							dataLengthAll = len;
-							notificationInfo += '</div>';
-						} else if (i === 'mine') {
-							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
-							var len = 0;
-							if (data[i].length === 0) {
-								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-							} else {
-								for (k in data[i]) {
-									if (data[i].hasOwnProperty(k)) {
-										len++;
-										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
-									}
-								}
-							}
-							dataLengthMine = len;
-							notificationInfo += '</div>';
-						}
-					}
-				}
-				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
+// // some admin related functions
+// likePosts.prototype.recountStats = function(options) {
+// 	if (!options.activity) return false;
 
-				dataLengthAll = dataLengthAll * 50;
-				if (dataLengthAll > 200) {
-					dataLengthAll = 200;
-				} else if (dataLengthAll < 100) {
-					dataLengthAll = 100;
-				}
+// 	var activity = options.activity,
+// 		totalWork = options.totalWork || 0,
+// 		startLimit = options.startLimit || 0,
+// 		increment = options.increment || 100,
+// 		endLimit = options.endLimit || 100;
 
-				dataLengthMine = dataLengthMine * 50;
-				if (dataLengthMine > 200) {
-					dataLengthMine = 200;
-				} else if (dataLengthMine < 100) {
-					dataLengthMine = 100;
-				}
-				lpObj.jQRef('body').append(completeString);
+// 	lpObj.jQRef.ajax({
+// 		type: "POST",
+// 		url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
+// 		dataType: "json",
+// 		data: {
+// 			'activity': activity,
+// 			'totalWork': totalWork,
+// 			'startLimit': startLimit,
+// 			'endLimit': endLimit
+// 		},
 
-				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
-					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+// 		success: function(resp) {
+// 			resp.activity = activity;
+// 			resp.increment = increment;
+// 			resp.startLimit = startLimit;
+// 			lpObj.checkRecount(resp);
+// 		},
+// 		error: function(err) {
+// 			console.log(err);
+// 		}
+// 	});
+// };
 
-				// changed from window.innerWidth for mobile devices
-				if (lpObj.isMobileDevice()) {
-					if (checkFloat > document.documentElement.clientWidth) {
-						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-					}
-				} else {
-					if (checkFloat > window.innerWidth) {
-						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-					}
-				}
+// likePosts.prototype.checkRecount = function(obj) {
+// 	var startLimit,
+// 		percentage = 0,
+// 		percentageText = '0%';
 
+// 	if (obj.startLimit === 0) {
+// 		var completeString = '<div class="like_posts_overlay"><div class="recount_stats"><div></div></div></div>';
 
-				lpObj.jQRef('.like_posts_notification').css({
-					'top': lpObj.jQRef('.showLikeNotification').offset().top,
-					'left': leftOffset
-				});
-				lpObj.jQRef('.lp_all_notifications_data').css({
-					'height': dataLengthAll + 'px'
-				});
-				lpObj.jQRef('.lp_my_notifications_data').css({
-					'height': dataLengthMine + 'px'
-				});
+// 		lpObj.jQRef('body').append(completeString);
 
-				lpObj.jQRef('#lp_all_notifications').css({
-					'font-weight': 'bold'
-				});
+// 		var screenWidth = lpObj.jQRef(window).width(),
+// 			screenHeight = lpObj.jQRef(window).height(),
+// 			popupHeight = lpObj.jQRef('.recount_stats').outerHeight(),
+// 			popupWidth = lpObj.jQRef('.recount_stats').outerWidth(),
+// 			topPopUpOffset = (screenHeight - popupHeight) / 2,
+// 			leftPopUpOffset = (screenWidth - popupWidth) / 2;
 
-				lpObj.jQRef('.lp_notification_header').on('click', function(e) {
-					e.preventDefault();
-					switch (e.target.id) {
-						case 'lp_all_notifications':
-							lpObj.jQRef('#lp_all_notifications').css({
-								'font-weight': 'bold'
-							});
-							lpObj.jQRef('#lp_my_notifications').css({
-								'font-weight': 'normal'
-							});
-							lpObj.jQRef('.lp_my_notifications_data').hide();
-							lpObj.jQRef('.lp_all_notifications_data').show();
-							break;
+// 		lpObj.jQRef('.recount_stats').css({
+// 			top: topPopUpOffset + 'px',
+// 			left: leftPopUpOffset + 'px'
+// 		});
+// 		startLimit = obj.startLimit + obj.increment + 1;
+// 	} else {
+// 		startLimit = obj.startLimit + obj.increment;
+// 	}
 
-						case 'lp_my_notifications':
-							lpObj.jQRef('#lp_all_notifications').css({
-								'font-weight': 'normal'
-							});
-							lpObj.jQRef('#lp_my_notifications').css({
-								'font-weight': 'bold'
-							});
-							lpObj.jQRef('.lp_all_notifications_data').hide();
-							lpObj.jQRef('.lp_my_notifications_data').show();
-							break;
+// 	if (startLimit < obj.totalWork) {
+// 		var endLimit = obj.endLimit + obj.increment;
+// 		if (endLimit > obj.totalWork) {
+// 			endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
+// 		}
+// 		percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
+// 		percentageText = percentage + '%';
+// 	} else {
+// 		percentage = 100;
+// 		percentageText = 'Done';
+// 		lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+// 	}
 
-						case 'close_notifications':
-							lpObj.removeNotification(e);
-							break;
+// 	lpObj.jQRef('.recount_stats').find('div').animate({
+// 		width: percentage + '%'
+// 	}, 1000, function() {
+// 		if (percentage < 100) {
+// 			lpObj.recountStats({
+// 				'activity': obj.activity,
+// 				'totalWork': obj.totalWork,
+// 				'startLimit': startLimit,
+// 				'endLimit': endLimit
+// 			});
+// 		}
+// 	}).html(percentageText + '&nbsp;');
+// };
 
-						default:
-							break;
-					}
-				});
-				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
-			} else {
-				//NOTE: Make an error callback over here
-				return false;
-			}
-		}
-	});
-};
+// likePosts.prototype.selectInputByLegend = function(event, elem) {
+// 	event.preventDefault();
 
-likePosts.prototype.removeNotification = function(e) {
-	if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
-		var container = lpObj.jQRef('#lp_all_notifications, #lp_my_notifications');
-		if (!container.is(e.target) && container.has(e.target).length === 0) {
-			lpObj.jQRef('.like_posts_notification').unbind('click');
-			lpObj.jQRef('.like_posts_notification').unbind('keyup');
-			lpObj.jQRef('.lp_notification_header').unbind('click');
-			lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
-			lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
-			lpObj.jQRef('.like_posts_notification').remove();
-		}
-	}
-};
+// 	var elemRef = lpObj.jQRef(elem),
+// 		parent = elemRef.parent();
 
-likePosts.prototype.bouncEffect = function(element, direction, times, distance, speed) {
-	var dir = 'marginLeft',
-		anim1 = {},
-		anim2 = {},
-		i = 0;
+// 	if (elemRef.data('allselected') === false) {
+// 		parent.find('input:checkbox').prop('checked', true);
+// 		elemRef.data('allselected', true);
+// 	} else {
+// 		parent.find('input:checkbox').prop('checked', false);
+// 		elemRef.data('allselected', false);
+// 	}
+// };
 
-	switch (direction) {
-		case 'rl':
-			dir = 'marginRight';
-			break;
+// likePosts.prototype.selectAllBoards = function(event) {
+// 	var elemRef = lpObj.jQRef('#lp_board_settings fieldset');
 
-		case 'tb':
-			dir = 'marginTop';
-			break;
-
-		case 'bt':
-			dir = 'marginBottom';
-			break;
-
-		default:
-			break;
-	}
-	anim1[dir] = '+=' + distance;
-	anim2[dir] = '-=' + distance;
-
-	for (; i < times; i++) {
-		element.animate(anim1, speed).animate(anim2, speed);
-	}
-};
-
-// some admin related functions
-likePosts.prototype.recountStats = function(options) {
-	if (!options.activity) return false;
-
-	var activity = options.activity,
-		totalWork = options.totalWork || 0,
-		startLimit = options.startLimit || 0,
-		increment = options.increment || 100,
-		endLimit = options.endLimit || 100;
-
-	lpObj.jQRef.ajax({
-		type: "POST",
-		url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
-		dataType: "json",
-		data: {
-			'activity': activity,
-			'totalWork': totalWork,
-			'startLimit': startLimit,
-			'endLimit': endLimit
-		},
-
-		success: function(resp) {
-			resp.activity = activity;
-			resp.increment = increment;
-			resp.startLimit = startLimit;
-			lpObj.checkRecount(resp);
-		},
-		error: function(err) {
-			console.log(err);
-		}
-	});
-};
-
-likePosts.prototype.checkRecount = function(obj) {
-	var startLimit,
-		percentage = 0,
-		percentageText = '0%';
-
-	if (obj.startLimit === 0) {
-		var completeString = '<div class="like_posts_overlay"><div class="recount_stats"><div></div></div></div>';
-
-		lpObj.jQRef('body').append(completeString);
-
-		var screenWidth = lpObj.jQRef(window).width(),
-			screenHeight = lpObj.jQRef(window).height(),
-			popupHeight = lpObj.jQRef('.recount_stats').outerHeight(),
-			popupWidth = lpObj.jQRef('.recount_stats').outerWidth(),
-			topPopUpOffset = (screenHeight - popupHeight) / 2,
-			leftPopUpOffset = (screenWidth - popupWidth) / 2;
-
-		lpObj.jQRef('.recount_stats').css({
-			top: topPopUpOffset + 'px',
-			left: leftPopUpOffset + 'px'
-		});
-		startLimit = obj.startLimit + obj.increment + 1;
-	} else {
-		startLimit = obj.startLimit + obj.increment;
-	}
-
-	if (startLimit < obj.totalWork) {
-		var endLimit = obj.endLimit + obj.increment;
-		if (endLimit > obj.totalWork) {
-			endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
-		}
-		percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
-		percentageText = percentage + '%';
-	} else {
-		percentage = 100;
-		percentageText = 'Done';
-		lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
-	}
-
-	lpObj.jQRef('.recount_stats').find('div').animate({
-		width: percentage + '%'
-	}, 1000, function() {
-		if (percentage < 100) {
-			lpObj.recountStats({
-				'activity': obj.activity,
-				'totalWork': obj.totalWork,
-				'startLimit': startLimit,
-				'endLimit': endLimit
-			});
-		}
-	}).html(percentageText + '&nbsp;');
-};
-
-likePosts.prototype.removeOverlay = function(e) {
-	var _this = this;
-	if (typeof(e) === 'undefined' && this.timeoutTimer === null) return false;
-	else if (this.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
-		clearTimeout(_this.timeoutTimer);
-		_this.timeoutTimer = null;
-		lpObj.jQRef('.like_posts_overlay').remove();
-		lpObj.jQRef('.like_posts_overlay').unbind('click');
-		lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
-		lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
-	}
-};
-
-likePosts.prototype.selectInputByLegend = function(event, elem) {
-	event.preventDefault();
-
-	var elemRef = lpObj.jQRef(elem),
-		parent = elemRef.parent();
-
-	if (elemRef.data('allselected') === false) {
-		parent.find('input:checkbox').prop('checked', true);
-		elemRef.data('allselected', true);
-	} else {
-		parent.find('input:checkbox').prop('checked', false);
-		elemRef.data('allselected', false);
-	}
-};
-
-likePosts.prototype.selectAllBoards = function(event) {
-	var elemRef = lpObj.jQRef('#lp_board_settings fieldset');
-
-	if (lpObj.jQRef(event.target).is(':checked')) {
-		elemRef.find('input:checkbox').prop('checked', true);
-	} else {
-		elemRef.find('input:checkbox').prop('checked', false);
-	}
-};
-
-likePosts.prototype.isMobileDevice = function() {
-	if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
-		return true;
-	} else {
-		return false;
-	}
-};
+// 	if (lpObj.jQRef(event.target).is(':checked')) {
+// 		elemRef.find('input:checkbox').prop('checked', true);
+// 	} else {
+// 		elemRef.find('input:checkbox').prop('checked', false);
+// 	}
+// };

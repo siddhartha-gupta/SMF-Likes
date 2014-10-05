@@ -43,6 +43,7 @@ class LikePosts {
 
 	public static $LikePostsUtils;
 	public static $LikePostsDB;
+	public static $LikePostsData;
 	public static $LikePostsDispatcher;
 	public static $LikeUnlikePosts;
 	public static $LikePostsStats;
@@ -84,6 +85,13 @@ class LikePosts {
 				}
 				break;
 
+			case 'LikePostsData': 
+				if (self::$LikePostsData === null) {
+					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
+					self::$LikePostsData = new LikePostsData();
+				}
+				break;
+
 			case 'LikePostsDispatcher':
 				if (self::$LikePostsDispatcher === null) {
 					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
@@ -115,8 +123,8 @@ class LikePosts {
 
 		self::loadClass('LikePostsDispatcher');
 
-		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatch');
-		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatch');
+		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikes');
+		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikeStats');
 	}
 
 	public static function includeAssets() {
@@ -257,7 +265,7 @@ class LikePosts {
 			$isAllowedToAccess = false;
 		}
 
-		if ($user_info['is_guest'] && !LP_isAllowedTo(array('guests_can_view_likes_stats'))) {
+		if ($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('guests_can_view_likes_stats'))) {
 			$isAllowedToAccess = false;
 		}
 		if (!self::$LikePostsUtils->isAllowedTo(array('can_view_likes_stats'))) {

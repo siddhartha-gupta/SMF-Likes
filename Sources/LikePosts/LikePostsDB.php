@@ -38,6 +38,9 @@ if (!defined('SMF')) {
 class LikePostsDB {
 	public function __construct() {}
 
+	/*
+	* Functions for admin panel
+	*/
 	// To update permission settings from admin panel
 	public function updatePermissions($replaceArray) {
 		global $smcFunc;
@@ -53,9 +56,12 @@ class LikePostsDB {
 
 
 	/*
+	* Functions for like post entry/delete handling
+	*/
+	/*
 	 * To insert new likes in DB
 	*/
-	public function LP_DB_insertLikePost($data = array()) {
+	public function insertLikePost($data = array()) {
 		global $smcFunc, $user_info;
 
 		if ($user_info['is_guest']) {
@@ -97,7 +103,7 @@ class LikePostsDB {
 	/*
 	 * Used when a topic is unliked
 	*/
-	public function LP_DB_deleteLikePost($data = array()) {
+	public function deleteLikePost($data = array()) {
 		global $smcFunc, $user_info;
 
 		if ($user_info['is_guest']) {
@@ -134,6 +140,40 @@ class LikePostsDB {
 
 		return true;
 	}
+
+
+	/*
+	 * To count number of like posts
+	 * Update UI accordingly
+	*/
+	public function getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
+		global $smcFunc;
+
+		$count = 0;
+		if (empty($boardId) || empty($topicId) || empty($msg_id)) {
+			return false;
+		}
+
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(lp.id_msg) as count
+			FROM {db_prefix}like_post as lp
+			WHERE lp.id_board = {int:id_board}
+			AND lp.id_topic = {int:id_topic}
+			AND lp.id_msg = {int:id_msg}
+			ORDER BY lp.id_msg',
+			array(
+				'id_board' => $boardId,
+				'id_topic' => $topicId,
+				'id_msg' => $msg_id
+			)
+		);
+		list($count) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+		return $count;
+	}
+
+
+
 
 	public function LP_DB_posterInfo($postersArr) {
 		global $smcFunc, $user_info, $scripturl;
@@ -220,36 +260,6 @@ class LikePostsDB {
 	}
 
 	/*
-	 * To count number of like posts
-	 * Update UI accordingly
-	*/
-	public function LP_DB_getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
-		global $smcFunc;
-
-		$count = 0;
-		if (empty($boardId) || empty($topicId) || empty($msg_id)) {
-			return false;
-		}
-
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(lp.id_msg) as count
-			FROM {db_prefix}like_post as lp
-			WHERE lp.id_board = {int:id_board}
-			AND lp.id_topic = {int:id_topic}
-			AND lp.id_msg = {int:id_msg}
-			ORDER BY lp.id_msg',
-			array(
-				'id_board' => $boardId,
-				'id_topic' => $topicId,
-				'id_msg' => $msg_id
-			)
-		);
-		list($count) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-		return $count;
-	}
-
-	/*
 	 * Underlying DB implementation of LP_getMessageLikeInfo
 	*/
 	public function LP_DB_getMessageLikeInfo($msg_id = 0) {
@@ -290,7 +300,7 @@ class LikePostsDB {
 	/*
 	 * Underlying DB implementation of LP_getAllTopicsInfo
 	*/
-	public function LP_DB_getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
+	public function getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 		global $smcFunc, $scripturl;
 
 		$topicsLikeInfo = array();
@@ -336,6 +346,9 @@ class LikePostsDB {
 				}
 			}
 		}
+		echo 'topicsLikeInfo';
+		print_r($topicsLikeInfo);
+		die();
 		return $topicsLikeInfo;
 	}
 

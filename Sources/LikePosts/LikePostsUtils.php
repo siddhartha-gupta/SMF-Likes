@@ -108,6 +108,18 @@ class LikePostsUtils {
 		}
 		return $result;
 	}
+
+	public function isBoardIncluded($boardId) {
+		global $modSettings;
+
+		$activeBoards = isset($modSettings['lp_active_boards']) && strlen($modSettings['lp_active_boards']) > 0 ? (explode(',', $modSettings['lp_active_boards'])) : '';
+
+		if(is_array($activeBoards) && in_array($boardId, $activeBoards)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 ?>
