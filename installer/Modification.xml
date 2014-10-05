@@ -116,7 +116,7 @@
 		<operation>
 			<search position="replace"><![CDATA[<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';]]></search>
 			<add><![CDATA[<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>
-					<li><a href="#" class="showLikeNotification" onclick="lpObj.showLikeNotification()">', $txt['like_show_notifications'], '</a></li>';]]></add>
+					<li><a href="#" class="showLikeNotification" onclick="lpObj.likePostsNotification.showLikeNotification()">', $txt['like_show_notifications'], '</a></li>';]]></add>
 		</operation>
 	</file>
     
