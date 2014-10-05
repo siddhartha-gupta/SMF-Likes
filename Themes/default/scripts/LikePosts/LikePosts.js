@@ -526,28 +526,27 @@
 	function likePostsAdmin() {}
 
 	likePostsAdmin.prototype = function() {
-		var recountStats = function(options) {
-				if (!options.activity) return false;
+		var recountStats = function(event, options) {
+				if (!lpObj.likePostsUtils.isNullUndefined(event)) {
+					event.preventDefault();
+				}
 
-				var activity = options.activity,
-					totalWork = options.totalWork || 0,
+				var totalWork = options.totalWork || 0,
 					startLimit = options.startLimit || 0,
 					increment = options.increment || 100,
 					endLimit = options.endLimit || 100;
 
 				lpObj.jQRef.ajax({
 					type: "POST",
-					url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
+					url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestotal',
 					dataType: "json",
 					data: {
-						'activity': activity,
 						'totalWork': totalWork,
 						'startLimit': startLimit,
 						'endLimit': endLimit
 					},
 
 					success: function(resp) {
-						resp.activity = activity;
 						resp.increment = increment;
 						resp.startLimit = startLimit;
 						checkRecount(resp);
@@ -601,8 +600,7 @@
 					width: percentage + '%'
 				}, 1000, function() {
 					if (percentage < 100) {
-						lpObj.recountStats({
-							'activity': obj.activity,
+						lpObj.likePostsAdmin.recountStats(null, {
 							'totalWork': obj.totalWork,
 							'startLimit': startLimit,
 							'endLimit': endLimit

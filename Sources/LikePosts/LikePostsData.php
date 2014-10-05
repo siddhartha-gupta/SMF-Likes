@@ -127,7 +127,6 @@ class LikePostsData {
 		}
 		$result = LikePosts::$LikePostsDB->getAllNotification();
 
-
 		$resp = array('response' => true, 'data' => $result);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}

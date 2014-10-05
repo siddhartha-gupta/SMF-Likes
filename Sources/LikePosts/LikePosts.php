@@ -307,22 +307,20 @@ class LikePosts {
 	public static function addProfilePanel(&$profile_areas) {
 		global $txt, $user_info, $modSettings;
 
-		if ($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) {
+		if ($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) {
 			return false;
 		}
 
-		if (isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) {
-			if ($user_info['id'] !== $_REQUEST['u']) {
-				if (!(LP_isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles')))) {
-					return false;
-				}
-			}
+		if ((isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) || 
+			$user_info['id'] !== $_REQUEST['u'] || 
+			!self::$LikePostsUtils->isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))) {
+			return false;
 		}
 
 		$profile_areas['info']['areas']['likeposts'] = array(
 			'label' => $txt['lp_menu'],
-			'file' => LikePosts::$sourceFolder . 'LikePostsProfile.php',
-			'function' => 'LP_showLikeProfile',
+			'file' => '/LikePosts/LikePostsProfile.php',
+			'function' => 'LikePostsProfileIndex',
 			'subsections' => array(
 				'seeownlikes' => array($txt['lp_you_liked'], array('profile_view_own', 'profile_view_any')),
 				'seeotherslikes' => array($txt['lp_liked_by_others'], array('profile_view_own', 'profile_view_any')),

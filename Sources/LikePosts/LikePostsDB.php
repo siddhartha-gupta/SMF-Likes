@@ -57,6 +57,81 @@ class LikePostsDB {
 		cache_put_data('modSettings', null, 90);
 	}
 
+	public function recountLikesTotal($startLimit, $endLimit, $totalWork) {
+		global $smcFunc;
+
+		if(!isset($totalWork) || empty($totalWork)) {
+			$request = $smcFunc['db_query']('', '
+				SELECT COUNT(id_member)
+				FROM {db_prefix}members'
+			);
+			list($totalWorkCalc) = $smcFunc['db_fetch_row']($request);
+			$smcFunc['db_free_result']($request);
+		} else {
+			$totalWorkCalc = $totalWork;
+		}
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member
+			FROM {db_prefix}members
+			LIMIT {int:start}, {int:max}',
+			array(
+				'start' => $startLimit,
+				'max' => 100,
+			)
+		);
+
+		$insertData = array();
+		$updateIds = array();
+		$updateData = '';
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			$calculatedLikeCount = 0;
+			$request1 = $smcFunc['db_query']('', '
+				SELECT COUNT(lp.id_member_received) as count, lc.like_count
+				FROM {db_prefix}like_post AS lp
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = lp.id_msg)
+				LEFT JOIN {db_prefix}like_count AS lc ON (lc.id_member = {int:id_member})
+				where m.id_member = {int:id_member}',
+				array(
+					'id_member' => $row['id_member'],
+				)
+			);
+			if ($smcFunc['db_num_rows']($request1) !== 0) {
+				list ($calculatedLikeCount, $presentCount) = $smcFunc['db_fetch_row']($request1);
+				if($presentCount === NULL) {
+					$insertData[] = array($row['id_member'], $calculatedLikeCount);
+				} else if($calculatedLikeCount !== $presentCount) {
+					$updateIds[] = $row['id_member'];
+					$updateData .= '
+							WHEN ' . $row['id_member'] . ' THEN ' . $calculatedLikeCount;
+				}
+			} else {
+				$insertData[] = array($row['id_member'], $calculatedLikeCount);
+			}
+			$smcFunc['db_free_result']($request1);
+		}
+		$smcFunc['db_free_result']($request);
+
+		if(!empty($updateData) && !empty($updateIds)) {
+			$result = $smcFunc['db_query']('', '
+				UPDATE {db_prefix}like_count
+				SET like_count = CASE id_member '. $updateData .' END
+				WHERE id_member IN ({array_int:updateIds})',
+				array(
+					'updateIds' => $updateIds
+				)
+			);
+		}
+
+		if(!empty($insertData)) {
+			$result = $smcFunc['db_insert']('replace',
+				'{db_prefix}like_count',
+				array('id_member' => 'int', 'like_count' => 'int'),
+				$insertData,
+				array('id_member')
+			);
+		}
+	}
 
 	/*
 	* Functions for like post entry/delete handling
