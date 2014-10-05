@@ -198,7 +198,7 @@ function template_lp_admin_board_settings() {
 				echo '
 				</div>
 				<div style="padding: 0 10px 10px;">
-					<input type="checkbox" value="0" onclick="lpObj.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
+					<input type="checkbox" value="0" onclick="lpObj.likePostsUtils.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
 				</div>
@@ -227,7 +227,7 @@ function template_lp_admin_recount_stats() {
 					</div>
 					<div style="width: 30%; float:left; position:relative">
 						<span class="floatright">
-							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.recountStats({\'activity\': \'totallikes\'}); return false;">
+							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.likePostsAdmin.recountStats({\'activity\': \'totallikes\'}); return false;">
 						</span>
 					</div>
 					<div class="member_count_precentage"></div>

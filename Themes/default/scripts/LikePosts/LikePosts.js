@@ -111,6 +111,21 @@
 				}
 			},
 
+			selectInputByLegend = function(event, elem) {
+				event.preventDefault();
+
+				var elemRef = lpObj.jQRef(elem),
+					parent = elemRef.parent();
+
+				if (elemRef.data('allselected') === false) {
+					parent.find('input:checkbox').prop('checked', true);
+					elemRef.data('allselected', true);
+				} else {
+					parent.find('input:checkbox').prop('checked', false);
+					elemRef.data('allselected', false);
+				}
+			},
+
 			isMobileDevice = function() {
 				if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
 					return true;
@@ -152,6 +167,7 @@
 
 		return {
 			'removeOverlay': removeOverlay,
+			'selectInputByLegend': selectInputByLegend,
 			'isMobileDevice': isMobileDevice,
 			'isNullUndefined': isNullUndefined
 		};
@@ -505,113 +521,111 @@
 	lpObj.likePostsNotification = likePostsNotification.prototype;
 })();
 
-// // some admin related functions
-// likePosts.prototype.recountStats = function(options) {
-// 	if (!options.activity) return false;
+// some admin related functions
+(function() {
+	function likePostsAdmin() {}
 
-// 	var activity = options.activity,
-// 		totalWork = options.totalWork || 0,
-// 		startLimit = options.startLimit || 0,
-// 		increment = options.increment || 100,
-// 		endLimit = options.endLimit || 100;
+	likePostsAdmin.prototype = function() {
+		var recountStats = function(options) {
+				if (!options.activity) return false;
 
-// 	lpObj.jQRef.ajax({
-// 		type: "POST",
-// 		url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
-// 		dataType: "json",
-// 		data: {
-// 			'activity': activity,
-// 			'totalWork': totalWork,
-// 			'startLimit': startLimit,
-// 			'endLimit': endLimit
-// 		},
+				var activity = options.activity,
+					totalWork = options.totalWork || 0,
+					startLimit = options.startLimit || 0,
+					increment = options.increment || 100,
+					endLimit = options.endLimit || 100;
 
-// 		success: function(resp) {
-// 			resp.activity = activity;
-// 			resp.increment = increment;
-// 			resp.startLimit = startLimit;
-// 			lpObj.checkRecount(resp);
-// 		},
-// 		error: function(err) {
-// 			console.log(err);
-// 		}
-// 	});
-// };
+				lpObj.jQRef.ajax({
+					type: "POST",
+					url: smf_scripturl + '?action=admin;area=likeposts;sa=recountlikestats',
+					dataType: "json",
+					data: {
+						'activity': activity,
+						'totalWork': totalWork,
+						'startLimit': startLimit,
+						'endLimit': endLimit
+					},
 
-// likePosts.prototype.checkRecount = function(obj) {
-// 	var startLimit,
-// 		percentage = 0,
-// 		percentageText = '0%';
+					success: function(resp) {
+						resp.activity = activity;
+						resp.increment = increment;
+						resp.startLimit = startLimit;
+						checkRecount(resp);
+					},
+					error: function(err) {
+						console.log(err);
+					}
+				});
+			},
 
-// 	if (obj.startLimit === 0) {
-// 		var completeString = '<div class="like_posts_overlay"><div class="recount_stats"><div></div></div></div>';
+			checkRecount = function(obj) {
+				var startLimit,
+					percentage = 0,
+					percentageText = '0%';
 
-// 		lpObj.jQRef('body').append(completeString);
+				if (obj.startLimit === 0) {
+					var completeString = '<div class="like_posts_overlay"><div class="recount_stats"><div></div></div></div>';
 
-// 		var screenWidth = lpObj.jQRef(window).width(),
-// 			screenHeight = lpObj.jQRef(window).height(),
-// 			popupHeight = lpObj.jQRef('.recount_stats').outerHeight(),
-// 			popupWidth = lpObj.jQRef('.recount_stats').outerWidth(),
-// 			topPopUpOffset = (screenHeight - popupHeight) / 2,
-// 			leftPopUpOffset = (screenWidth - popupWidth) / 2;
+					lpObj.jQRef('body').append(completeString);
 
-// 		lpObj.jQRef('.recount_stats').css({
-// 			top: topPopUpOffset + 'px',
-// 			left: leftPopUpOffset + 'px'
-// 		});
-// 		startLimit = obj.startLimit + obj.increment + 1;
-// 	} else {
-// 		startLimit = obj.startLimit + obj.increment;
-// 	}
+					var screenWidth = lpObj.jQRef(window).width(),
+						screenHeight = lpObj.jQRef(window).height(),
+						popupHeight = lpObj.jQRef('.recount_stats').outerHeight(),
+						popupWidth = lpObj.jQRef('.recount_stats').outerWidth(),
+						topPopUpOffset = (screenHeight - popupHeight) / 2,
+						leftPopUpOffset = (screenWidth - popupWidth) / 2;
 
-// 	if (startLimit < obj.totalWork) {
-// 		var endLimit = obj.endLimit + obj.increment;
-// 		if (endLimit > obj.totalWork) {
-// 			endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
-// 		}
-// 		percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
-// 		percentageText = percentage + '%';
-// 	} else {
-// 		percentage = 100;
-// 		percentageText = 'Done';
-// 		lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
-// 	}
+					lpObj.jQRef('.recount_stats').css({
+						top: topPopUpOffset + 'px',
+						left: leftPopUpOffset + 'px'
+					});
+					startLimit = obj.startLimit + obj.increment + 1;
+				} else {
+					startLimit = obj.startLimit + obj.increment;
+				}
 
-// 	lpObj.jQRef('.recount_stats').find('div').animate({
-// 		width: percentage + '%'
-// 	}, 1000, function() {
-// 		if (percentage < 100) {
-// 			lpObj.recountStats({
-// 				'activity': obj.activity,
-// 				'totalWork': obj.totalWork,
-// 				'startLimit': startLimit,
-// 				'endLimit': endLimit
-// 			});
-// 		}
-// 	}).html(percentageText + '&nbsp;');
-// };
+				if (startLimit < obj.totalWork) {
+					var endLimit = obj.endLimit + obj.increment;
+					if (endLimit > obj.totalWork) {
+						endLimit = Math.abs(obj.endLimit - obj.totalWork) + obj.endLimit;
+					}
+					percentage = Math.floor((obj.endLimit / obj.totalWork) * 100);
+					percentageText = percentage + '%';
+				} else {
+					percentage = 100;
+					percentageText = 'Done';
+					lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+				}
 
-// likePosts.prototype.selectInputByLegend = function(event, elem) {
-// 	event.preventDefault();
+				lpObj.jQRef('.recount_stats').find('div').animate({
+					width: percentage + '%'
+				}, 1000, function() {
+					if (percentage < 100) {
+						lpObj.recountStats({
+							'activity': obj.activity,
+							'totalWork': obj.totalWork,
+							'startLimit': startLimit,
+							'endLimit': endLimit
+						});
+					}
+				}).html(percentageText + '&nbsp;');
+			},
 
-// 	var elemRef = lpObj.jQRef(elem),
-// 		parent = elemRef.parent();
+			selectAllBoards = function(event) {
+				var elemRef = lpObj.jQRef('#lp_board_settings fieldset');
 
-// 	if (elemRef.data('allselected') === false) {
-// 		parent.find('input:checkbox').prop('checked', true);
-// 		elemRef.data('allselected', true);
-// 	} else {
-// 		parent.find('input:checkbox').prop('checked', false);
-// 		elemRef.data('allselected', false);
-// 	}
-// };
+				if (lpObj.jQRef(event.target).is(':checked')) {
+					elemRef.find('input:checkbox').prop('checked', true);
+				} else {
+					elemRef.find('input:checkbox').prop('checked', false);
+				}
+			};
 
-// likePosts.prototype.selectAllBoards = function(event) {
-// 	var elemRef = lpObj.jQRef('#lp_board_settings fieldset');
+		return {
+			'recountStats': recountStats,
+			'selectAllBoards': selectAllBoards
+		};
+	}();
 
-// 	if (lpObj.jQRef(event.target).is(':checked')) {
-// 		elemRef.find('input:checkbox').prop('checked', true);
-// 	} else {
-// 		elemRef.find('input:checkbox').prop('checked', false);
-// 	}
-// };
+	lpObj.likePostsAdmin = likePostsAdmin.prototype;
+})();
