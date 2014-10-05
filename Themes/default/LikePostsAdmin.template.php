@@ -187,7 +187,7 @@ function template_lp_admin_board_settings() {
 
 				foreach ($context['categories'] as $key => $category) {
 					echo ' <fieldset>';
-					echo '<legend onclick="lpObj.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
+					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
 				
 					foreach ($category['boards'] as $board) {
 						echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
