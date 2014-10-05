@@ -427,11 +427,33 @@ class LikePostsDB {
 		return $topicsLikeInfo;
 	}
 
+	// For profile section
+	public function getTotalResults($select, $where) {
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT '. $select .' as total_results
+			FROM {db_prefix}like_post as lp
+			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			WHERE {query_wanna_see_board}
+			AND ' . $where
+		);
+
+		if ($smcFunc['db_num_rows']($request) == 0)
+			return 'nothing found';
+
+		list ($total_results) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		return $total_results;
+	}
+
 	/*
 	 * To get posts liked by user
 	 * add permissions to this
 	*/
-	public function LP_DB_getOwnLikes($user_id = 0, $start_limit = 0) {
+	public function getOwnLikes($user_id = 0, $start_limit = 0) {
 		global $smcFunc, $scripturl, $modSettings;
 
 		if (empty($user_id)) {
@@ -480,7 +502,7 @@ class LikePostsDB {
 	 * To get posts of a user liked by other
 	 * add permissions to this
 	*/
-	public function LP_DB_getOthersLikes($user_id = 0, $start_limit = 0) {
+	public function getOthersLikes($user_id = 0, $start_limit = 0) {
 		global $smcFunc, $scripturl, $modSettings;
 
 		if (empty($user_id)) {
@@ -520,27 +542,6 @@ class LikePostsDB {
 		}
 		$smcFunc['db_free_result']($request);
 		return $likedData;
-	}
-
-	public function LP_DB_getTotalResults($select, $where) {
-		global $context, $smcFunc;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT '. $select .' as total_results
-			FROM {db_prefix}like_post as lp
-			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE {query_wanna_see_board}
-			AND ' . $where
-		);
-
-		if ($smcFunc['db_num_rows']($request) == 0)
-			return 'nothing found';
-
-		list ($total_results) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		return $total_results;
 	}
 
 	public function getAllNotification() {

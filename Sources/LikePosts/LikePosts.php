@@ -311,9 +311,7 @@ class LikePosts {
 			return false;
 		}
 
-		if ((isset($_REQUEST['u']) && is_numeric($_REQUEST['u'])) || 
-			$user_info['id'] !== $_REQUEST['u'] || 
-			!self::$LikePostsUtils->isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))) {
+		if (!self::$LikePostsUtils->isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))) {
 			return false;
 		}
 

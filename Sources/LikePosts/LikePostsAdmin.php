@@ -111,7 +111,6 @@ function LikePostsAdminIndex($return_config = false) {
 
 class LikePostsAdmin {
 	protected static $instance;
-	private $LikePostsUtilsInstance;
 
 	/**
 	 * Singleton method
@@ -126,7 +125,6 @@ class LikePostsAdmin {
 	}
 
 	public function __construct() {}
-
 
 	public function generalSettings($return_config = false) {
 		global $txt, $context, $sourcedir;

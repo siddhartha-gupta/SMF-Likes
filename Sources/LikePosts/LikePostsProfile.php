@@ -34,27 +34,18 @@
  */
  
 
-if (!defined('SMF')) {
+if (!defined('SMF'))
 	die('Hacking attempt...');
-}
 
-function LP_showLikeProfile($memID) {
+function LikePostsProfileIndex($memID) {
 	global $context, $txt, $sourcedir, $settings, $user_info;
 
-	require_once($sourcedir . '/LikePosts.php');
-	if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_profiles'))) return false;
+	if($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) return false;
 
-	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/css/likeposts.css" />';
-	$default_action_func = 'LP_getOwnLikes';
-	$default_template_func = 'lp_show_own_likes';
-	$default_title = $txt['lp_you_liked'];
-
-	// array is defined as follow
-	// source func, template func name
-	$subActions = array(
-		'seeownlikes' => array('LP_getOwnLikes', 'lp_show_own_likes', $txt['lp_you_liked']),
-		'seeotherslikes' => array('LP_getOthersLikes', 'lp_show_others_likes', $txt['lp_liked_by_others']),
-	);
+	loadLanguage('LikePosts');
+	loadtemplate('LikePostsProfile');
+	$LikePostsProfile = LikePostsProfile::getInstance();
+	$defaultActionFunc = 'getOwnLikes';
 
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['lp_tab_title'],
@@ -66,22 +57,73 @@ function LP_showLikeProfile($memID) {
 		),
 	);
 
-	$context['like_active_area_func'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && function_exists($subActions[$_REQUEST['sa']][0]) ? $subActions[$_REQUEST['sa']][0] : $default_action_func;
+	$subActions = array(
+		'seeownlikes' => 'getOwnLikes',
+		'seeotherslikes' => 'getOthersLikes',
+	);
 
-	$context['like_active_area_temp'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $subActions[$_REQUEST['sa']][1] : $default_template_func;
+	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists($LikePostsProfile, $subActions[$_REQUEST['sa']]))
+		return $LikePostsProfile->$subActions[$_REQUEST['sa']]($memID);
 
-	$context['like_active_area_title'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $subActions[$_REQUEST['sa']][2] : $default_title;
-
-
-	$context['sub_template'] = $context['like_active_area_temp'];
-	$context['page_title'] = $context['like_active_area_title'];
-	$context['like_active_area_func']($memID);
+	// At this point we can just do our default.
+	$LikePostsProfile->$defaultActionFunc($memID);
 }
 
 class LikePostsProfile {
-	public function __construct() {
-		loadLanguage('LikePosts');
-		loadtemplate('LikePosts');
+	protected static $instance;
+
+	/**
+	 * Singleton method
+	 *
+	 * @return void
+	 */
+	public static function getInstance() {
+		if (self::$instance === null) {
+			self::$instance = new static ();
+		}
+		return self::$instance;
+	}
+
+	public function __construct() {}
+
+	public function getOwnLikes($memID) {
+		global $context, $scripturl, $modSettings;
+
+		$select = 'COUNT(*)';
+		$where = 'lp.id_member_gave = ' . $memID;
+		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LikePosts::$LikePostsDB->getTotalResults($select, $where);
+
+		$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
+		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
+
+		// Give admin options for these
+		$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+
+		$context['like_post']['own_like_data'] = LikePosts::$LikePostsDB->getOwnLikes($memID, $context['start']);
+		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
+
+		$context['sub_template'] = 'lp_show_own_likes';
+		$context['page_title'] = $txt['lp_you_liked'];
+	}
+
+	public function getOthersLikes($memID) {
+		global $context, $scripturl, $modSettings;
+
+		$select = 'COUNT(DISTINCT(lp.id_msg))';
+		$where = 'm.id_member = ' . $memID;
+		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LikePosts::$LikePostsDB->getTotalResults($select, $where);
+
+		$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
+		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
+
+		// Give admin options for these
+		$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+
+		$context['like_post']['others_like_data'] = LikePosts::$LikePostsDB->getOthersLikes($memID, $context['start']);
+		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
+
+		$context['sub_template'] = 'lp_show_others_likes';
+		$context['page_title'] = $txt['lp_liked_by_others'];
 	}
 }
 
