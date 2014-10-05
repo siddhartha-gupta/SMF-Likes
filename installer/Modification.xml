@@ -93,12 +93,12 @@
 					LikePosts::$LikePostsUtils->isAllowedTo('can_like_posts')) {
 
 					echo '
-								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
+								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
 				}
 		
 				if(LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes', 'can_view_likes_in_boards'))) {
 					echo '
-								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
+								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.likeHandler.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
 				}
 
 				echo '

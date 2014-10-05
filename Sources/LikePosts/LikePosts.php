@@ -124,6 +124,7 @@ class LikePosts {
 		self::loadClass('LikePostsDispatcher');
 
 		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikes');
+		$actions['likepostsdata'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikesData');
 		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikeStats');
 	}
 

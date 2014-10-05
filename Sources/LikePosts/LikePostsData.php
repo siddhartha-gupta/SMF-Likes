@@ -40,7 +40,7 @@ class LikePostsData {
 	public function getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 		global $context, $user_info;
 
-		if($user_info['is_guest'] && !LP_isAllowedTo(array('can_view_likes_in_boards'))) {
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_boards'))) {
 			return false;
 		}
 
@@ -54,6 +54,31 @@ class LikePostsData {
 		}
 		$result = LikePosts::$LikePostsDB->getAllTopicsInfo($topicsArr, $boardId);
 		return $result;
+	}
+
+	/*
+	 * To get the info of members who liked the post
+	 */
+	public function getMessageLikeInfo() {
+		global $sourcedir, $user_info;
+
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))&& 
+			!LP_isAllowedTo(array('can_view_likes_in_boards'))) {
+			return false;
+		} elseif (!$user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes'))) {
+			return false;
+		}
+
+		if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
+			$resp = array('response' => false);
+		}
+		$msg_id = (int) $_REQUEST['msg_id'];
+
+		$result = LikePosts::$LikePostsDB->getMessageLikeInfo($msg_id);
+		$resp = array('response' => true, 'data' => $result);
+
+		echo json_encode($resp);
+		die();
 	}
 }
 

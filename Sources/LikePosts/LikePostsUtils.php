@@ -73,7 +73,6 @@ class LikePostsUtils {
 		}
 
 		$result = true;
-
 		$guestPermission = array(
 			'can_view_likes_in_posts',
 			'can_view_likes_in_boards',

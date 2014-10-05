@@ -262,7 +262,7 @@ class LikePostsDB {
 	/*
 	 * Underlying DB implementation of LP_getMessageLikeInfo
 	*/
-	public function LP_DB_getMessageLikeInfo($msg_id = 0) {
+	public function getMessageLikeInfo($msg_id = 0) {
 		global $smcFunc, $scripturl, $settings, $modSettings;
 
 		if (empty($msg_id)) {
@@ -289,7 +289,7 @@ class LikePostsDB {
 				'name' => $row['real_name'],
 				'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
 				'avatar' => array(
-					'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'href' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
 				),
 			);
 		}

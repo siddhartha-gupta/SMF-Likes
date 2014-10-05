@@ -232,75 +232,76 @@
 					isLikeAjaxInProgress = false;
 					lpObj.likePostsUtils.removeOverlay();
 				}, 2000);
+			},
+
+			showMessageLikedInfo = function(messageId) {
+				if (isNaN(messageId)) {
+					return false;
+				}
+
+				lpObj.jQRef.ajax({
+					type: "GET",
+					url: smf_scripturl + '?action=likepostsdata;sa=get_message_like_info',
+					dataType: "json",
+					data: {
+						msg_id: messageId
+					}
+				}).done(function(resp) {
+					if (resp.response) {
+						if (resp.data.length <= 0) {
+							return false;
+						}
+
+						var data = resp.data,
+							i,
+							height = 0,
+							completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
+
+						for (i in data) {
+							if (data.hasOwnProperty(i)) {
+								completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
+							}
+						}
+						completeString += '</div></div>';
+						lpObj.jQRef('body').append(completeString);
+
+						setTimeout(function() {
+							lpObj.jQRef('.like_posts_member_info').each(function() {
+								height += lpObj.jQRef(this).outerHeight();
+							});
+
+							if (height >= (window.innerHeight - 100)) {
+								height = window.innerHeight - 200;
+							}
+							lpObj.jQRef('.like_posts_member_info_box').css({
+								'height': height,
+								'visibility': 'visible'
+							});
+						}, 50);
+
+						lpObj.jQRef(document).one('click keyup', lpObj.likePostsUtils.removeOverlay);
+						lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
+							e.stopPropagation();
+						});
+					} else {
+						//NOTE: Make an error callback over here
+						return false;
+					}
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function(resp) {
+					console.log(resp);
+				});
 			};
 
 		return {
-			'likeUnlikePosts': likeUnlikePosts
+			'likeUnlikePosts': likeUnlikePosts,
+			'showMessageLikedInfo': showMessageLikedInfo
 		};
 	}();
 
 	lpObj.likeHandler = likeHandler.prototype;
 })();
-
-// likePosts.prototype.showMessageLikedInfo = function(messageId) {
-// 	if (isNaN(messageId)) {
-// 		return false;
-// 	}
-
-// 	lpObj.jQRef.ajax({
-// 		type: "GET",
-// 		url: smf_scripturl + '?action=likeposts;sa=get_message_like_info',
-// 		context: document.body,
-// 		dataType: "json",
-// 		data: {
-// 			msg_id: messageId
-// 		},
-
-// 		success: function(resp) {
-// 			if (resp.response) {
-// 				if (resp.data.length <= 0) {
-// 					return false;
-// 				}
-
-// 				var data = resp.data,
-// 					i,
-// 					height = 0,
-// 					completeString = '<div class="like_posts_overlay"><div class="like_posts_member_info_box">';
-
-// 				for (i in data) {
-// 					if (data.hasOwnProperty(i)) {
-// 						completeString += '<div class="like_posts_member_info"><img class="avatar" src="' + data[i].avatar.href + '" /><div class="like_posts_member_info_details"><a href="' + data[i].href + '">' + data[i].name + '</a></div></div>';
-// 					}
-// 				}
-// 				completeString += '</div></div>';
-// 				lpObj.jQRef('body').append(completeString);
-
-// 				setTimeout(function() {
-// 					lpObj.jQRef('.like_posts_member_info').each(function() {
-// 						height += lpObj.jQRef(this).outerHeight();
-// 					});
-
-// 					if (height >= (window.innerHeight - 100)) {
-// 						height = window.innerHeight - 200;
-// 					}
-// 					lpObj.jQRef('.like_posts_member_info_box').css({
-// 						'height': height,
-// 						'visibility': 'visible'
-// 					});
-// 				}, 50);
-
-// 				lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
-
-// 				lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
-// 					e.stopPropagation();
-// 				});
-// 			} else {
-// 				//NOTE: Make an error callback over here
-// 				return false;
-// 			}
-// 		}
-// 	});
-// };
 
 // likePosts.prototype.showLikeNotification = function() {
 // 	lpObj.jQRef.ajax({

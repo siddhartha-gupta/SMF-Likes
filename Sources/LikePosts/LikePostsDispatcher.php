@@ -41,15 +41,25 @@ class LikePostsDispatcher {
 		LikePosts::loadClass('LikeUnlikePosts');
 
 		$subActions = array(
-			'like_post' => 'likeUnlikePostsHandler',
-			'get_message_like_info' => 'LP_getMessageLikeInfo',
-			'get_all_messages_info' => 'LP_getAllMessagesInfo',
-			'get_all_topics_info' => 'LP_getAllTopicsInfo',
-			'like_posts_notification'=> 'LP_getAllNotification',
+			'like_post' => 'likeUnlikePostsHandler'
 		);
 
 		if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikeUnlikePosts, $subActions[$_REQUEST['sa']]))
 			return LikePosts::$LikeUnlikePosts->$subActions[$_REQUEST['sa']]();
+	}
+
+	public function dispatchLikesData() {
+		LikePosts::loadClass('LikePostsData');
+
+		$subActions = array(
+			'get_message_like_info' => 'getMessageLikeInfo',
+			'get_all_messages_info' => 'LP_getAllMessagesInfo',
+			'get_all_topics_info' => 'LP_getAllTopicsInfo',
+			'like_posts_notification'=> 'LP_getAllNotification'
+		);
+
+		if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikePostsData, $subActions[$_REQUEST['sa']]))
+			return LikePosts::$LikePostsData->$subActions[$_REQUEST['sa']]();
 	}
 
 	public function dispatchLikeStats() {
