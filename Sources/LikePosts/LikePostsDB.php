@@ -178,8 +178,8 @@ class LikePostsDB {
 
 
 
-	public function LP_DB_posterInfo($postersArr) {
-		global $smcFunc, $user_info, $scripturl;
+	public function posterInfo($postersArr) {
+		global $smcFunc;
 
 		$postersInfo = array();
 		if (count($postersArr) === 0) {
@@ -209,8 +209,8 @@ class LikePostsDB {
 	/*
 	 * Underlying DB implementation of LP_getAllMessagesInfo
 	*/
-	public function LP_DB_getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
-		global $smcFunc, $user_info, $scripturl;
+	public function getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
+		global $smcFunc, $scripturl;
 
 		$topicsLikeInfo = array();
 		if (count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {

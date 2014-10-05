@@ -67,7 +67,7 @@ class LikePostsData {
 
 		if($user_info['is_guest'] && 
 			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts')) && 
-			!LP_isAllowedTo(array('can_view_likes_in_boards'))) {
+			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_boards'))) {
 			return false;
 		} elseif (!$user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes'))) {
 			return false;
@@ -82,6 +82,41 @@ class LikePostsData {
 
 		$resp = array('response' => true, 'data' => $result);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
+
+	public function posterInfo($postersArr = array()) {
+		global $context, $sourcedir, $user_info;
+
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
+			return false;
+		}
+
+		if (!is_array($postersArr)) {
+			$postersArr = array($postersArr);
+		}
+		$result = LikePosts::$LikePostsDB->posterInfo($postersArr);
+		return $result;
+	}
+
+	public function getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
+		global $context, $sourcedir, $user_info;
+
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
+			return false;
+		}
+
+		if (!is_array($msgsArr)) {
+			$msgsArr = array($msgsArr);
+		}
+
+		$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
+		$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
+
+		if (empty($boardId) || empty($topicId)) {
+			return false;
+		}
+		$result = LikePosts::$LikePostsDB->getAllMessagesInfo($msgsArr, $boardId, $topicId);
+		return $result;
 	}
 }
 

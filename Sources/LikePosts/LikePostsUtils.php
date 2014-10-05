@@ -165,6 +165,53 @@ class LikePostsUtils {
 		return $data;
 	}
 
+	/*
+	 * To check whether a specific message is liked or not
+	 * Used in Display template
+	*/
+	public function isPostLiked($arr, $id) {
+		global $context, $txt, $user_info;
+
+		loadlanguage('LikePosts');
+
+		$data = array(
+			'text' => $txt['lp_like'],
+			'count' => 0,
+			'members' => array(),
+			'already_liked' => 1,
+		);
+
+		if (!is_array($arr) || empty($arr) || empty($id))
+			return $data;
+
+		if (array_key_exists($id, $arr)) {
+			$data = array(
+				'members' => $arr[$id]['members'],
+				'count' => $arr[$id]['count'],
+			);
+
+			if (array_key_exists($user_info['id'], $arr[$id]['members'])) {
+				$data['text'] = $txt['lp_unlike'];
+
+				$remaining_likes = (int) ($data['count'] - 1);
+				if ($remaining_likes > 0)
+					$data['count_text'] = sprintf($txt['lp_string_you_and_liked'], $remaining_likes);
+				else
+					$data['count_text'] = $txt['lp_string_you_liked'];
+
+				//If already liked make it to unlink
+				$data['already_liked'] = 0;
+			} else {
+				$data['text'] = $txt['lp_like'];
+				$data['count_text'] = sprintf($txt['lp_string_people_liked'], $data['count']);
+
+				//Give them the option to like
+				$data['already_liked'] = 1;
+			}
+		}
+		return $data;
+	}
+
 	public function sendJSONResponse($resp) {
 		echo json_encode($resp);
 		die();
