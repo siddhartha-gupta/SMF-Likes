@@ -164,6 +164,11 @@ class LikePostsUtils {
 		}
 		return $data;
 	}
+
+	public function sendJSONResponse($resp) {
+		echo json_encode($resp);
+		die();
+	}
 }
 
 ?>

@@ -1,34 +1,37 @@
 <?php
 
-// /**
-//  * @package manifest file for Like Posts
-//  * @version 1.6.1
-//  * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-//  * @copyright Copyright (c) 2014, Siddhartha Gupta
-//  * @license http://www.mozilla.org/MPL/MPL-1.1.html
-//  */
+/**
+ *
+ *
+ * @package manifest file for Like Posts
+ * @version 1.6.1
+ * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+ * @copyright Copyright (c) 2014, Siddhartha Gupta
+ * @license http://www.mozilla.org/MPL/MPL-1.1.html
+ */
 
-
-//  * Version: MPL 1.1
-//  *
-//  * The contents of this file are subject to the Mozilla Public License Version
-//  * 1.1 (the "License"); you may not use this file except in compliance with
-//  * the License. You may obtain a copy of the License at
-//  * http://www.mozilla.org/MPL/
-//  *
-//  * Software distributed under the License is distributed on an "AS IS" basis,
-//  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  * for the specific language governing rights and limitations under the
-//  * License.
-//  *
-//  * The Initial Developer of the Original Code is
-//  *  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
-//  * Portions created by the Initial Developer are Copyright (C) 2012
-//  * the Initial Developer. All Rights Reserved.
-//  *
-//  * Contributor(s): Big thanks to all contributor(s)
-//  * emanuele45 (https://github.com/emanuele45)
-//  *
+/*
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Initial Developer of the Original Code is
+ *  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+ * Portions created by the Initial Developer are Copyright (C) 2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s): Big thanks to all contributor(s)
+ * emanuele45 (https://github.com/emanuele45)
+ *
+ */
 
 if (!defined('SMF')) {
 	die('Hacking attempt...');
@@ -62,7 +65,8 @@ class LikePostsData {
 	public function getMessageLikeInfo() {
 		global $sourcedir, $user_info;
 
-		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))&& 
+		if($user_info['is_guest'] && 
+			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts')) && 
 			!LP_isAllowedTo(array('can_view_likes_in_boards'))) {
 			return false;
 		} elseif (!$user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes'))) {
@@ -71,14 +75,13 @@ class LikePostsData {
 
 		if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
 			$resp = array('response' => false);
+			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
 		$msg_id = (int) $_REQUEST['msg_id'];
-
 		$result = LikePosts::$LikePostsDB->getMessageLikeInfo($msg_id);
-		$resp = array('response' => true, 'data' => $result);
 
-		echo json_encode($resp);
-		die();
+		$resp = array('response' => true, 'data' => $result);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}
 }
 

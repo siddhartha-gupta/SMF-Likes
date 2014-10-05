@@ -61,8 +61,6 @@ class LikePosts {
 			self::loadClass('LikePostsDB');
 		}
 		return self::$instance;
-
-		// loadtemplate('LikePosts');
 	}
 
 	public function __construct() {}
