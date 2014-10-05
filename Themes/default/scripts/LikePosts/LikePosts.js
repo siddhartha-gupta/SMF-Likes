@@ -357,145 +357,146 @@
 				lpObj.jQRef.ajax({
 					type: "GET",
 					url: smf_scripturl + '?action=likepostsdata;sa=like_posts_notification',
-					context: document.body,
 					dataType: "json",
-
-					success: function(resp) {
-						if (resp.response) {
-							if (resp.data.length <= 0) {
-								return false;
-							}
-
-							var data = resp.data,
-								notificationInfo = '',
-								i, j, k,
-								dataLengthAll = 0,
-								dataLengthMine = 0,
-								completeString = '';
-
-							notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
-
-							for (i in data) {
-								if (data.hasOwnProperty(i)) {
-									if (i === 'all') {
-										notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
-										var len = 0;
-										if (data[i].length === 0) {
-											notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-										} else {
-											for (j in data[i]) {
-												if (data[i].hasOwnProperty(j)) {
-													len++;
-													notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
-												}
-											}
-										}
-										dataLengthAll = len;
-										notificationInfo += '</div>';
-									} else if (i === 'mine') {
-										notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
-										var len = 0;
-										if (data[i].length === 0) {
-											notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-										} else {
-											for (k in data[i]) {
-												if (data[i].hasOwnProperty(k)) {
-													len++;
-													notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
-												}
-											}
-										}
-										dataLengthMine = len;
-										notificationInfo += '</div>';
-									}
-								}
-							}
-							completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
-
-							dataLengthAll = dataLengthAll * 50;
-							if (dataLengthAll > 200) {
-								dataLengthAll = 200;
-							} else if (dataLengthAll < 100) {
-								dataLengthAll = 100;
-							}
-
-							dataLengthMine = dataLengthMine * 50;
-							if (dataLengthMine > 200) {
-								dataLengthMine = 200;
-							} else if (dataLengthMine < 100) {
-								dataLengthMine = 100;
-							}
-							lpObj.jQRef('body').append(completeString);
-
-							var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
-								checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
-
-							// changed from window.innerWidth for mobile devices
-							if (lpObj.likePostsUtils.isMobileDevice()) {
-								if (checkFloat > document.documentElement.clientWidth) {
-									leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-								}
-							} else {
-								if (checkFloat > window.innerWidth) {
-									leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-								}
-							}
-
-
-							lpObj.jQRef('.like_posts_notification').css({
-								'top': lpObj.jQRef('.showLikeNotification').offset().top,
-								'left': leftOffset
-							});
-							lpObj.jQRef('.lp_all_notifications_data').css({
-								'height': dataLengthAll + 'px'
-							});
-							lpObj.jQRef('.lp_my_notifications_data').css({
-								'height': dataLengthMine + 'px'
-							});
-
-							lpObj.jQRef('#lp_all_notifications').css({
-								'font-weight': 'bold'
-							});
-
-							lpObj.jQRef('.lp_notification_header').on('click', function(e) {
-								e.preventDefault();
-								switch (e.target.id) {
-									case 'lp_all_notifications':
-										lpObj.jQRef('#lp_all_notifications').css({
-											'font-weight': 'bold'
-										});
-										lpObj.jQRef('#lp_my_notifications').css({
-											'font-weight': 'normal'
-										});
-										lpObj.jQRef('.lp_my_notifications_data').hide();
-										lpObj.jQRef('.lp_all_notifications_data').show();
-										break;
-
-									case 'lp_my_notifications':
-										lpObj.jQRef('#lp_all_notifications').css({
-											'font-weight': 'normal'
-										});
-										lpObj.jQRef('#lp_my_notifications').css({
-											'font-weight': 'bold'
-										});
-										lpObj.jQRef('.lp_all_notifications_data').hide();
-										lpObj.jQRef('.lp_my_notifications_data').show();
-										break;
-
-									case 'close_notifications':
-										lpObj.removeNotification(e);
-										break;
-
-									default:
-										break;
-								}
-							});
-							lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
-						} else {
-							//NOTE: Make an error callback over here
+				}).done(function(resp) {
+					if (resp.response) {
+						if (resp.data.length <= 0) {
 							return false;
 						}
+
+						var data = resp.data,
+							notificationInfo = '',
+							i, j, k,
+							dataLengthAll = 0,
+							dataLengthMine = 0,
+							completeString = '';
+
+						notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+
+						for (i in data) {
+							var len = 0;
+
+							if (data.hasOwnProperty(i)) {
+								if (i === 'all') {
+									notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
+
+									if (data[i].length === 0) {
+										notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+									} else {
+										for (j in data[i]) {
+											if (data[i].hasOwnProperty(j)) {
+												len++;
+												notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+											}
+										}
+									}
+									dataLengthAll = len;
+									notificationInfo += '</div>';
+								} else if (i === 'mine') {
+									notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
+									if (data[i].length === 0) {
+										notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+									} else {
+										for (k in data[i]) {
+											if (data[i].hasOwnProperty(k)) {
+												len++;
+												notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+											}
+										}
+									}
+									dataLengthMine = len;
+									notificationInfo += '</div>';
+								}
+							}
+						}
+						completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
+
+						dataLengthAll = dataLengthAll * 50;
+						if (dataLengthAll > 200) {
+							dataLengthAll = 200;
+						} else if (dataLengthAll < 100) {
+							dataLengthAll = 100;
+						}
+
+						dataLengthMine = dataLengthMine * 50;
+						if (dataLengthMine > 200) {
+							dataLengthMine = 200;
+						} else if (dataLengthMine < 100) {
+							dataLengthMine = 100;
+						}
+						lpObj.jQRef('body').append(completeString);
+
+						var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
+							checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+
+						// changed from window.innerWidth for mobile devices
+						if (lpObj.likePostsUtils.isMobileDevice()) {
+							if (checkFloat > document.documentElement.clientWidth) {
+								leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+							}
+						} else {
+							if (checkFloat > window.innerWidth) {
+								leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+							}
+						}
+
+						lpObj.jQRef('.like_posts_notification').css({
+							'top': lpObj.jQRef('.showLikeNotification').offset().top,
+							'left': leftOffset
+						});
+						lpObj.jQRef('.lp_all_notifications_data').css({
+							'height': dataLengthAll + 'px'
+						});
+						lpObj.jQRef('.lp_my_notifications_data').css({
+							'height': dataLengthMine + 'px'
+						});
+
+						lpObj.jQRef('#lp_all_notifications').css({
+							'font-weight': 'bold'
+						});
+
+						lpObj.jQRef('.lp_notification_header').on('click', function(e) {
+							e.preventDefault();
+							switch (e.target.id) {
+								case 'lp_all_notifications':
+									lpObj.jQRef('#lp_all_notifications').css({
+										'font-weight': 'bold'
+									});
+									lpObj.jQRef('#lp_my_notifications').css({
+										'font-weight': 'normal'
+									});
+									lpObj.jQRef('.lp_my_notifications_data').hide();
+									lpObj.jQRef('.lp_all_notifications_data').show();
+									break;
+
+								case 'lp_my_notifications':
+									lpObj.jQRef('#lp_all_notifications').css({
+										'font-weight': 'normal'
+									});
+									lpObj.jQRef('#lp_my_notifications').css({
+										'font-weight': 'bold'
+									});
+									lpObj.jQRef('.lp_all_notifications_data').hide();
+									lpObj.jQRef('.lp_my_notifications_data').show();
+									break;
+
+								case 'close_notifications':
+									removeNotification(e);
+									break;
+
+								default:
+									break;
+							}
+						});
+						lpObj.jQRef(document).on('click keyup', removeNotification);
+					} else {
+						//NOTE: Make an error callback over here
+						return false;
 					}
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function(resp) {
+					console.log(resp);
 				});
 			},
 
@@ -506,16 +507,15 @@
 						lpObj.jQRef('.like_posts_notification').unbind('click');
 						lpObj.jQRef('.like_posts_notification').unbind('keyup');
 						lpObj.jQRef('.lp_notification_header').unbind('click');
-						lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
-						lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
+						lpObj.jQRef(document).unbind('click', removeNotification);
+						lpObj.jQRef(document).unbind('keyup', removeNotification);
 						lpObj.jQRef('.like_posts_notification').remove();
 					}
 				}
 			};
 
 		return {
-			'showLikeNotification': showLikeNotification,
-			'removeNotification': removeNotification
+			'showLikeNotification': showLikeNotification
 		};
 	}();
 	lpObj.likePostsNotification = likePostsNotification.prototype;

@@ -563,7 +563,7 @@ class LikePostsDB {
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
-			$msgString = LP_trimContent($row['body'], ' ', 255);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
 			$mostLikedMessage = array(
 				'id_msg' => $row['id_msg'],
@@ -655,7 +655,7 @@ class LikePostsDB {
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
-			$msgString = LP_trimContent($row['body'], ' ', 255);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
 			$mostLikedTopic['msg_data'][] = array(
 				'id_msg' => $row['id_msg'],
@@ -713,7 +713,7 @@ class LikePostsDB {
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
-			$msgString = LP_trimContent($row['body'], ' ', 255);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
 			$mostLikedBoard['topic_data'][] = array(
 				'id_topic' => $row['id_topic'],
@@ -785,7 +785,7 @@ class LikePostsDB {
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
-			$msgString = LP_trimContent($row['body'], ' ', 255);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
 			$mostLikedMember['topic_data'][] = array(
 				'id_topic' => $row['id_topic'],
@@ -853,7 +853,7 @@ class LikePostsDB {
 		);
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
-			$msgString = LP_trimContent($row['body'], ' ', 255);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
 			$mostLikeGivingMember['topic_data'][] = array(
 				'id_msg' => $row['id_msg'],
