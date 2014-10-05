@@ -56,9 +56,9 @@ class LikePostsDispatcher {
 
 		$subActions = array(
 			'get_message_like_info' => 'getMessageLikeInfo',
-			'get_all_messages_info' => 'LP_getAllMessagesInfo',
-			'get_all_topics_info' => 'LP_getAllTopicsInfo',
-			'like_posts_notification'=> 'LP_getAllNotification'
+			// 'get_all_messages_info' => 'LP_getAllMessagesInfo',
+			// 'get_all_topics_info' => 'LP_getAllTopicsInfo',
+			'like_posts_notification'=> 'getAllNotification'
 		);
 
 		if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikePostsData, $subActions[$_REQUEST['sa']]))

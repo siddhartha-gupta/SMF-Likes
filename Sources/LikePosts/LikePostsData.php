@@ -118,6 +118,19 @@ class LikePostsData {
 		$result = LikePosts::$LikePostsDB->getAllMessagesInfo($msgsArr, $boardId, $topicId);
 		return $result;
 	}
+
+	public function getAllNotification() {
+		global $sourcedir, $user_info;
+
+		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes')) || $user_info['is_guest']) {
+			return false;
+		}
+		$result = LikePosts::$LikePostsDB->getAllNotification();
+
+
+		$resp = array('response' => true, 'data' => $result);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
 }
 
 ?>

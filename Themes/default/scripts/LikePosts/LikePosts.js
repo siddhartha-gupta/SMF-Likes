@@ -81,6 +81,36 @@
 				}
 			},
 
+			bouncEffect = function(element, direction, times, distance, speed) {
+				var dir = 'marginLeft',
+					anim1 = {},
+					anim2 = {},
+					i = 0;
+
+				switch (direction) {
+					case 'rl':
+						dir = 'marginRight';
+						break;
+
+					case 'tb':
+						dir = 'marginTop';
+						break;
+
+					case 'bt':
+						dir = 'marginBottom';
+						break;
+
+					default:
+						break;
+				}
+				anim1[dir] = '+=' + distance;
+				anim2[dir] = '-=' + distance;
+
+				for (; i < times; i++) {
+					element.animate(anim1, speed).animate(anim2, speed);
+				}
+			},
+
 			isMobileDevice = function() {
 				if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
 					return true;
@@ -303,195 +333,177 @@
 	lpObj.likeHandler = likeHandler.prototype;
 })();
 
-// likePosts.prototype.showLikeNotification = function() {
-// 	lpObj.jQRef.ajax({
-// 		type: "GET",
-// 		url: smf_scripturl + '?action=likeposts;sa=like_posts_notification',
-// 		context: document.body,
-// 		dataType: "json",
+(function() {
+	function likePostsNotification() {}
 
-// 		success: function(resp) {
-// 			if (resp.response) {
-// 				if (resp.data.length <= 0) {
-// 					return false;
-// 				}
+	likePostsNotification.prototype = function() {
+		var showLikeNotification = function() {
+				lpObj.jQRef.ajax({
+					type: "GET",
+					url: smf_scripturl + '?action=likepostsdata;sa=like_posts_notification',
+					context: document.body,
+					dataType: "json",
 
-// 				var data = resp.data,
-// 					notificationInfo = '',
-// 					i, j, k,
-// 					dataLengthAll = 0,
-// 					dataLengthMine = 0,
-// 					completeString = '';
+					success: function(resp) {
+						if (resp.response) {
+							if (resp.data.length <= 0) {
+								return false;
+							}
 
-// 				notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+							var data = resp.data,
+								notificationInfo = '',
+								i, j, k,
+								dataLengthAll = 0,
+								dataLengthMine = 0,
+								completeString = '';
 
-// 				for (i in data) {
-// 					if (data.hasOwnProperty(i)) {
-// 						if (i === 'all') {
-// 							notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
-// 							var len = 0;
-// 							if (data[i].length === 0) {
-// 								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-// 							} else {
-// 								for (j in data[i]) {
-// 									if (data[i].hasOwnProperty(j)) {
-// 										len++;
-// 										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
-// 									}
-// 								}
-// 							}
-// 							dataLengthAll = len;
-// 							notificationInfo += '</div>';
-// 						} else if (i === 'mine') {
-// 							notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
-// 							var len = 0;
-// 							if (data[i].length === 0) {
-// 								notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
-// 							} else {
-// 								for (k in data[i]) {
-// 									if (data[i].hasOwnProperty(k)) {
-// 										len++;
-// 										notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
-// 									}
-// 								}
-// 							}
-// 							dataLengthMine = len;
-// 							notificationInfo += '</div>';
-// 						}
-// 					}
-// 				}
-// 				completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
+							notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
 
-// 				dataLengthAll = dataLengthAll * 50;
-// 				if (dataLengthAll > 200) {
-// 					dataLengthAll = 200;
-// 				} else if (dataLengthAll < 100) {
-// 					dataLengthAll = 100;
-// 				}
+							for (i in data) {
+								if (data.hasOwnProperty(i)) {
+									if (i === 'all') {
+										notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
+										var len = 0;
+										if (data[i].length === 0) {
+											notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+										} else {
+											for (j in data[i]) {
+												if (data[i].hasOwnProperty(j)) {
+													len++;
+													notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+												}
+											}
+										}
+										dataLengthAll = len;
+										notificationInfo += '</div>';
+									} else if (i === 'mine') {
+										notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
+										var len = 0;
+										if (data[i].length === 0) {
+											notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+										} else {
+											for (k in data[i]) {
+												if (data[i].hasOwnProperty(k)) {
+													len++;
+													notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+												}
+											}
+										}
+										dataLengthMine = len;
+										notificationInfo += '</div>';
+									}
+								}
+							}
+							completeString = '<div class="like_posts_notification">' + notificationInfo + '</div>';
 
-// 				dataLengthMine = dataLengthMine * 50;
-// 				if (dataLengthMine > 200) {
-// 					dataLengthMine = 200;
-// 				} else if (dataLengthMine < 100) {
-// 					dataLengthMine = 100;
-// 				}
-// 				lpObj.jQRef('body').append(completeString);
+							dataLengthAll = dataLengthAll * 50;
+							if (dataLengthAll > 200) {
+								dataLengthAll = 200;
+							} else if (dataLengthAll < 100) {
+								dataLengthAll = 100;
+							}
 
-// 				var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
-// 					checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+							dataLengthMine = dataLengthMine * 50;
+							if (dataLengthMine > 200) {
+								dataLengthMine = 200;
+							} else if (dataLengthMine < 100) {
+								dataLengthMine = 100;
+							}
+							lpObj.jQRef('body').append(completeString);
 
-// 				// changed from window.innerWidth for mobile devices
-// 				if (lpObj.isMobileDevice()) {
-// 					if (checkFloat > document.documentElement.clientWidth) {
-// 						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-// 					}
-// 				} else {
-// 					if (checkFloat > window.innerWidth) {
-// 						leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
-// 					}
-// 				}
+							var leftOffset = lpObj.jQRef('.showLikeNotification').offset().left + lpObj.jQRef('.showLikeNotification').width() + 20,
+								checkFloat = leftOffset + lpObj.jQRef('.like_posts_notification').outerWidth();
+
+							// changed from window.innerWidth for mobile devices
+							if (lpObj.likePostsUtils.isMobileDevice()) {
+								if (checkFloat > document.documentElement.clientWidth) {
+									leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+								}
+							} else {
+								if (checkFloat > window.innerWidth) {
+									leftOffset = lpObj.jQRef('.showLikeNotification').offset().left - lpObj.jQRef('.like_posts_notification').outerWidth() - 20;
+								}
+							}
 
 
-// 				lpObj.jQRef('.like_posts_notification').css({
-// 					'top': lpObj.jQRef('.showLikeNotification').offset().top,
-// 					'left': leftOffset
-// 				});
-// 				lpObj.jQRef('.lp_all_notifications_data').css({
-// 					'height': dataLengthAll + 'px'
-// 				});
-// 				lpObj.jQRef('.lp_my_notifications_data').css({
-// 					'height': dataLengthMine + 'px'
-// 				});
+							lpObj.jQRef('.like_posts_notification').css({
+								'top': lpObj.jQRef('.showLikeNotification').offset().top,
+								'left': leftOffset
+							});
+							lpObj.jQRef('.lp_all_notifications_data').css({
+								'height': dataLengthAll + 'px'
+							});
+							lpObj.jQRef('.lp_my_notifications_data').css({
+								'height': dataLengthMine + 'px'
+							});
 
-// 				lpObj.jQRef('#lp_all_notifications').css({
-// 					'font-weight': 'bold'
-// 				});
+							lpObj.jQRef('#lp_all_notifications').css({
+								'font-weight': 'bold'
+							});
 
-// 				lpObj.jQRef('.lp_notification_header').on('click', function(e) {
-// 					e.preventDefault();
-// 					switch (e.target.id) {
-// 						case 'lp_all_notifications':
-// 							lpObj.jQRef('#lp_all_notifications').css({
-// 								'font-weight': 'bold'
-// 							});
-// 							lpObj.jQRef('#lp_my_notifications').css({
-// 								'font-weight': 'normal'
-// 							});
-// 							lpObj.jQRef('.lp_my_notifications_data').hide();
-// 							lpObj.jQRef('.lp_all_notifications_data').show();
-// 							break;
+							lpObj.jQRef('.lp_notification_header').on('click', function(e) {
+								e.preventDefault();
+								switch (e.target.id) {
+									case 'lp_all_notifications':
+										lpObj.jQRef('#lp_all_notifications').css({
+											'font-weight': 'bold'
+										});
+										lpObj.jQRef('#lp_my_notifications').css({
+											'font-weight': 'normal'
+										});
+										lpObj.jQRef('.lp_my_notifications_data').hide();
+										lpObj.jQRef('.lp_all_notifications_data').show();
+										break;
 
-// 						case 'lp_my_notifications':
-// 							lpObj.jQRef('#lp_all_notifications').css({
-// 								'font-weight': 'normal'
-// 							});
-// 							lpObj.jQRef('#lp_my_notifications').css({
-// 								'font-weight': 'bold'
-// 							});
-// 							lpObj.jQRef('.lp_all_notifications_data').hide();
-// 							lpObj.jQRef('.lp_my_notifications_data').show();
-// 							break;
+									case 'lp_my_notifications':
+										lpObj.jQRef('#lp_all_notifications').css({
+											'font-weight': 'normal'
+										});
+										lpObj.jQRef('#lp_my_notifications').css({
+											'font-weight': 'bold'
+										});
+										lpObj.jQRef('.lp_all_notifications_data').hide();
+										lpObj.jQRef('.lp_my_notifications_data').show();
+										break;
 
-// 						case 'close_notifications':
-// 							lpObj.removeNotification(e);
-// 							break;
+									case 'close_notifications':
+										lpObj.removeNotification(e);
+										break;
 
-// 						default:
-// 							break;
-// 					}
-// 				});
-// 				lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
-// 			} else {
-// 				//NOTE: Make an error callback over here
-// 				return false;
-// 			}
-// 		}
-// 	});
-// };
+									default:
+										break;
+								}
+							});
+							lpObj.jQRef(document).on('click keyup', lpObj.removeNotification);
+						} else {
+							//NOTE: Make an error callback over here
+							return false;
+						}
+					}
+				});
+			},
 
-// likePosts.prototype.removeNotification = function(e) {
-// 	if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
-// 		var container = lpObj.jQRef('#lp_all_notifications, #lp_my_notifications');
-// 		if (!container.is(e.target) && container.has(e.target).length === 0) {
-// 			lpObj.jQRef('.like_posts_notification').unbind('click');
-// 			lpObj.jQRef('.like_posts_notification').unbind('keyup');
-// 			lpObj.jQRef('.lp_notification_header').unbind('click');
-// 			lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
-// 			lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
-// 			lpObj.jQRef('.like_posts_notification').remove();
-// 		}
-// 	}
-// };
+			removeNotification = function(e) {
+				if ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click') {
+					var container = lpObj.jQRef('#lp_all_notifications, #lp_my_notifications');
+					if (!container.is(e.target) && container.has(e.target).length === 0) {
+						lpObj.jQRef('.like_posts_notification').unbind('click');
+						lpObj.jQRef('.like_posts_notification').unbind('keyup');
+						lpObj.jQRef('.lp_notification_header').unbind('click');
+						lpObj.jQRef(document).unbind('click', lpObj.removeNotification);
+						lpObj.jQRef(document).unbind('keyup', lpObj.removeNotification);
+						lpObj.jQRef('.like_posts_notification').remove();
+					}
+				}
+			};
 
-// likePosts.prototype.bouncEffect = function(element, direction, times, distance, speed) {
-// 	var dir = 'marginLeft',
-// 		anim1 = {},
-// 		anim2 = {},
-// 		i = 0;
-
-// 	switch (direction) {
-// 		case 'rl':
-// 			dir = 'marginRight';
-// 			break;
-
-// 		case 'tb':
-// 			dir = 'marginTop';
-// 			break;
-
-// 		case 'bt':
-// 			dir = 'marginBottom';
-// 			break;
-
-// 		default:
-// 			break;
-// 	}
-// 	anim1[dir] = '+=' + distance;
-// 	anim2[dir] = '-=' + distance;
-
-// 	for (; i < times; i++) {
-// 		element.animate(anim1, speed).animate(anim2, speed);
-// 	}
-// };
+		return {
+			'showLikeNotification': showLikeNotification,
+			'removeNotification': removeNotification
+		};
+	}();
+	lpObj.likePostsNotification = likePostsNotification.prototype;
+})();
 
 // // some admin related functions
 // likePosts.prototype.recountStats = function(options) {
