@@ -57,7 +57,7 @@ class LikePostsDB {
 		cache_put_data('modSettings', null, 90);
 	}
 
-	public function recountLikesTotal($startLimit, $endLimit, $totalWork) {
+	public function recountLikesTotal($startLimit, $totalWork) {
 		global $smcFunc;
 
 		if(!isset($totalWork) || empty($totalWork)) {
@@ -131,6 +131,8 @@ class LikePostsDB {
 				array('id_member')
 			);
 		}
+
+		return $totalWorkCalc;
 	}
 
 	/*

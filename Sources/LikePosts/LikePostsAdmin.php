@@ -222,9 +222,11 @@ class LikePostsAdmin {
 		$startLimit = (int) $_REQUEST['startLimit'];
 		$endLimit = (int) $_REQUEST['endLimit'];
 		$totalWork = (int) $_REQUEST['totalWork'];
-		LikePosts::$LikePostsDB->recountLikesTotal($startLimit, $endLimit, $totalWork);
 
-		$resp = array('totalWork' => (int) $totalWork, 'endLimit' => (int) $endLimit);
+		// Result carries totalWork to do
+		$result = LikePosts::$LikePostsDB->recountLikesTotal($startLimit, $totalWork);
+
+		$resp = array('totalWork' => (int) $result, 'endLimit' => (int) $endLimit);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}
 }
