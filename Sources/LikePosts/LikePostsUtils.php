@@ -43,6 +43,7 @@ class LikePostsUtils {
 
 		if (!function_exists('json_decode')) {
 			function json_decode($content, $assoc = false) {
+				global $sourcedir;
 				require_once ($sourcedir . '/LikePosts/JSON.php');
 				if ($assoc) {
 					$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
@@ -55,6 +56,7 @@ class LikePostsUtils {
 
 		if (!function_exists('json_encode')) {
 			function json_encode($content) {
+				global $sourcedir;
 				require_once ($sourcedir . '/LikePosts/JSON.php');
 				$json = new Services_JSON;
 				return $json->encode($content);

@@ -193,6 +193,7 @@ class LikePostsAdmin {
 		isAllowedTo('admin_forum');
 		checkSession('request', '', true);
 
+		$general_settings = array();
 		$activeBoards = $_POST['active_board'];
 		$activeBoards = isset($activeBoards) && !empty($activeBoards) ? implode(',', $activeBoards) : '';
 		$general_settings[] = array('lp_active_boards', $activeBoards);
