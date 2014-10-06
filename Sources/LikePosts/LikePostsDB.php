@@ -113,7 +113,7 @@ class LikePostsDB {
 		$smcFunc['db_free_result']($request);
 
 		if(!empty($updateData) && !empty($updateIds)) {
-			$result = $smcFunc['db_query']('', '
+			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}like_count
 				SET like_count = CASE id_member '. $updateData .' END
 				WHERE id_member IN ({array_int:updateIds})',
@@ -124,7 +124,7 @@ class LikePostsDB {
 		}
 
 		if(!empty($insertData)) {
-			$result = $smcFunc['db_insert']('replace',
+			$smcFunc['db_insert']('replace',
 				'{db_prefix}like_count',
 				array('id_member' => 'int', 'like_count' => 'int'),
 				$insertData,
@@ -159,7 +159,7 @@ class LikePostsDB {
 			array('id_like')
 		);
 
-		$result = $smcFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}like_count
 			SET like_count = like_count + {int:count}
 			WHERE id_member = {int:id_member_received}',
@@ -170,7 +170,7 @@ class LikePostsDB {
 		);
 
 		if ($smcFunc['db_affected_rows']() == 0) {
-			$result = $smcFunc['db_insert']('ignore',
+			$smcFunc['db_insert']('ignore',
 				'{db_prefix}like_count',
 				array('id_member' => 'int', 'like_count' => 'int'),
 				array($data['id_member_received'], 1),
@@ -208,7 +208,7 @@ class LikePostsDB {
 			)
 		);
 
-		$result = $smcFunc['db_query']('', '
+		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}like_count
 			SET like_count = like_count - {int:count}
 			WHERE id_member = {int:id_member_received}',
