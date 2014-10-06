@@ -60,6 +60,15 @@
 				width: width + "px"
 			});
 		});
+
+
+		lpObj.jQRef(".like_post_stats_menu a").on("click", function(event) {
+			if (!lpObj.likePostsUtils.isNullUndefined(event)) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			lpObj.likePostStats.checkUrl(this.id);
+		});
 	});
 })(window);
 
@@ -627,3 +636,243 @@
 
 	lpObj.likePostsAdmin = likePostsAdmin.prototype;
 })();
+
+(function() {
+	function likePostStats() {}
+
+	likePostStats.prototype = function() {
+		var currentUrlFrag = null,
+			allowedUrls = {},
+			tabsVisitedCurrentSession = {},
+			defaultHash = 'messagestats',
+			txtStrings = {},
+
+			init = function(params) {
+				txtStrings = lpObj.jQRef.extend({}, params.txtStrings);
+				if (params.onError === "") {
+					allowedUrls = {
+						'messagestats': {
+							'uiFunc': showMessageStats
+						},
+						'topicstats': {
+							'uiFunc': showTopicStats
+						},
+						'boardstats': {
+							'uiFunc': showBoardStats
+						},
+						'mostlikesreceiveduserstats': {
+							'uiFunc': showMostLikesReceivedUserStats
+						},
+						'mostlikesgivenuserstats': {
+							'uiFunc': showMostLikesGivenUserStats
+						}
+					};
+					checkUrl();
+				}
+			},
+
+			showSpinnerOverlay = function() {
+				lpObj.jQRef('#like_post_stats_overlay').show();
+				lpObj.jQRef('#lp_preloader').show();
+			},
+
+			hideSpinnerOverlay = function() {
+				lpObj.jQRef('#lp_preloader').hide();
+				lpObj.jQRef('#like_post_stats_overlay').hide();
+			},
+
+			highlightActiveTab = function() {
+				lpObj.jQRef('.like_post_stats_menu a').removeClass('active');
+				lpObj.jQRef('.like_post_stats_menu #' + currentUrlFrag).addClass('active');
+			},
+
+			checkUrl = function(url) {
+				showSpinnerOverlay();
+
+				lpObj.jQRef(".message_title").off('mouseenter mousemove mouseout');
+				if (typeof(url) === 'undefined' || url === '') {
+					var currentHref = window.location.href.split('#');
+					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : defaultHash;
+				} else {
+					currentUrlFrag = url;
+				}
+
+				if (allowedUrls.hasOwnProperty(currentUrlFrag) === false) {
+					currentUrlFrag = defaultHash;
+				}
+
+				lpObj.jQRef('.like_post_stats_data').children().hide();
+				highlightActiveTab();
+				if (tabsVisitedCurrentSession.hasOwnProperty(currentUrlFrag) === false) {
+					getDataFromServer({
+						'url': currentUrlFrag,
+						'uiFunc': allowedUrls[currentUrlFrag].uiFunc
+					});
+				} else {
+					allowedUrls[currentUrlFrag].uiFunc();
+				}
+			},
+
+			getDataFromServer = function(params) {
+				lpObj.jQRef('.like_post_stats_error').hide().html('');
+				lpObj.jQRef.ajax({
+					type: "POST",
+					url: smf_scripturl + '?action=likepostsstatsajax',
+					context: document.body,
+					dataType: "json",
+					data: {
+						'sa': params.url
+					},
+					success: function(resp) {
+						if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
+							genericErrorMessage({
+								errorMsg: resp.error
+							});
+						} else if (typeof(resp.data) !== 'undefined' && typeof(resp.data.noDataMessage) !== 'undefined' && resp.data.noDataMessage !== '') {
+							genericErrorMessage({
+								errorMsg: resp.data.noDataMessage
+							});
+						} else if (resp.response) {
+							tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
+							params.uiFunc();
+						} else {
+
+						}
+					}
+				});
+			},
+
+			showMessageStats = function() {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '',
+					messageUrl = smf_scripturl + '?topic=' + data.id_topic + '.msg' + data.id_msg;
+
+				lpObj.jQRef('.like_post_message_data').html('');
+				htmlContent += '<a class="message_title" href="' + messageUrl + '">' + txtStrings.topic + ': ' + data.subject + '</a>' + '<span style="display: none;">' + data.body + '</span>';
+
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '</div>';
+
+				htmlContent += '<div class="users_liked">';
+				htmlContent += '<p class="title">' + data.member_liked_data.length + ' ' + txtStrings.usersWhoLiked + '</p>';
+				for (var i = 0, len = data.member_liked_data.length; i < len; i++) {
+					htmlContent += '<a class="poster_details" href="' + data.member_liked_data[i].href + '"><div class="poster_avatar" style="background-image: url(' + encodeURI(data.member_liked_data[i].avatar) + ')" title="' + data.member_liked_data[i].real_name + '"></div></a>';
+				}
+				htmlContent += '</div>';
+
+				lpObj.jQRef('#like_post_current_tab').text(txtStrings.mostLikedMessage);
+				lpObj.jQRef('.like_post_message_data').append(htmlContent).show();
+
+				lpObj.jQRef(".message_title").on('mouseenter', function(e) {
+					e.preventDefault();
+					var currText = lpObj.jQRef(this).next().html();
+
+					lpObj.jQRef("<div class=\'subject_details\'></div>").html(currText).appendTo("body").fadeIn("slow");
+				}).on('mouseleave', function(e) {
+					e.preventDefault();
+
+					lpObj.jQRef(".subject_details").fadeOut("slow");
+					lpObj.jQRef(".subject_details").remove();
+				}).on('mousemove', function(e) {
+					e.preventDefault();
+
+					var mousex = e.pageX + 20,
+						mousey = e.pageY + 10,
+						width = lpObj.jQRef("#wrapper").width() - mousex - 50;
+
+					lpObj.jQRef(".subject_details").css({
+						top: mousey,
+						left: mousex,
+						width: width + "px"
+					});
+				});
+				hideSpinnerOverlay();
+			},
+
+			showTopicStats = function() {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '',
+					topicUrl = smf_scripturl + '?topic=' + data.id_topic;
+
+				lpObj.jQRef('.like_post_topic_data').html('');
+				htmlContent += '<a class="topic_title" href="' + topicUrl + '">' + txtStrings.mostPopularTopicHeading1 + ' ' + data.like_count + ' ' + txtStrings.genricHeading1 + '</a>';
+				htmlContent += '<p class="topic_info">' + txtStrings.mostPopularTopicSubHeading1 + ' ' + data.msg_data.length + ' ' + txtStrings.mostPopularTopicSubHeading2 + '</p>';
+
+				for (var i = 0, len = data.msg_data.length; i < len; i++) {
+					var msgUrl = topicUrl + '.msg' + data.msg_data[i].id_msg;
+
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + data.msg_data[i].member.name + ' : ' + txtStrings.postedAt + ' ' + data.msg_data[i].poster_time + '</div> ' + '<a class="poster_details" href="' + data.msg_data[i].member.href + '"><div class="poster_avatar" style="background-image: url(' + encodeURI(data.msg_data[i].member.avatar) + ')"></div></a><div class="content_encapsulate">' + data.msg_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a>' + '</div>';
+				}
+				lpObj.jQRef('#like_post_current_tab').text(txtStrings.mostLikedTopic);
+				lpObj.jQRef('.like_post_topic_data').html(htmlContent).show();
+				hideSpinnerOverlay();
+			},
+
+			showBoardStats = function(response) {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '',
+					boardUrl = smf_scripturl + '?board=' + data.id_board;
+
+				lpObj.jQRef('.like_post_board_data').html('');
+				htmlContent += '<a class="board_title" href="' + boardUrl + '">' + data.name + ' ' + txtStrings.mostPopularBoardHeading1 + ' ' + data.like_count + ' ' + txtStrings.genricHeading1 + '</a>';
+				htmlContent += '<p class="board_info">' + txtStrings.mostPopularBoardSubHeading1 + ' ' + data.num_topics + ' ' + txtStrings.mostPopularBoardSubHeading2 + ' ' + data.topics_liked + ' ' + txtStrings.mostPopularBoardSubHeading3 + '</p>';
+				htmlContent += '<p class="board_info" style="margin: 5px 0 20px;">' + txtStrings.mostPopularBoardSubHeading4 + ' ' + data.num_posts + ' ' + txtStrings.mostPopularBoardSubHeading5 + ' ' + data.msgs_liked + ' ' + txtStrings.mostPopularBoardSubHeading6 + '</p>';
+
+				for (var i = 0, len = data.topic_data.length; i < len; i++) {
+					var topicUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic;
+
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + data.topic_data[i].member.name + ' : ' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + '</div> ' + '<a class="poster_details" href="' + data.topic_data[i].member.href + '"><div class="poster_avatar" style="background-image: url(' + encodeURI(data.topic_data[i].member.avatar) + ')"></div></a><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + topicUrl + '">' + txtStrings.readMore + '</a></div>';
+				}
+				lpObj.jQRef('#like_post_current_tab').text(txtStrings.mostLikedBoard);
+				lpObj.jQRef('.like_post_board_data').html(htmlContent).show();
+				hideSpinnerOverlay();
+			},
+
+			showMostLikesReceivedUserStats = function(response) {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '';
+
+				lpObj.jQRef('.like_post_most_liked_user_data').html('');
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesReceived + ': ' + data.like_count + '</div>' + '</div>';
+
+				htmlContent += '<p class="generic_text">' + txtStrings.mostPopularUserHeading1 + '</p>';
+				for (var i = 0, len = data.topic_data.length; i < len; i++) {
+					var msgUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic + '.msg' + data.topic_data[i].id_msg;
+
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + ': ' + txtStrings.likesReceived + ' (' + data.topic_data[i].like_count + ')</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
+				}
+				lpObj.jQRef('#like_post_current_tab').text(txtStrings.mostLikedMember);
+				lpObj.jQRef('.like_post_most_liked_user_data').html(htmlContent).show();
+				hideSpinnerOverlay();
+			},
+
+			showMostLikesGivenUserStats = function(response) {
+				var data = tabsVisitedCurrentSession[currentUrlFrag],
+					htmlContent = '';
+
+				lpObj.jQRef('.like_post_most_likes_given_user_data').html('');
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_given.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_given.href + '" style="font-size: 20px;">' + data.member_given.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_given.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesGiven + ': ' + data.like_count + '</div>' + '</div>';
+
+				htmlContent += '<p class="generic_text">' + txtStrings.mostLikeGivenUserHeading1 + '</p>';
+				for (var i = 0, len = data.topic_data.length; i < len; i++) {
+					var msgUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic + '.msg' + data.topic_data[i].id_msg;
+
+					htmlContent += '<div class="message_body">' + '<div class="posted_at">' + txtStrings.postedAt + ' ' + data.topic_data[i].poster_time + '</div><div class="content_encapsulate">' + data.topic_data[i].body + '</div><a class="read_more" href="' + msgUrl + '">' + txtStrings.readMore + '</a></div>';
+				}
+				lpObj.jQRef('#like_post_current_tab').text(txtStrings.mostLikeGivingMember);
+				lpObj.jQRef('.like_post_most_likes_given_user_data').html(htmlContent).show();
+				hideSpinnerOverlay();
+			},
+
+			genericErrorMessage = function(params) {
+				lpObj.jQRef('.like_post_stats_error').html(params.errorMsg).show();
+				hideSpinnerOverlay();
+			};
+
+		return {
+			init: init,
+			checkUrl: checkUrl
+		};
+	}();
+
+	lpObj.likePostStats = likePostStats.prototype;
+}());

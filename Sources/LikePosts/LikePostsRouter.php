@@ -165,7 +165,68 @@ class LikePostsRouter {
 	}
 
 	public function routeLikeStats() {
+		global $context, $txt, $sourcedir, $modSettings, $user_info;
 
+		LikePosts::loadClass('LikePostsStats');
+		LikePosts::$LikePostsStats->checkStatsPermission();
+
+		loadtemplate('LikePostsStats');
+		$context['page_title'] = $txt['lp_stats'];
+		$context['like_posts']['tab_desc'] = $txt['like_posts_stats_desc'];
+
+		// Load up the guns
+		$context['lp_stats_tabs'] = array(
+			'messagestats' => array(
+				'label' => $txt['lp_message'],
+				'id' => 'messagestats',
+			),
+			'topicstats' => array(
+				'label' => $txt['lp_topic'],
+				'id' => 'topicstats',
+			),
+			'boardstats' => array(
+				'label' => $txt['lp_board'],
+				'id' => 'boardstats',
+			),
+			'usergivenstats' => array(
+				'label' => $txt['lp_tab_mlmember'],
+				'id' => 'mostlikesreceiveduserstats',
+			),
+			'userreceivedstats' => array(
+				'label' => $txt['lp_tab_mlgmember'],
+				'id' => 'mostlikesgivenuserstats',
+			),
+		);
+		$context['sub_template'] = 'lp_stats';
+
+		if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikePostsData, $subActions[$_REQUEST['sa']]))
+			return LikePosts::$LikePostsData->$subActions[$_REQUEST['sa']]();
+	}
+
+	public function routeLikeStatsAjax() {
+		global $context, $txt, $sourcedir, $modSettings, $user_info;
+
+		LikePosts::loadClass('LikePostsStats');
+		LikePosts::$LikePostsStats->checkStatsPermission();
+
+		if(empty($context['like_post_stats_error'])) {
+			$defaultActionFunc = 'messageStats';
+
+			$subActions = array(
+				'messagestats' => 'messageStats',
+				'topicstats' => 'topicStats',
+				'boardstats' => 'boardStats',
+				'mostlikesreceiveduserstats' => 'mostLikesReceivedUserStats',
+				'mostlikesgivenuserstats' => 'mostLikesGivenUserStats',
+			);
+
+			//wakey wakey, call the func you lazy
+			if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists(LikePosts::$LikePostsStats, $subActions[$_REQUEST['sa']]))
+				return LikePosts::$LikePostsStats->$subActions[$_REQUEST['sa']]();
+
+			// At this point we can just do our default.
+			LikePosts::$LikePostsStats->$defaultActionFunc();
+		}
 	}
 }
 

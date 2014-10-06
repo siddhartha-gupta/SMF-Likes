@@ -140,6 +140,7 @@ class LikePosts {
 		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikes');
 		$actions['likepostsdata'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikesData');
 		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikeStats');
+		$actions['likepostsstatsajax'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikeStatsAjax');
 	}
 
 	public static function includeAssets() {
@@ -257,15 +258,6 @@ class LikePosts {
 				js.type = "text/javascript";
 				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePosts.js";
 				document.body.appendChild(js);
-
-				var isLPStatsPage = (window.location.href.indexOf("likepostsstats") >= 0) ? true : false;
-
-				if(isLPStatsPage) {
-					var statsJS = document.createElement("script");
-					statsJS.type = "text/javascript";
-					statsJS.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePostStats.js";
-					document.body.appendChild(statsJS);
-				}
 			}
 		// ]]></script>';
 

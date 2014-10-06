@@ -619,7 +619,7 @@ class LikePostsDB {
 		return $notificationData;
 	}
 
-	public function LP_DB_getStatsMostLikedMessage() {
+	public function getStatsMostLikedMessage() {
 		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 		// Most liked Message
@@ -692,7 +692,7 @@ class LikePostsDB {
 		return $mostLikedMessage;
 	}
 
-	public function LP_DB_getStatsMostLikedTopic() {
+	public function getStatsMostLikedTopic() {
 		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 		// Most liked topic
@@ -750,7 +750,7 @@ class LikePostsDB {
 		return $mostLikedTopic;
 	}
 
-	public function LP_DB_getStatsMostLikedBoard() {
+	public function getStatsMostLikedBoard() {
 		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 		// Most liked board
@@ -808,7 +808,7 @@ class LikePostsDB {
 		return $mostLikedBoard;
 	}
 
-	public function LP_DB_getStatsMostLikedUser() {
+	public function getStatsMostLikedUser() {
 		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 		// Most liked board
@@ -877,7 +877,7 @@ class LikePostsDB {
 		return $mostLikedMember;
 	}
 
-	public function LP_DB_getStatsMostLikesGivenUser() {
+	public function getStatsMostLikesGivenUser() {
 		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
 
 		// Most liked board

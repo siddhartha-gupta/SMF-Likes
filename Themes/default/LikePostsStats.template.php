@@ -96,7 +96,7 @@ function template_lp_stats() {
 
 	echo '<script type="text/javascript"><!-- // --><![CDATA[
 		window.onload = function() {
-			likePostStats.prototype.init({
+			lpObj.likePostStats.init({
 				onError: ' . JavaScriptEscape($context['like_post_stats_error']) . ',
 				txtStrings: {
 					topic: ' . JavaScriptEscape($txt['lp_topic']) . ',
