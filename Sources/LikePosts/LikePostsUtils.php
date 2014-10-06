@@ -37,15 +37,13 @@ if (!defined('SMF'))
 class LikePostsUtils {
 
 	public function __construct() {}
-	private $sourceDir;
 
 	public function checkJsonEncodeDecode() {
 		global $sourcedir;
 
-		$this->$sourceDir = $sourcedir;
+		require_once ($sourcedir . '/LikePosts/JSON.php');
 		if (!function_exists('json_decode')) {
 			function json_decode($content, $assoc = false) {
-				require_once ($this->$sourceDir . '/LikePosts/JSON.php');
 				if ($assoc) {
 					$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 				} else {
@@ -57,7 +55,6 @@ class LikePostsUtils {
 
 		if (!function_exists('json_encode')) {
 			function json_encode($content) {
-				require_once ($this->$sourceDir . '/LikePosts/JSON.php');
 				$json = new Services_JSON;
 				return $json->encode($content);
 			}
