@@ -124,7 +124,7 @@ class LikePostsUtils {
 	 * Used in MessageIndex template
 	*/
 	public function isTopicLiked($arr, $id) {
-		global $context, $txt, $user_info;
+		global $txt, $user_info;
 
 		$data = array(
 			'text' => $txt['lp_like'],
@@ -169,7 +169,7 @@ class LikePostsUtils {
 	 * Used in Display template
 	*/
 	public function isPostLiked($arr, $id) {
-		global $context, $txt, $user_info;
+		global $txt, $user_info;
 
 		loadlanguage('LikePosts');
 

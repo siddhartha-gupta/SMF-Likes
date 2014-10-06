@@ -43,7 +43,7 @@ class LikePostsStats {
 	}
 
 	public function checkStatsPermission() {
-		global $context, $txt, $sourcedir, $modSettings, $user_info;
+		global $context, $txt, $modSettings, $user_info;
 
 		$context['like_post_stats_error'] = '';
 		if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
@@ -59,7 +59,7 @@ class LikePostsStats {
 	}
 
 	public function messageStats() {
-		global $context, $txt, $sourcedir, $settings, $user_info;
+		global $txt;
 
 		$data = LikePosts::$LikePostsDB->getStatsMostLikedMessage();
 		if($data) {
@@ -72,7 +72,7 @@ class LikePostsStats {
 	}
 
 	public function topicStats() {
-		global $context, $txt, $sourcedir, $settings, $user_info;
+		global $txt;
 
 		$data = LikePosts::$LikePostsDB->getStatsMostLikedTopic();
 		if($data) {
@@ -85,7 +85,7 @@ class LikePostsStats {
 	}
 
 	public function boardStats() {
-		global $context, $txt, $sourcedir, $settings, $user_info;
+		global $txt;
 
 		$data = LikePosts::$LikePostsDB->getStatsMostLikedBoard();
 
@@ -99,7 +99,7 @@ class LikePostsStats {
 	}
 
 	public function mostLikesReceivedUserStats() {
-		global $context, $txt, $sourcedir, $settings, $user_info;
+		global $txt;
 
 		$data = LikePosts::$LikePostsDB->getStatsMostLikedUser();
 
@@ -113,7 +113,7 @@ class LikePostsStats {
 	}
 
 	public function mostLikesGivenUserStats() {
-		global $context, $txt, $sourcedir, $settings, $user_info;
+		global $txt;
 
 		$data = LikePosts::$LikePostsDB->getStatsMostLikesGivenUser();
 

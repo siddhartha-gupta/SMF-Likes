@@ -108,7 +108,7 @@ function routeLikePostsAdmin() {
 }
 
 function routeLikePostsProfile($memID) {
-	global $context, $txt, $sourcedir, $settings, $user_info;
+	global $context, $txt, $user_info;
 
 	if($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) return false;
 
@@ -165,7 +165,7 @@ class LikePostsRouter {
 	}
 
 	public function routeLikeStats() {
-		global $context, $txt, $sourcedir, $modSettings, $user_info;
+		global $context, $txt;
 
 		LikePosts::loadClass('LikePostsStats');
 		LikePosts::$LikePostsStats->checkStatsPermission();
@@ -204,7 +204,7 @@ class LikePostsRouter {
 	}
 
 	public function routeLikeStatsAjax() {
-		global $context, $txt, $sourcedir, $modSettings, $user_info;
+		global $context;
 
 		LikePosts::loadClass('LikePostsStats');
 		LikePosts::$LikePostsStats->checkStatsPermission();

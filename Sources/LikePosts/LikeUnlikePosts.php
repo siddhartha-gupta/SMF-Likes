@@ -43,7 +43,7 @@ class LikeUnlikePosts {
 	}
 
 	public function likeUnlikePostsHandler() {
-		global $user_info, $sourcedir, $txt, $settings;
+		global $user_info, $txt;
 
 		// Check and send them bacl if found guilty :D
 		if ($user_info['is_guest'] || !(LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts')))) {

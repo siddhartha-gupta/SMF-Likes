@@ -96,7 +96,7 @@ class LikePostsAdmin {
 	}
 
 	public function savePermissionsettings() {
-		global $context, $sourcedir;
+		global $context;
 
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
@@ -153,7 +153,6 @@ class LikePostsAdmin {
 				$general_settings[] = array($value, '');
 			}
 		}
-		// require_once($sourcedir . '/Subs-LikePosts.php');
 		LikePosts::$LikePostsDB->updatePermissions($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 	}
@@ -187,8 +186,6 @@ class LikePostsAdmin {
 	}
 
 	public function saveBoardsettings() {
-		global $sourcedir;
-
 		/* I can has Adminz? */
 		isAllowedTo('admin_forum');
 		checkSession('request', '', true);
@@ -203,7 +200,7 @@ class LikePostsAdmin {
 	}
 
 	public function recountLikeStats() {
-		global $txt, $context, $sourcedir, $settings;
+		global $txt, $context;
 
 		isAllowedTo('admin_forum');
 		$context['page_title'] = $txt['lp_admin_panel'];
@@ -213,8 +210,6 @@ class LikePostsAdmin {
 	}
 
 	public function recountLikesTotal() {
-		global $txt, $context, $smcFunc;
-
 		isAllowedTo('admin_forum');
 
 		// Lets fire the bullet.

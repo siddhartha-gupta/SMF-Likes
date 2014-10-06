@@ -63,7 +63,7 @@ class LikePostsData {
 	 * To get the info of members who liked the post
 	 */
 	public function getMessageLikeInfo() {
-		global $sourcedir, $user_info;
+		global $user_info;
 
 		if($user_info['is_guest'] && 
 			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts')) && 
@@ -85,7 +85,7 @@ class LikePostsData {
 	}
 
 	public function posterInfo($postersArr = array()) {
-		global $context, $sourcedir, $user_info;
+		global $user_info;
 
 		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
 			return false;
@@ -99,7 +99,7 @@ class LikePostsData {
 	}
 
 	public function getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
-		global $context, $sourcedir, $user_info;
+		global $context, $user_info;
 
 		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
 			return false;
@@ -120,7 +120,7 @@ class LikePostsData {
 	}
 
 	public function getAllNotification() {
-		global $sourcedir, $user_info;
+		global $user_info;
 
 		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes')) || $user_info['is_guest']) {
 			return false;

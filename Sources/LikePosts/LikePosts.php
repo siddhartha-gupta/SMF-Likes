@@ -133,8 +133,6 @@ class LikePosts {
 	}
 
 	public static function addActionContext(&$actions) {
-		global $sourcedir;
-
 		self::loadClass('LikePostsRouter');
 
 		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikes');
@@ -301,7 +299,7 @@ class LikePosts {
 	}
 
 	public static function addAdminPanel(&$admin_areas) {
-		global $sourcedir, $txt;
+		global $txt;
 
 		$admin_areas['config']['areas']['likeposts'] = array(
 			'label' => $txt['lp_menu'],
@@ -313,7 +311,7 @@ class LikePosts {
 	}
 
 	public static function addProfilePanel(&$profile_areas) {
-		global $txt, $user_info, $modSettings;
+		global $txt, $user_info;
 
 		if ($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) {
 			return false;
