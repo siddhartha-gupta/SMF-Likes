@@ -44,9 +44,11 @@ class LikePosts {
 	public static $LikePostsUtils;
 	public static $LikePostsDB;
 	public static $LikePostsData;
-	public static $LikePostsDispatcher;
+	public static $LikePostsRouter;
 	public static $LikeUnlikePosts;
 	public static $LikePostsStats;
+	public static $LikePostsAdmin;
+	public static $LikePostsProfile;
 
 	/**
 	 * Singleton method
@@ -90,10 +92,10 @@ class LikePosts {
 				}
 				break;
 
-			case 'LikePostsDispatcher':
-				if (self::$LikePostsDispatcher === null) {
+			case 'LikePostsRouter':
+				if (self::$LikePostsRouter === null) {
 					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
-					self::$LikePostsDispatcher = new LikePostsDispatcher();
+					self::$LikePostsRouter = new LikePostsRouter();
 				}
 				break;
 
@@ -111,6 +113,20 @@ class LikePosts {
 				}
 				break;
 
+			case 'LikePostsAdmin':
+				if (self::$LikePostsAdmin === null) {
+					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
+					self::$LikePostsAdmin = new LikePostsAdmin();
+				}
+				break;
+
+			case 'LikePostsProfile':
+				if (self::$LikePostsProfile === null) {
+					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
+					self::$LikePostsProfile = new LikePostsProfile();
+				}
+				break;
+
 			default:
 				break;
 		}
@@ -119,11 +135,11 @@ class LikePosts {
 	public static function addActionContext(&$actions) {
 		global $sourcedir;
 
-		self::loadClass('LikePostsDispatcher');
+		self::loadClass('LikePostsRouter');
 
-		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikes');
-		$actions['likepostsdata'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikesData');
-		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsDispatcher.php', 'LikePostsDispatcher::dispatchLikeStats');
+		$actions['likeposts'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikes');
+		$actions['likepostsdata'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikesData');
+		$actions['likepostsstats'] = array(self::$sourceFolder . 'LikePostsRouter.php', 'LikePostsRouter::routeLikeStats');
 	}
 
 	public static function includeAssets() {
@@ -297,8 +313,8 @@ class LikePosts {
 
 		$admin_areas['config']['areas']['likeposts'] = array(
 			'label' => $txt['lp_menu'],
-			'file' => '/LikePosts/LikePostsAdmin.php',
-			'function' => 'LikePostsAdminIndex',
+			'file' => '/LikePosts/LikePostsRouter.php',
+			'function' => 'routeLikePostsAdmin',
 			'icon' => 'administration.gif',
 			'subsections' => array(),
 		);
@@ -317,8 +333,8 @@ class LikePosts {
 
 		$profile_areas['info']['areas']['likeposts'] = array(
 			'label' => $txt['lp_menu'],
-			'file' => '/LikePosts/LikePostsProfile.php',
-			'function' => 'LikePostsProfileIndex',
+			'file' => '/LikePosts/LikePostsRouter.php',
+			'function' => 'routeLikePostsProfile',
 			'subsections' => array(
 				'seeownlikes' => array($txt['lp_you_liked'], array('profile_view_own', 'profile_view_any')),
 				'seeotherslikes' => array($txt['lp_liked_by_others'], array('profile_view_own', 'profile_view_any')),

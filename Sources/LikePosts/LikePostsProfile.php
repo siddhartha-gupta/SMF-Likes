@@ -37,53 +37,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function LikePostsProfileIndex($memID) {
-	global $context, $txt, $sourcedir, $settings, $user_info;
-
-	if($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) return false;
-
-	loadLanguage('LikePosts');
-	loadtemplate('LikePostsProfile');
-	$LikePostsProfile = LikePostsProfile::getInstance();
-	$defaultActionFunc = 'getOwnLikes';
-
-	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['lp_tab_title'],
-		'description' => $txt['lp_tab_description'],
-		'icon' => 'profile_sm.gif',
-		'tabs' => array(
-			'seeownlikes' => array(),
-			'seeotherslikes' => array(),
-		),
-	);
-
-	$subActions = array(
-		'seeownlikes' => 'getOwnLikes',
-		'seeotherslikes' => 'getOthersLikes',
-	);
-
-	if (isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) && method_exists($LikePostsProfile, $subActions[$_REQUEST['sa']]))
-		return $LikePostsProfile->$subActions[$_REQUEST['sa']]($memID);
-
-	// At this point we can just do our default.
-	$LikePostsProfile->$defaultActionFunc($memID);
-}
-
 class LikePostsProfile {
-	protected static $instance;
-
-	/**
-	 * Singleton method
-	 *
-	 * @return void
-	 */
-	public static function getInstance() {
-		if (self::$instance === null) {
-			self::$instance = new static ();
-		}
-		return self::$instance;
-	}
-
 	public function __construct() {}
 
 	public function getOwnLikes($memID) {
