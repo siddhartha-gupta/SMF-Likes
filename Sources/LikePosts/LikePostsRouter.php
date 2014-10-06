@@ -37,7 +37,7 @@ if (!defined('SMF')) {
 	die('Hacking attempt...');
 }
 
-function routeLikePostsAdmin($return_config = false) {
+function routeLikePostsAdmin() {
 	global $txt, $context;
 
 	/* I can has Adminz? */

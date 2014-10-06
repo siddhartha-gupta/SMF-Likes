@@ -41,7 +41,7 @@ class LikePostsProfile {
 	public function __construct() {}
 
 	public function getOwnLikes($memID) {
-		global $context, $scripturl, $modSettings;
+		global $context, $scripturl, $modSettings, $txt;
 
 		$select = 'COUNT(*)';
 		$where = 'lp.id_member_gave = ' . $memID;
@@ -61,7 +61,7 @@ class LikePostsProfile {
 	}
 
 	public function getOthersLikes($memID) {
-		global $context, $scripturl, $modSettings;
+		global $context, $scripturl, $modSettings, $txt;
 
 		$select = 'COUNT(DISTINCT(lp.id_msg))';
 		$where = 'm.id_member = ' . $memID;
