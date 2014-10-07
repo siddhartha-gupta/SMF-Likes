@@ -41,8 +41,9 @@ class LikePostsUtils {
 	public function checkJsonEncodeDecode() {
 		global $sourcedir;
 
-		require_once ($sourcedir . '/LikePosts/JSON.php');
 		if (!function_exists('json_decode')) {
+			require_once ($sourcedir . '/LikePosts/JSON.php');
+
 			function json_decode($content, $assoc = false) {
 				if ($assoc) {
 					$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
@@ -54,6 +55,8 @@ class LikePostsUtils {
 		}
 
 		if (!function_exists('json_encode')) {
+			require_once ($sourcedir . '/LikePosts/JSON.php');
+
 			function json_encode($content) {
 				$json = new Services_JSON;
 				return $json->encode($content);
