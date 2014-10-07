@@ -49,7 +49,7 @@ tools:
     php_analyzer: true
 
     # External Code Coverage (https://scrutinizer-ci.com/docs/tools/external-code-coverage/)
-    external_code_coverage: true
+    # external_code_coverage: true
 
 checks:
     php:
