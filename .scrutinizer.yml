@@ -1,5 +1,10 @@
 # .scrutinizer.yml
 
+
+filter:
+    excluded_paths:
+        - Sources/LikePosts/JSON.php
+
 tools:
     # Runs the JSHint static analysis tool (https://scrutinizer-ci.com/docs/tools/javascript/jshint/)
     js_hint:
@@ -29,8 +34,8 @@ tools:
 
         path_configs:
             # Prototype
-                paths:                []
-                enabled:              true
+                paths: []
+                enabled: true
 
     # PHPLOC - PHP Lines of code
     php_loc: true
@@ -50,6 +55,9 @@ tools:
 
     # External Code Coverage (https://scrutinizer-ci.com/docs/tools/external-code-coverage/)
     # external_code_coverage: true
+
+    #The change tracking analyzer inspects your recent commits and counts how often certain classes and methods were changed, how many bug fixes were and how many features were added.
+    php_changetracking: true
 
 checks:
     php:
