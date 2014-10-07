@@ -3,7 +3,7 @@
 tools:
     # Runs the JSHint static analysis tool (https://scrutinizer-ci.com/docs/tools/javascript/jshint/)
     js_hint:
-	    command:              ~
+        command:              ~
         # Whether to use JSHint's native config file, .jshintrc.
         use_native_config:    true
         extensions:
@@ -53,7 +53,7 @@ tools:
 
 checks:
     php:
-    	newline_at_end_of_file: true
+        newline_at_end_of_file: true
         code_rating: true
         duplication: true
         no_trailing_whitespace: true
