@@ -46,7 +46,7 @@ class LikePostsStats {
 		global $context, $txt, $modSettings, $user_info;
 
 		$context['like_post_stats_error'] = '';
-		if(!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
+		if(!isset($modSettings['lp_mod_enable']) || empty($modSettings['lp_mod_enable'])) {
 			$context['like_post_stats_error'] = $txt['lp_no_access'];
 		}
 

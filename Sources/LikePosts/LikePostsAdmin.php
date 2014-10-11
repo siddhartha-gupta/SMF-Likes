@@ -43,9 +43,10 @@ class LikePostsAdmin {
 
 		require_once($sourcedir . '/ManageServer.php');
 		$general_settings = array(
-			array('check', 'like_post_enable', 'subtext' => $txt['lp_enable_desc']),
-			array('text', 'like_per_profile_page', 'subtext' => $txt['like_per_profile_page_desc']),
-			array('text', 'like_in_notification', 'subtext' => $txt['like_in_notification_desc']),
+			array('check', 'lp_mod_enable', 'subtext' => $txt['lp_mod_enable_desc']),
+			array('check', 'lp_stats_enable', 'subtext' => $txt['lp_stats_enable_desc']),
+			array('text', 'lp_per_profile_page', 'subtext' => $txt['lp_per_profile_page_desc']),
+			array('text', 'lp_in_notification', 'subtext' => $txt['lp_in_notification_desc']),
 			array('check', 'lp_show_like_on_boards', 'subtext' => $txt['lp_show_like_on_boards_desc']),
 		);
 
@@ -64,9 +65,10 @@ class LikePostsAdmin {
 		checkSession('request', '', true);
 
 		$general_settings = array(
-			array('check', 'like_post_enable'),
-			array('text', 'like_per_profile_page'),
-			array('text', 'like_in_notification'),
+			array('check', 'lp_mod_enable'),
+			array('check', 'lp_stats_enable'),
+			array('text', 'lp_per_profile_page'),
+			array('text', 'lp_in_notification'),
 			array('check', 'lp_show_like_on_boards'),
 		);
 

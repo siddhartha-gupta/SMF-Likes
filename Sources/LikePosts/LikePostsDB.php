@@ -462,7 +462,7 @@ class LikePostsDB {
 			return false;
 		}
 
-		$end_limit = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+		$end_limit = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
 		$request = $smcFunc['db_query']('', '
 			SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled
@@ -511,7 +511,7 @@ class LikePostsDB {
 			return false;
 		}
 
-		$end_limit = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+		$end_limit = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
 		$request = $smcFunc['db_query']('', '
 			SELECT m.id_msg, m.subject, m.id_topic, m.poster_time, m.body, m.smileys_enabled, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS member_count
@@ -564,7 +564,7 @@ class LikePostsDB {
 			ORDER BY lp.id_like DESC
 			LIMIT {int:limit}',
 			array(
-				'limit' => isset($modSettings['like_in_notification']) && !empty($modSettings['like_in_notification']) ? (int) $modSettings['like_in_notification'] : 10,
+				'limit' => isset($modSettings['lp_in_notification']) && !empty($modSettings['lp_in_notification']) ? (int) $modSettings['lp_in_notification'] : 10,
 			)
 		);
 
@@ -598,7 +598,7 @@ class LikePostsDB {
 			LIMIT {int:limit}',
 			array(
 				'id_member_received' => $user_info['id'],
-				'limit' => isset($modSettings['like_in_notification']) && !empty($modSettings['like_in_notification']) ? (int) $modSettings['like_in_notification'] : 10,
+				'limit' => isset($modSettings['lp_in_notification']) && !empty($modSettings['lp_in_notification']) ? (int) $modSettings['lp_in_notification'] : 10,
 			)
 		);
 

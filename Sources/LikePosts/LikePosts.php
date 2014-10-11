@@ -266,7 +266,7 @@ class LikePosts {
 		global $scripturl, $txt, $user_info, $modSettings;
 
 		$isAllowedToAccess = true;
-		if (!isset($modSettings['like_post_enable']) || empty($modSettings['like_post_enable'])) {
+		if (!isset($modSettings['lp_mod_enable']) || empty($modSettings['lp_mod_enable'])) {
 			$isAllowedToAccess = false;
 		}
 

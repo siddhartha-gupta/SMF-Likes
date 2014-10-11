@@ -51,7 +51,7 @@ class LikePostsProfile {
 		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
 
 		// Give admin options for these
-		$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+		$context['likes_per_page'] = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
 		$context['like_post']['own_like_data'] = LikePosts::$LikePostsDB->getOwnLikes($memID, $context['start']);
 		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
@@ -71,7 +71,7 @@ class LikePostsProfile {
 		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
 
 		// Give admin options for these
-		$context['likes_per_page'] = isset($modSettings['like_per_profile_page']) && !empty($modSettings['like_per_profile_page']) ? (int) $modSettings['like_per_profile_page'] : 10;
+		$context['likes_per_page'] = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
 		$context['like_post']['others_like_data'] = LikePosts::$LikePostsDB->getOthersLikes($memID, $context['start']);
 		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
