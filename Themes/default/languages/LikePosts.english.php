@@ -145,4 +145,9 @@ $txt['lp_no_access'] = 'Oops! It looks like you are not allowed to access this s
 $txt['lp_error_something_wrong'] = 'Oops! There seems to be some server error. Please contact the site administrator.';
 $txt['lp_error_no_data'] = 'Sorry, it looks like there is nothing to show yet!';
 
+// Related to notification
+$txt['lp_all_notification'] = 'All Notification';
+$txt['lp_my_posts'] = 'My Posts';
+$txt['lp_no_notification'] = 'Nothing to show at the moment';
+
 ?>

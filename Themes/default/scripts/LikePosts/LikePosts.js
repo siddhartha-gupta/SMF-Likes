@@ -85,8 +85,8 @@
 					lpObj.timeoutTimer = null;
 					lpObj.jQRef('.like_posts_overlay').remove();
 					lpObj.jQRef('.like_posts_overlay').unbind('click');
-					lpObj.jQRef(document).unbind('click', lpObj.removeOverlay);
-					lpObj.jQRef(document).unbind('keyup', lpObj.removeOverlay);
+					lpObj.jQRef(document).unbind('click', lpObj.likePostsUtils.removeOverlay);
+					lpObj.jQRef(document).unbind('keyup', lpObj.likePostsUtils.removeOverlay);
 				}
 			},
 
@@ -370,7 +370,13 @@
 	function likePostsNotification() {}
 
 	likePostsNotification.prototype = function() {
-		var showLikeNotification = function() {
+		var textStrings = {},
+
+			init = function(params) {
+				textStrings = lpObj.jQRef.extend({}, params.txtStrings);
+			},
+
+			showLikeNotification = function() {
 				lpObj.jQRef.ajax({
 					type: "GET",
 					url: smf_scripturl + '?action=likepostsdata;sa=like_posts_notification',
@@ -388,7 +394,7 @@
 							dataLengthMine = 0,
 							completeString = '';
 
-						notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">All Notification</div><div class="lp_notification_tabs" id="lp_my_notifications">My Posts</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+						notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">' + textStrings.lpAllNotification + '</div><div class="lp_notification_tabs" id="lp_my_notifications">' + textStrings.lpMyPosts + '</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
 
 						for (i in data) {
 							var len = 0;
@@ -398,7 +404,7 @@
 									notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
 
 									if (data[i].length === 0) {
-										notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+										notificationInfo += '<div class="single_notify"></div>';
 									} else {
 										for (j in data[i]) {
 											if (data[i].hasOwnProperty(j)) {
@@ -412,7 +418,7 @@
 								} else if (i === 'mine') {
 									notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
 									if (data[i].length === 0) {
-										notificationInfo += '<div class="single_notify">Nothing to show at the moment</div>';
+										notificationInfo += '<div class="single_notify">' + textStrings.lpNoNotification + '</div>';
 									} else {
 										for (k in data[i]) {
 											if (data[i].hasOwnProperty(k)) {
@@ -532,6 +538,7 @@
 			};
 
 		return {
+			'init': init,
 			'showLikeNotification': showLikeNotification
 		};
 	}();
@@ -610,7 +617,7 @@
 				} else {
 					percentage = 100;
 					percentageText = 'Done';
-					lpObj.jQRef(document).one('click keyup', lpObj.removeOverlay);
+					lpObj.jQRef(document).one('click keyup', lpObj.likePostsUtils.removeOverlay);
 				}
 
 				lpObj.jQRef('.recount_stats').find('div').animate({

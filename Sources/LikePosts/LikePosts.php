@@ -140,7 +140,7 @@ class LikePosts {
 	}
 
 	public static function includeAssets() {
-		global $context, $settings;
+		global $context, $settings, $txt;
 
 		$context['insert_after_template'] .= '
 		<script type="text/javascript"><!-- // --><![CDATA[
@@ -253,6 +253,15 @@ class LikePosts {
 				var js = document.createElement("script");
 				js.type = "text/javascript";
 				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePosts.js";
+				js.onload = function() {
+					lpObj.likePostsNotification.init({
+						txtStrings: {
+							"lpAllNotification": "'. $txt['lp_all_notification'] .'",
+							"lpMyPosts": "'. $txt['lp_my_posts'] .'",
+							"lpNoNotification": "'. $txt['lp_no_notification'] .'"
+						}
+					});
+				}
 				document.body.appendChild(js);
 			}
 		// ]]></script>';
