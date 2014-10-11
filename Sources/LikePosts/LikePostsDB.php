@@ -55,6 +55,10 @@ class LikePostsDB {
 		cache_put_data('modSettings', null, 90);
 	}
 
+	/**
+	 * @param integer $startLimit
+	 * @param integer $totalWork
+	 */
 	public function recountLikesTotal($startLimit, $totalWork) {
 		global $smcFunc;
 
@@ -428,6 +432,11 @@ class LikePostsDB {
 	}
 
 	// For profile section
+
+	/**
+	 * @param string $select
+	 * @param string $where
+	 */
 	public function getTotalResults($select, $where) {
 		global $smcFunc;
 
