@@ -93,7 +93,11 @@ function routeLikePostsAdmin() {
 function routeLikePostsProfile($memID) {
 	global $context, $txt, $user_info;
 
-	if($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_profiles'))) return false;
+	if(isset($_REQUEST['u']) && is_numeric($_REQUEST['u']) && 
+		$user_info['id'] !== $_REQUEST['u'] && 
+		!self::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_profiles', 'lp_can_view_others_likes_profile'))) {
+				return false;
+	}
 
 	LikePosts::loadClass('LikePostsProfile');
 	loadtemplate('LikePostsProfile');

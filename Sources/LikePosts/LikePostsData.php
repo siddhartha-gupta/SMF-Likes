@@ -57,43 +57,6 @@ class LikePostsData {
 		return $result;
 	}
 
-	/*
-	 * To get the info of members who liked the post
-	 */
-	public function getMessageLikeInfo() {
-		global $user_info;
-
-		if($user_info['is_guest'] && 
-			!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts')) && 
-			!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_boards'))) {
-			return false;
-		} elseif (!$user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes'))) {
-			return false;
-		}
-
-		if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
-			$resp = array('response' => false);
-			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
-		}
-		$msg_id = (int) $_REQUEST['msg_id'];
-		$result = LikePosts::$LikePostsDB->getMessageLikeInfo($msg_id);
-
-		$resp = array('response' => true, 'data' => $result);
-		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
-	}
-
-	public function posterInfo($postersArr = array()) {
-		if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
-			return false;
-		}
-
-		if (!is_array($postersArr)) {
-			$postersArr = array($postersArr);
-		}
-		$result = LikePosts::$LikePostsDB->posterInfo($postersArr);
-		return $result;
-	}
-
 	public function getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 		global $context;
 
@@ -115,11 +78,42 @@ class LikePostsData {
 		return $result;
 	}
 
-	public function getAllNotification() {
-		global $user_info;
-
-		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes')) || $user_info['is_guest']) {
+	public function posterInfo($postersArr = array()) {
+		if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 			return false;
+		}
+
+		if (!is_array($postersArr)) {
+			$postersArr = array($postersArr);
+		}
+		$result = LikePosts::$LikePostsDB->posterInfo($postersArr);
+		return $result;
+	}
+
+	/*
+	 * To get the info of members who liked the post
+	 */
+	public function getMessageLikeInfo() {
+		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_guest_can_view_likes_in_boards'), 'lp_can_view_likes')) {
+			$resp = array('response' => false);
+			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+		}
+
+		if (!isset($_REQUEST['msg_id']) || empty($_REQUEST['msg_id'])) {
+			$resp = array('response' => false);
+			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+		}
+		$msg_id = (int) $_REQUEST['msg_id'];
+		$result = LikePosts::$LikePostsDB->getMessageLikeInfo($msg_id);
+
+		$resp = array('response' => true, 'data' => $result);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
+
+	public function getAllNotification() {
+		if(!LikePosts::$LikePostsUtils->showLikeNotification()) {
+			$resp = array('response' => false);
+			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
 		$result = LikePosts::$LikePostsDB->getAllNotification();
 
