@@ -51,7 +51,7 @@ class LikePosts {
 	/**
 	 * Singleton method
 	 *
-	 * @return void
+	 * @return LikePosts
 	 * @return LikePosts
 	 */
 	public static function getInstance() {
