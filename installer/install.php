@@ -167,7 +167,7 @@ function lpAddUpdateSettings() {
 
 	if ($smcFunc['db_num_rows']($request) == 0) {
 		// For all general settings add 'like_post_' as prefix
-		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 	} else {
 		list ($last_version) = $smcFunc['db_fetch_row']($request);
 
