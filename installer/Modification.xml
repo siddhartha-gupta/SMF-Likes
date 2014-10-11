@@ -42,7 +42,7 @@
 			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
 			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
 				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
-				LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts'))) {
+				LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 
 				$total_likes = isset($context['like_posts']['posters_data'][$message['member']['id']]) ? $context['like_posts']['posters_data'][$message['member']['id']] : 0;
 
@@ -56,18 +56,17 @@
 		<operation>
 			<search position="after"><![CDATA[// Show the member's signature?]]></search>
 			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
-			LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
-			LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_posts'))) {
+			LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
 
 			$context['like_posts']['single_msg_data'] = LikePosts::$LikePostsUtils->isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
 
 			echo '<div class="like_post_box floatleft">';
-			if(!$message['is_message_author'] && LikePosts::$LikePostsUtils->isAllowedTo('can_like_posts')) {
+			if(!$message['is_message_author'] && LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
 				echo '
 							<a class="', $context['like_posts']['single_msg_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event,', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
 			}
 
-			if(LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts'))) {
+			if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_posts'))) {
 				echo '
 							<a id="like_post_info_'. $message['id'] .'" href="javascript:void(0)" onclick="lpObj.likeHandler.showMessageLikedInfo(', $message['id'], ')">
 								', !empty($context['like_posts']['single_msg_data']['count']) ? '<span id="like_count_'. $message['id'] .'">('. $context['like_posts']['single_msg_data']['count_text'] .')</span>' : '', '
@@ -87,21 +86,20 @@
 
 			if(!empty($modSettings['lp_mod_enable'])&& 
 				!empty($modSettings['lp_show_like_on_boards']) && 
-				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
-				LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_boards'))) {
+				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
 
 				$context['like_posts']['single_topic_data'] = LikePosts::$LikePostsUtils->isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
 				echo '
 					<div class="like_post_box floatright">';
 
 				if($context['user']['id'] !== $topic['first_post']['member']['id'] && 
-					LikePosts::$LikePostsUtils->isAllowedTo('can_like_posts')) {
+					LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
 
 					echo '
 								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
 				}
 		
-				if(LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes', 'can_view_likes_in_boards'))) {
+				if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_boards'))) {
 					echo '
 								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.likeHandler.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
 				}
@@ -127,18 +125,15 @@
 	<file name="$sourcedir/Display.php">
 		<operation>
 			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
-			<add><![CDATA[if(!empty($modSettings['lp_mod_enable'])) {
-		LikePosts::loadClass('LikePostsData');
-		if(LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
-			LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes', 'can_view_likes_in_posts'))) {
-			$lp_posters_data = LikePosts::$LikePostsData->posterInfo($posters);
-			$context['like_posts']['posters_data'] = isset($lp_posters_data) ? $lp_posters_data : array();
-		}
+			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
+		LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
 
-		if(LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_posts'))) {
-			$topic_liked_data = LikePosts::$LikePostsData->getAllMessagesInfo($messages);
-			$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
-		}
+		LikePosts::loadClass('LikePostsData');
+		$lp_posters_data = LikePosts::$LikePostsData->posterInfo($posters);
+		$context['like_posts']['posters_data'] = isset($lp_posters_data) ? $lp_posters_data : array();
+
+		$topic_liked_data = LikePosts::$LikePostsData->getAllMessagesInfo($messages);
+		$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 	}
 
 	]]></add>
@@ -150,14 +145,12 @@
 			<search position="after"><![CDATA[
 	$context['jump_to'] = array(]]></search>
 			<add><![CDATA[
-	if(!empty($modSettings['lp_mod_enable']) && !empty($modSettings['lp_show_like_on_boards'])) {
-		if(LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
-			LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts', 'can_view_likes', 'can_view_likes_in_boards'))) {
-
+	if(!empty($modSettings['lp_mod_enable']) && 
+		!empty($modSettings['lp_show_like_on_boards']) && 
+		LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
 			LikePosts::loadClass('LikePostsData');
 			$topic_liked_data = LikePosts::$LikePostsData->getAllTopicsInfo($topic_ids, $board);
 			$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
-		}
 	}
 ]]></add>
 		</operation>

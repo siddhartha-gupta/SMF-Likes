@@ -195,8 +195,6 @@ class LikePostsUtils {
 	public function isPostLiked($arr, $id) {
 		global $txt, $user_info;
 
-		loadlanguage('LikePosts');
-
 		$data = array(
 			'text' => $txt['lp_like'],
 			'count' => 0,

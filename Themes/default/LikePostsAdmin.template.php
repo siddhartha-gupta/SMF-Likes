@@ -149,7 +149,7 @@ function template_lp_admin_permission_settings() {
 
 
 					echo ' <fieldset>
-						<legend>' . $txt['lp_guest_permissions'] . '</legend>';
+						<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_guest_permissions'] . '</legend>';
 
 						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
 							echo '
