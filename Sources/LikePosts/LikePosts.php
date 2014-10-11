@@ -52,6 +52,7 @@ class LikePosts {
 	 * Singleton method
 	 *
 	 * @return void
+	 * @return LikePosts
 	 */
 	public static function getInstance() {
 		if (self::$instance === null) {
@@ -65,6 +66,9 @@ class LikePosts {
 
 	public function __construct() {}
 
+	/**
+	 * @param string $className
+	 */
 	public static function loadClass($className) {
 		global $sourcedir;
 

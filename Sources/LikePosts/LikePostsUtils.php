@@ -75,6 +75,9 @@ class LikePostsUtils {
 		} 
 	}
 
+	/**
+	 * @param string[] $permissions
+	 */
 	public function isAllowedTo($permissions) {
 		global $modSettings, $user_info;
 
@@ -243,6 +246,9 @@ class LikePostsUtils {
 		return $data;
 	}
 
+	/**
+	 * @param string $delimiter
+	 */
 	public function trimContent($str, $delimiter, $limit = 255) {
 		if (strlen($str) > $limit) {
 			if(strpos($str, $delimiter) !== false) {
