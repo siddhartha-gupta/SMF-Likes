@@ -88,16 +88,17 @@ class LikePostsUtils {
 
 		$result = true;
 		$guestPermission = array(
-			'can_view_likes_in_posts',
-			'can_view_likes_in_boards',
-			'can_view_likes_in_profiles',
+			'guest_can_view_likes_in_posts',
+			'guest_can_view_likes_in_boards',
+			'guest_can_view_likes_in_profiles',
+			'guests_can_view_likes_stats'
 		);
 
 		if ($user_info['is_guest']) {
 			$result = false;
 			$permToCheck = array_intersect($guestPermission, $permissions);
 			foreach ($permToCheck as $permission) {
-				if (in_array($permission, $guestPermission) && isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
+				if (isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
 					$result = true;
 				} else {
 					$result = false;

@@ -95,9 +95,9 @@ class LikePostsAdmin {
 		);
 
 		$context['like_posts']['guest_permission_settings'] = array(
-			'can_view_likes_in_posts',
-			'can_view_likes_in_boards',
-			'can_view_likes_in_profiles',
+			'guest_can_view_likes_in_posts',
+			'guest_can_view_likes_in_boards',
+			'guest_can_view_likes_in_profiles',
 			'guests_can_view_likes_stats'
 		);
 
@@ -134,9 +134,9 @@ class LikePostsAdmin {
 		);
 
 		$context['like_posts']['guest_permission_settings'] = array(
-			'can_view_likes_in_posts',
-			'can_view_likes_in_boards',
-			'can_view_likes_in_profiles',
+			'guest_can_view_likes_in_posts',
+			'guest_can_view_likes_in_boards',
+			'guest_can_view_likes_in_profiles',
 			'guests_can_view_likes_stats'
 		);
 
@@ -149,9 +149,9 @@ class LikePostsAdmin {
 		);
 
 		$guestPermissionKeys = array(
-			'can_view_likes_in_posts',
-			'can_view_likes_in_boards',
-			'can_view_likes_in_profiles',
+			'guest_can_view_likes_in_posts',
+			'guest_can_view_likes_in_boards',
+			'guest_can_view_likes_in_profiles',
 			'guests_can_view_likes_stats'
 		);
 

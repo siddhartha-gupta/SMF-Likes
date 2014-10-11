@@ -263,37 +263,28 @@ class LikePosts {
 	public static function addMenuItems(&$menu_buttons) {
 		global $scripturl, $txt, $user_info, $modSettings;
 
-		$isAllowedToAccess = true;
-		if (!isset($modSettings['lp_mod_enable']) || empty($modSettings['lp_mod_enable'])) {
-			$isAllowedToAccess = false;
+		if (empty($modSettings['lp_mod_enable']) || empty($modSettings['lp_stats_enable']) || 
+			!self::$LikePostsUtils->isAllowedTo(array('guests_can_view_likes_stats', 'can_view_likes_stats'))) {
+			return false;
 		}
 
-		if ($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('guests_can_view_likes_stats'))) {
-			$isAllowedToAccess = false;
-		}
-		if (!self::$LikePostsUtils->isAllowedTo(array('can_view_likes_stats'))) {
-			$isAllowedToAccess = false;
-		}
+		// insert before logout
+		$initPos = 0;
+		reset($menu_buttons);
+		while ((list($key, $val) = each($menu_buttons)) && $key != 'logout')
+		$initPos++;
 
-		if ($isAllowedToAccess) {
-			// insert before logout
-			$initPos = 0;
-			reset($menu_buttons);
-			while ((list($key, $val) = each($menu_buttons)) && $key != 'logout')
-			$initPos++;
-
-			$menu_buttons = array_merge(
-				array_slice($menu_buttons, 0, $initPos),
-				array(
-					'like_post_stats' => array(
-						'title' => $txt['lp_stats'],
-						'href' => $scripturl . '?action=likepostsstats',
-						'show' => true,
-					),
+		$menu_buttons = array_merge(
+			array_slice($menu_buttons, 0, $initPos),
+			array(
+				'like_post_stats' => array(
+					'title' => $txt['lp_stats'],
+					'href' => $scripturl . '?action=likepostsstats',
+					'show' => true,
 				),
-				array_slice($menu_buttons, $initPos, count($menu_buttons) - $initPos)
-			);
-		}
+			),
+			array_slice($menu_buttons, $initPos, count($menu_buttons) - $initPos)
+		);
 	}
 
 	public static function addAdminPanel(&$admin_areas) {
@@ -311,11 +302,7 @@ class LikePosts {
 	public static function addProfilePanel(&$profile_areas) {
 		global $txt, $user_info;
 
-		if ($user_info['is_guest'] && !self::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_profiles'))) {
-			return false;
-		}
-
-		if (!self::$LikePostsUtils->isAllowedTo(array('can_view_others_likes_profile', 'can_view_likes_in_profiles'))) {
+		if (!self::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_profiles', 'can_view_others_likes_profile'))) {
 			return false;
 		}
 

@@ -41,7 +41,7 @@ class LikePostsData {
 	public function getAllTopicsInfo($topicsArr = array(), $boardId = '') {
 		global $context, $user_info;
 
-		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_boards'))) {
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_boards'))) {
 			return false;
 		}
 
@@ -64,8 +64,8 @@ class LikePostsData {
 		global $user_info;
 
 		if($user_info['is_guest'] && 
-			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts')) && 
-			!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_boards'))) {
+			!LikePosts::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_posts')) && 
+			!LikePosts::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_boards'))) {
 			return false;
 		} elseif (!$user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes'))) {
 			return false;
@@ -85,7 +85,7 @@ class LikePostsData {
 	public function posterInfo($postersArr = array()) {
 		global $user_info;
 
-		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_posts'))) {
 			return false;
 		}
 
@@ -99,7 +99,7 @@ class LikePostsData {
 	public function getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
 		global $context, $user_info;
 
-		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_in_posts'))) {
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_posts'))) {
 			return false;
 		}
 

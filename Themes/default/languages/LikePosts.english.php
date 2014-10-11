@@ -78,9 +78,9 @@ $txt['lp_board_settings_desc'] = 'Select on which boards you want to activate th
 
 // For our beloved guests
 $txt['lp_guest_permissions'] = 'Permissions for guests';
-$txt['lp_guest_perm_can_view_likes_in_posts'] = 'Can view like posts in topics';
-$txt['lp_guest_perm_can_view_likes_in_boards'] = 'Can view like posts in boards';
-$txt['lp_guest_perm_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
+$txt['lp_guest_perm_guest_can_view_likes_in_posts'] = 'Can view like posts in topics';
+$txt['lp_guest_perm_guest_can_view_likes_in_boards'] = 'Can view like posts in boards';
+$txt['lp_guest_perm_guest_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
 $txt['lp_guest_perm_guests_can_view_likes_stats'] = 'Can view like stats';
 
 // Profile area strings
