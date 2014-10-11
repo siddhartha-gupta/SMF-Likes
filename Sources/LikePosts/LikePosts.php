@@ -302,7 +302,6 @@ class LikePosts {
 	public static function addProfilePanel(&$profile_areas) {
 		global $txt, $user_info;
 
-
 		if(isset($_REQUEST['u']) && is_numeric($_REQUEST['u']) && 
 			$user_info['id'] !== $_REQUEST['u'] && 
 			!self::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_profiles', 'lp_can_view_others_likes_profile'))) {
