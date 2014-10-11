@@ -94,7 +94,7 @@ class LikePostsData {
 	 * To get the info of members who liked the post
 	 */
 	public function getMessageLikeInfo() {
-		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_guest_can_view_likes_in_boards'), 'lp_can_view_likes')) {
+		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_guest_can_view_likes_in_boards', 'lp_can_view_likes'))) {
 			$resp = array('response' => false);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
