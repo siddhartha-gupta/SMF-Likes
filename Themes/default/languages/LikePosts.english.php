@@ -72,6 +72,7 @@ $txt['lp_perm_can_like_posts'] = 'Can like posts';
 $txt['lp_perm_can_view_likes'] = 'Can view likes';
 $txt['lp_perm_can_view_others_likes_profile'] = 'Can view likes of other users in their profiles';
 $txt['lp_perm_can_view_likes_stats'] = 'Can view like stats';
+$txt['lp_perm_can_view_likes_notification'] = 'Can view like posts notifications';
 $txt['lp_board_settings'] = 'Board Settings';
 $txt['lp_board_settings_desc'] = 'Select on which boards you want to activate the mod';
 

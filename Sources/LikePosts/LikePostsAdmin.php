@@ -85,6 +85,22 @@ class LikePostsAdmin {
 		require_once($sourcedir . '/ManageServer.php');
 		require_once($sourcedir . '/Subs-Membergroups.php');
 
+		// set up the vars for groups and guests permissions
+		$context['like_posts']['groups_permission_settings'] = array(
+			'can_like_posts',
+			'can_view_likes',
+			'can_view_others_likes_profile',
+			'can_view_likes_stats',
+			'can_view_likes_notification'
+		);
+
+		$context['like_posts']['guest_permission_settings'] = array(
+			'can_view_likes_in_posts',
+			'can_view_likes_in_boards',
+			'can_view_likes_in_profiles',
+			'guests_can_view_likes_stats'
+		);
+
 		$context['like_posts']['groups'][0] = array(
 			'id_group' => 0,
 			'group_name' => $txt['lp_regular_members'],
@@ -108,11 +124,28 @@ class LikePostsAdmin {
 		checkSession('request', '', true);
 		unset($_POST['submit']);
 
+		// set up the vars for groups and guests permissions
+		$context['like_posts']['groups_permission_settings'] = array(
+			'can_like_posts',
+			'can_view_likes',
+			'can_view_others_likes_profile',
+			'can_view_likes_stats',
+			'can_view_likes_notification'
+		);
+
+		$context['like_posts']['guest_permission_settings'] = array(
+			'can_view_likes_in_posts',
+			'can_view_likes_in_boards',
+			'can_view_likes_in_profiles',
+			'guests_can_view_likes_stats'
+		);
+
 		$permissionKeys = array(
 			'can_like_posts',
 			'can_view_likes',
 			'can_view_others_likes_profile',
-			'can_view_likes_stats'
+			'can_view_likes_stats',
+			'can_view_likes_notification',
 		);
 
 		$guestPermissionKeys = array(

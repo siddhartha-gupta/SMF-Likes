@@ -67,7 +67,8 @@ class LikePostsUtils {
 	public function showLikeNotification() {
 		global $modSettings, $user_info;
 
-		if(!empty($modSettings['lp_mod_enable']) && !empty($modSettings['lp_notification_enable'])) {
+		if(!empty($modSettings['lp_mod_enable']) && !empty($modSettings['lp_notification_enable']) &&
+			LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_notification'))) {
 			return true;
 		} else {
 			return false;

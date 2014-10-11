@@ -47,21 +47,6 @@ function routeLikePostsAdmin() {
 	$context['page_title'] = $txt['lp_admin_panel'];
 	$defaultActionFunc = 'generalSettings';
 
-	// set up the vars for groups and guests permissions
-	$context['like_posts']['groups_permission_settings'] = array(
-		'can_like_posts',
-		'can_view_likes',
-		'can_view_others_likes_profile',
-		'can_view_likes_stats'
-	);
-
-	$context['like_posts']['guest_permission_settings'] = array(
-		'can_view_likes_in_posts',
-		'can_view_likes_in_boards',
-		'can_view_likes_in_profiles',
-		'guests_can_view_likes_stats'
-	);
-
 	// Load tabs menu, text etc for the admin panel
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['lp_admin_panel'],
