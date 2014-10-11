@@ -264,7 +264,7 @@ class LikePosts {
 		global $scripturl, $txt, $user_info, $modSettings;
 
 		if (empty($modSettings['lp_mod_enable']) || empty($modSettings['lp_stats_enable']) || 
-			!self::$LikePostsUtils->isAllowedTo(array('guests_can_view_likes_stats', 'can_view_likes_stats'))) {
+			!self::$LikePostsUtils->isAllowedTo(array('lp_guests_can_view_likes_stats', 'lp_can_view_likes_stats'))) {
 			return false;
 		}
 
@@ -302,7 +302,7 @@ class LikePosts {
 	public static function addProfilePanel(&$profile_areas) {
 		global $txt, $user_info;
 
-		if (!self::$LikePostsUtils->isAllowedTo(array('guest_can_view_likes_in_profiles', 'can_view_others_likes_profile'))) {
+		if (!self::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_profiles', 'lp_can_view_others_likes_profile'))) {
 			return false;
 		}
 

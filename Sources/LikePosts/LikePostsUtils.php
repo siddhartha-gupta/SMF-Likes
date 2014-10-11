@@ -68,7 +68,7 @@ class LikePostsUtils {
 		global $modSettings, $user_info;
 
 		if(!empty($modSettings['lp_mod_enable']) && !empty($modSettings['lp_notification_enable']) &&
-			LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_notification'))) {
+			LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes_notification'))) {
 			return true;
 		} else {
 			return false;
@@ -88,10 +88,10 @@ class LikePostsUtils {
 
 		$result = true;
 		$guestPermission = array(
-			'guest_can_view_likes_in_posts',
-			'guest_can_view_likes_in_boards',
-			'guest_can_view_likes_in_profiles',
-			'guests_can_view_likes_stats'
+			'lp_guest_can_view_likes_in_posts',
+			'lp_guest_can_view_likes_in_boards',
+			'lp_guest_can_view_likes_in_profiles',
+			'lp_guests_can_view_likes_stats'
 		);
 
 		if ($user_info['is_guest']) {

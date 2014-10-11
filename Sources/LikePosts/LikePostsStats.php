@@ -47,10 +47,10 @@ class LikePostsStats {
 			$context['like_post_stats_error'] = $txt['lp_no_access'];
 		}
 
-		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('guests_can_view_likes_stats'))) {
+		if($user_info['is_guest'] && !LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guests_can_view_likes_stats'))) {
 			$context['like_post_stats_error'] = $txt['lp_no_access'];
 		}
-		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('can_view_likes_stats'))) {
+		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes_stats'))) {
 			$context['like_post_stats_error'] = $txt['lp_no_access'];
 		}
 	}

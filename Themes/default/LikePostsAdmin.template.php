@@ -153,7 +153,7 @@ function template_lp_admin_permission_settings() {
 
 						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
 							echo '
-								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['lp_guest_perm_' . $perm] . '</label><br />';
+								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['lp_perm_' . $perm] . '</label><br />';
 						}
 					echo ' </fieldset>';
 

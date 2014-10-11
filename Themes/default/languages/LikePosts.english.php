@@ -68,20 +68,20 @@ $txt['lp_in_notification_desc'] = 'No. of likes to show in notifications';
 $txt['lp_show_like_on_boards'] = 'Show like button on board index';
 $txt['lp_show_like_on_boards_desc'] = 'Global settings to show like button board index';
 $txt['lp_regular_members'] = 'Regular Members';
-$txt['lp_perm_can_like_posts'] = 'Can like posts';
-$txt['lp_perm_can_view_likes'] = 'Can view likes';
-$txt['lp_perm_can_view_others_likes_profile'] = 'Can view likes of other users in their profiles';
-$txt['lp_perm_can_view_likes_stats'] = 'Can view like stats';
-$txt['lp_perm_can_view_likes_notification'] = 'Can view like posts notifications';
+$txt['lp_perm_lp_can_like_posts'] = 'Can like posts';
+$txt['lp_perm_lp_can_view_likes'] = 'Can view likes';
+$txt['lp_perm_lp_can_view_others_likes_profile'] = 'Can view likes of other users in their profiles';
+$txt['lp_perm_lp_can_view_likes_stats'] = 'Can view like stats';
+$txt['lp_perm_lp_can_view_likes_notification'] = 'Can view like posts notifications';
 $txt['lp_board_settings'] = 'Board Settings';
 $txt['lp_board_settings_desc'] = 'Select on which boards you want to activate the mod';
 
 // For our beloved guests
 $txt['lp_guest_permissions'] = 'Permissions for guests';
-$txt['lp_guest_perm_guest_can_view_likes_in_posts'] = 'Can view like posts in topics';
-$txt['lp_guest_perm_guest_can_view_likes_in_boards'] = 'Can view like posts in boards';
-$txt['lp_guest_perm_guest_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
-$txt['lp_guest_perm_guests_can_view_likes_stats'] = 'Can view like stats';
+$txt['lp_perm_lp_guest_can_view_likes_in_posts'] = 'Can view like posts in topics';
+$txt['lp_perm_lp_guest_can_view_likes_in_boards'] = 'Can view like posts in boards';
+$txt['lp_perm_lp_guest_can_view_likes_in_profiles'] = 'Can view like posts in profiles';
+$txt['lp_perm_lp_guests_can_view_likes_stats'] = 'Can view like stats';
 
 // Profile area strings
 $txt['lp_you_liked'] = 'Likes given';

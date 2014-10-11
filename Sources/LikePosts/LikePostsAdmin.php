@@ -87,18 +87,18 @@ class LikePostsAdmin {
 
 		// set up the vars for groups and guests permissions
 		$context['like_posts']['groups_permission_settings'] = array(
-			'can_like_posts',
-			'can_view_likes',
-			'can_view_others_likes_profile',
-			'can_view_likes_stats',
-			'can_view_likes_notification'
+			'lp_can_like_posts',
+			'lp_can_view_likes',
+			'lp_can_view_others_likes_profile',
+			'lp_can_view_likes_stats',
+			'lp_can_view_likes_notification'
 		);
 
 		$context['like_posts']['guest_permission_settings'] = array(
-			'guest_can_view_likes_in_posts',
-			'guest_can_view_likes_in_boards',
-			'guest_can_view_likes_in_profiles',
-			'guests_can_view_likes_stats'
+			'lp_guest_can_view_likes_in_posts',
+			'lp_guest_can_view_likes_in_boards',
+			'lp_guest_can_view_likes_in_profiles',
+			'lp_guests_can_view_likes_stats'
 		);
 
 		$context['like_posts']['groups'][0] = array(
@@ -126,33 +126,33 @@ class LikePostsAdmin {
 
 		// set up the vars for groups and guests permissions
 		$context['like_posts']['groups_permission_settings'] = array(
-			'can_like_posts',
-			'can_view_likes',
-			'can_view_others_likes_profile',
-			'can_view_likes_stats',
-			'can_view_likes_notification'
+			'lp_can_like_posts',
+			'lp_can_view_likes',
+			'lp_can_view_others_likes_profile',
+			'lp_can_view_likes_stats',
+			'lp_can_view_likes_notification'
 		);
 
 		$context['like_posts']['guest_permission_settings'] = array(
-			'guest_can_view_likes_in_posts',
-			'guest_can_view_likes_in_boards',
-			'guest_can_view_likes_in_profiles',
-			'guests_can_view_likes_stats'
+			'lp_guest_can_view_likes_in_posts',
+			'lp_guest_can_view_likes_in_boards',
+			'lp_guest_can_view_likes_in_profiles',
+			'lp_guests_can_view_likes_stats'
 		);
 
 		$permissionKeys = array(
-			'can_like_posts',
-			'can_view_likes',
-			'can_view_others_likes_profile',
-			'can_view_likes_stats',
-			'can_view_likes_notification',
+			'lp_can_like_posts',
+			'lp_can_view_likes',
+			'lp_can_view_others_likes_profile',
+			'lp_can_view_likes_stats',
+			'lp_can_view_likes_notification',
 		);
 
 		$guestPermissionKeys = array(
-			'guest_can_view_likes_in_posts',
-			'guest_can_view_likes_in_boards',
-			'guest_can_view_likes_in_profiles',
-			'guests_can_view_likes_stats'
+			'lp_guest_can_view_likes_in_posts',
+			'lp_guest_can_view_likes_in_boards',
+			'lp_guest_can_view_likes_in_profiles',
+			'lp_guests_can_view_likes_stats'
 		);
 
 		// Array to be saved to DB

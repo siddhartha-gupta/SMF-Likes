@@ -43,7 +43,7 @@ class LikeUnlikePosts {
 		global $user_info, $txt;
 
 		// Check and send them bacl if found guilty :D
-		if ($user_info['is_guest'] || !(LikePosts::$LikePostsUtils->isAllowedTo(array('can_like_posts')))) {
+		if ($user_info['is_guest'] || !(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_like_posts')))) {
 			$resp = array('response' => false, 'error' => $txt['lp_cannot_like_posts']);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
