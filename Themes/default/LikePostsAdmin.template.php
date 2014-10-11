@@ -138,7 +138,7 @@ function template_lp_admin_permission_settings() {
 						$permVals = isset($modSettings[$perm]) && strlen($modSettings[$perm]) > 0 ? (explode(',', $modSettings[$perm])) : '';
 
 						echo ' <fieldset>';
-						echo '<legend>' . $txt['lp_perm_' . $perm] . '</legend>';
+						echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_perm_' . $perm] . '</legend>';
 					
 						foreach ($context['like_posts']['groups'] as $group) {
 							echo '
@@ -187,7 +187,7 @@ function template_lp_admin_board_settings() {
 
 				foreach ($context['categories'] as $key => $category) {
 					echo ' <fieldset>';
-					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
+					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $category['name'] . '</legend>';
 				
 					foreach ($category['boards'] as $board) {
 						echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
@@ -198,7 +198,7 @@ function template_lp_admin_board_settings() {
 				echo '
 				</div>
 				<div style="padding: 0 10px 10px;">
-					<input type="checkbox" value="0" onclick="lpObj.likePostsUtils.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
+					<input type="checkbox" value="0" onclick="lpObj.likePostsAdmin.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
 				</div>
