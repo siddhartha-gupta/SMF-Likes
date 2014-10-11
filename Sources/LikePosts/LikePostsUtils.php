@@ -149,16 +149,24 @@ class LikePostsUtils {
 				$data['text'] = $txt['lp_unlike'];
 
 				$remaining_likes = (int) ($data['count'] - 1);
-				if ($remaining_likes > 0)
-					$data['count_text'] = sprintf($txt['lp_string_you_and_liked'], $remaining_likes);
-				else
+				if ($remaining_likes > 0) {
+					if($remaining_likes > 1) {
+						$data['count_text'] = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_multiple_people_liked'], $remaining_likes);
+					} else {
+						$data['count_text'] = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_people_liked'], $remaining_likes);
+					}
+				} else {
 					$data['count_text'] = $txt['lp_string_you_liked'];
-
+				}
 				//If already liked make it to unlink
 				$data['already_liked'] = 0;
 			} else {
 				$data['text'] = $txt['lp_like'];
-				$data['count_text'] = sprintf($txt['lp_string_people_liked'], $data['count']);
+				if($data['count'] > 1) {
+					$data['count_text'] = sprintf($txt['lp_string_multiple_people_liked'], $data['count']);
+				} else {
+					$data['count_text'] = sprintf($txt['lp_string_people_liked'], $data['count']);
+				}
 
 				//Give them the option to like
 				$data['already_liked'] = 1;
@@ -196,16 +204,26 @@ class LikePostsUtils {
 				$data['text'] = $txt['lp_unlike'];
 
 				$remaining_likes = (int) ($data['count'] - 1);
-				if ($remaining_likes > 0)
-					$data['count_text'] = sprintf($txt['lp_string_you_and_liked'], $remaining_likes);
-				else
+
+				if ($remaining_likes > 0) {
+					if($remaining_likes > 1) {
+						$data['count_text'] = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_multiple_people_liked'], $remaining_likes);
+					} else {
+						$data['count_text'] = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_people_liked'], $remaining_likes);
+					}
+				} else {
 					$data['count_text'] = $txt['lp_string_you_liked'];
+				}
 
 				//If already liked make it to unlink
 				$data['already_liked'] = 0;
 			} else {
 				$data['text'] = $txt['lp_like'];
-				$data['count_text'] = sprintf($txt['lp_string_people_liked'], $data['count']);
+				if($data['count'] > 1) {
+					$data['count_text'] = sprintf($txt['lp_string_multiple_people_liked'], $data['count']);
+				} else {
+					$data['count_text'] = sprintf($txt['lp_string_people_liked'], $data['count']);
+				}
 
 				//Give them the option to like
 				$data['already_liked'] = 1;

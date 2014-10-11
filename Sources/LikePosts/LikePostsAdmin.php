@@ -88,6 +88,7 @@ class LikePostsAdmin {
 		$context['like_posts']['groups'] += list_getMembergroups(null, null, 'id_group', 'regular');
 		unset($context['like_posts']['groups'][3]);
 		unset($context['like_posts']['groups'][1]);
+		$context['like_posts']['groups'] += list_getMembergroups(null, null, 'id_group', 'post_count');		
 
 		$context['page_title'] = $txt['lp_admin_panel'];
 		$context['sub_template'] = 'lp_admin_permission_settings';

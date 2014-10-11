@@ -64,7 +64,7 @@ class LikeUnlikePosts {
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
 
-		//  All good lets proceed
+		// All good lets proceed
 		$data = array(
 			'id_msg' => $msg_id,
 			'id_topic' => $topic_id,
@@ -86,12 +86,24 @@ class LikeUnlikePosts {
 
 			$remaining_likes = (int) ($count - 1);
 			if(!empty($rating)) {
-				if ($remaining_likes > 0)
-					$liked_text = sprintf($txt['lp_string_you_and_liked'], $remaining_likes);
-				else
+				if ($remaining_likes > 0) {
+					if($remaining_likes > 1) {
+						$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_multiple_people_liked'], $remaining_likes);
+					} else {
+						$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_people_liked'], $remaining_likes);
+					}
+				} else {
 					$liked_text = $txt['lp_string_you_liked'];
+				}
 			} else {
-				$liked_text = !empty($count) ? sprintf($txt['lp_string_people_liked'], $count) : '';
+				$liked_text = '';
+				if(!empty($count)) {
+					if($count > 1) {
+						$liked_text = sprintf($txt['lp_string_multiple_people_liked'], $count);
+					} else {
+						$liked_text = sprintf($txt['lp_string_people_liked'], $count);
+					}
+				}
 			}
 
 			$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);

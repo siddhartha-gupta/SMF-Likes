@@ -35,8 +35,11 @@ global $txt;
 
 //front end strings strings
 $txt['lp_string_you_liked'] = 'You liked this';
-$txt['lp_string_you_and_liked'] = 'You &amp; %1$d others liked this';
-$txt['lp_string_people_liked'] = '%1$d people liked this';
+$txt['lp_string_you'] = 'You &amp;';
+$txt['lp_string_other_people_liked'] = '%1$d other person liked this';
+$txt['lp_string_other_multiple_people_liked'] = '%1$d other people liked this';
+$txt['lp_string_people_liked'] = '%1$d person liked this';
+$txt['lp_string_multiple_people_liked'] = '%1$d people liked this';
 
 $txt['lp_like'] = 'Like';
 $txt['lp_unlike'] = 'Unlike';
