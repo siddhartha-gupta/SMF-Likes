@@ -64,10 +64,21 @@ class LikePostsUtils {
 		}
 	}
 
+	public function showLikeNotification() {
+		global $modSettings, $user_info;
+
+		if(!empty($modSettings['lp_mod_enable']) && !empty($modSettings['lp_notification_enable'])) {
+			return true;
+		} else {
+			return false;
+		} 
+	}
+
 	public function isAllowedTo($permissions) {
 		global $modSettings, $user_info;
 
-		if ($user_info['is_admin']) {return true;
+		if ($user_info['is_admin']) {
+			return true;
 		}
 
 		if (!is_array($permissions)) {
