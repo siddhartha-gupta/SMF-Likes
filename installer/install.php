@@ -158,27 +158,27 @@ function lpAddUpdateSettings() {
 	$request = $smcFunc['db_query']('', '
 		SELECT * 
 		FROM {db_prefix}settings
-		WHERE variable =  {string:like_post_mod_version}
+		WHERE variable =  {string:lp_mod_version}
 		LIMIT 1',
 		array(
-			'like_post_mod_version' => 'like_post_mod_version',
+			'lp_mod_version' => 'lp_mod_version',
 		)
 	);
 
 	if ($smcFunc['db_num_rows']($request) == 0) {
 		// For all general settings add 'like_post_' as prefix
-		updateSettings(array('like_post_mod_version' => '1.6.1', 'like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 	} else {
 		list ($last_version) = $smcFunc['db_fetch_row']($request);
 
-		if (version_compare('1.6.1', $last_version) >= 0) {
+		if (version_compare('2.0', $last_version) >= 0) {
 			$smcFunc['db_query']('', '
 				UPDATE {db_prefix}settings
 				SET value = {string:current_version}
-				WHERE variable = {string:like_post_mod_version}',
+				WHERE variable = {string:lp_mod_version}',
 				array(
-					'current_version' => '1.6.1',
-					'like_post_mod_version' => 'like_post_mod_version'
+					'current_version' => '2.0',
+					'lp_mod_version' => 'lp_mod_version'
 				)
 			);
 		}
