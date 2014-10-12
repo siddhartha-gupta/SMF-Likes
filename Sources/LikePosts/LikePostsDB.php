@@ -946,12 +946,12 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			$mostLikeGivingMember['topic_data'] = $this->fetchMostLikedGivenUserPosts($id_msgs);
+			$mostLikeGivingMember['topic_data'] = $this->fetchMostLikedGivenUserPosts(array('id_msgs' => $id_msgs));
 		}
 		return $mostLikeGivingMember;
 	}
 
-	private function fetchMostLikedGivenUserPosts($id_msgs) {
+	private function fetchMostLikedGivenUserPosts($data = array('id_msgs' => '')) {
 		global $smcFunc;
 
 		// Lets fetch highest liked posts by this user
@@ -964,16 +964,16 @@ class LikePostsDB {
 			ORDER BY m.id_msg DESC
 			LIMIT 10',
 			array(
-				'id_msgs' => $id_msgs
+				'id_msgs' => $data['id_msgs']
 			)
 		);
 
-		$data = array();
+		$topic_data = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
 			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
-			$data[] = array(
+			$topic_data[] = array(
 				'id_msg' => $row['id_msg'],
 				'id_topic' => $row['id_topic'],
 				'subject' => $row['subject'],
@@ -982,7 +982,7 @@ class LikePostsDB {
 			);
 		}
 		$smcFunc['db_free_result']($request);
-		return $data;
+		return $topic_data;
 	}
 }
 
