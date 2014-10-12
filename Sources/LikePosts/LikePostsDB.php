@@ -152,8 +152,8 @@ class LikePostsDB {
 
 		$smcFunc['db_insert']('replace',
 			'{db_prefix}like_post',
-			array('id_msg' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'id_member_gave' => 'int', 'id_member_received' => 'int', 'rating' => 'int', 'liked_timestamp' => 'int'),
-			array($data['id_msg'], $data['id_topic'], $data['id_board'], $data['id_member_gave'], $data['id_member_received'], $data['rating'], time()),
+			array('id_msg' => 'int', 'id_member_gave' => 'int', 'id_member_received' => 'int', 'rating' => 'int', 'liked_timestamp' => 'int'),
+			array($data['id_msg'], $data['id_member_gave'], $data['id_member_received'], $data['rating'], time()),
 			array('id_like')
 		);
 
@@ -192,13 +192,9 @@ class LikePostsDB {
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}like_post
 			WHERE id_msg = {int:id_msg}
-				AND id_topic = {int:id_topic}
-				AND id_board = {int:id_board}
 				AND id_member_gave = {int:id_member_gave}',
 			array(
 				'id_msg' => $data['id_msg'],
-				'id_topic' => $data['id_topic'],
-				'id_board' => $data['id_board'],
 				'id_member_gave' => $data['id_member_gave'],
 			)
 		);
@@ -219,10 +215,10 @@ class LikePostsDB {
 	 * To count number of posts liked
 	 * Update UI accordingly
 	*/
-	public function getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
+	public function getLikeTopicCount($msg_id = 0) {
 		global $smcFunc;
 
-		if (empty($boardId) || empty($topicId) || empty($msg_id)) {
+		if (empty($msg_id)) {
 			return false;
 		}
 
@@ -230,13 +226,9 @@ class LikePostsDB {
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(lp.id_msg) as count
 			FROM {db_prefix}like_post as lp
-			WHERE lp.id_board = {int:id_board}
-			AND lp.id_topic = {int:id_topic}
-			AND lp.id_msg = {int:id_msg}
+			WHERE AND lp.id_msg = {int:id_msg}
 			ORDER BY lp.id_msg',
 			array(
-				'id_board' => $boardId,
-				'id_topic' => $topicId,
 				'id_msg' => $msg_id
 			)
 		);
@@ -280,11 +272,11 @@ class LikePostsDB {
 	/*
 	 * Underlying DB implementation of getAllMessagesInfo
 	*/
-	public function getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
+	public function getAllMessagesInfo($msgsArr) {
 		global $smcFunc, $scripturl;
 
 		$topicsLikeInfo = array();
-		if (count($msgsArr) == 0 || empty($boardId) || empty($topicId)) {
+		if (count($msgsArr) == 0) {
 			return $topicsLikeInfo;
 		}
 
@@ -292,13 +284,9 @@ class LikePostsDB {
 			SELECT lp.id_msg, lp.id_member_gave, lp.rating, mem.real_name
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
-			WHERE lp.id_board = {int:id_board}
-			AND lp.id_topic = {int:id_topic}
-			AND lp.id_msg IN ({array_int:message_list})
+			WHERE lp.id_msg IN ({array_int:message_list})
 			ORDER BY lp.id_msg',
 			array(
-				'id_board' => $boardId,
-				'id_topic' => $topicId,
 				'message_list' => $msgsArr,
 			)
 		);
@@ -374,11 +362,11 @@ class LikePostsDB {
 	/*
 	 * Underlying DB implementation of getAllTopicsInfo
 	*/
-	public function getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
-		global $smcFunc, $scripturl;
+	public function getAllTopicsInfo($topicsArr = array()) {
+		global $smcFunc;
 
 		$topicsLikeInfo = array();
-		if (count($topicsArr) == 0 || empty($boardId)) {
+		if (count($topicsArr) == 0) {
 			return $topicsLikeInfo;
 		}
 
@@ -387,11 +375,9 @@ class LikePostsDB {
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 			INNER JOIN {db_prefix}topics as t ON (t.id_first_msg = lp.id_msg)
-			WHERE lp.id_board = {int:id_board}
-			AND lp.id_topic IN ({array_int:topics_list})
+			WHERE t.id_topic IN ({array_int:topics_list})
 			ORDER BY lp.id_msg',
 			array(
-				'id_board' => $boardId,
 				'topics_list' => $topicsArr,
 			)
 		);

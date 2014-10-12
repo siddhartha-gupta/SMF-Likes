@@ -38,9 +38,7 @@ if (!defined('SMF')) {
 class LikePostsData {
 	public function __construct() {}
 
-	public function getAllTopicsInfo($topicsArr = array(), $boardId = '') {
-		global $context;
-
+	public function getAllTopicsInfo($topicsArr = array()) {
 		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 			return false;
 		}
@@ -48,18 +46,11 @@ class LikePostsData {
 		if (!is_array($topicsArr)) {
 			$topicsArr = array($topicsArr);
 		}
-		$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
-
-		if (empty($boardId)) {
-			return false;
-		}
 		$result = LikePosts::$LikePostsDB->getAllTopicsInfo($topicsArr, $boardId);
 		return $result;
 	}
 
-	public function getAllMessagesInfo($msgsArr = array(), $boardId = '', $topicId = '') {
-		global $context;
-
+	public function getAllMessagesInfo($msgsArr = array()) {
 		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 			return false;
 		}
@@ -68,12 +59,6 @@ class LikePostsData {
 			$msgsArr = array($msgsArr);
 		}
 
-		$boardId = isset($boardId) && !empty($boardId) ? $boardId : $context['current_board'];
-		$topicId = isset($topicId) && !empty($topicId) ? $topicId : $context['current_topic'];
-
-		if (empty($boardId) || empty($topicId)) {
-			return false;
-		}
 		$result = LikePosts::$LikePostsDB->getAllMessagesInfo($msgsArr, $boardId, $topicId);
 		return $result;
 	}

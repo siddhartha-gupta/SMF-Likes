@@ -61,20 +61,6 @@ $tables = array(
 				'default' => '0',
 			),
 			array(
-				'name' => 'id_topic',
-				'type' => 'mediumint',
-				'size' => 8,
-				'unsigned' => true,
-				'default' => '0',
-			),
-			array(
-				'name' => 'id_board',
-				'type' => 'smallint',
-				'size' => 5,
-				'unsigned' => true,
-				'default' => '0',
-			),
-			array(
 				'name' => 'id_member_received',
 				'type' => 'mediumint',
 				'size' => 8,
@@ -170,20 +156,46 @@ function lpAddUpdateSettings() {
 		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 	} else {
 		list ($last_version) = $smcFunc['db_fetch_row']($request);
-
 		if (version_compare('2.0', $last_version) >= 0) {
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}settings
-				SET value = {string:current_version}
-				WHERE variable = {string:lp_mod_version}',
-				array(
-					'current_version' => '2.0',
-					'lp_mod_version' => 'lp_mod_version'
-				)
-			);
+			updateModVersion();
 		}
 	}
 	$smcFunc['db_free_result']($request);
+}
+
+function updateModVersion() {
+	global $smcFunc;
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}settings
+		SET value = {string:current_version}
+		WHERE variable = {string:lp_mod_version}',
+		array(
+			'current_version' => '2.0',
+			'lp_mod_version' => 'lp_mod_version'
+		)
+	);
+}
+
+function upgrade2_0() {
+	global $smcFunc;
+
+	$like_post_permissions = array('like_post_mod_version', 'like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}settings
+		WHERE variable IN ({array_string:like_post_permissions})',
+		array(
+			'like_post_permissions' => $like_post_permissions,
+		)
+	);
+
+	$smcFunc['db_query']('',
+		'ALTER TABLE {db_prefix}like_post
+		DROP COLUMN id_topic, id_board'
+	);
+
+	updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 }
 
 if (SMF == 'SSI')

@@ -49,14 +49,12 @@ class LikeUnlikePosts {
 		}
 
 		// Lets get and sanitize the data first
-		$board_id = isset($_REQUEST['board']) && !empty($_REQUEST['board']) ? (int) ($_REQUEST['board']) : 0;
-		$topic_id = isset($_REQUEST['topic']) && !empty($_REQUEST['topic']) ? (int) ($_REQUEST['topic']) : 0;
 		$msg_id = isset($_REQUEST['msg']) && !empty($_REQUEST['msg']) ? (int) ($_REQUEST['msg']) : 0;
 		$author_id = isset($_REQUEST['author']) ? (int) ($_REQUEST['author']) : 0;
 		$rating = isset($_REQUEST['rating']) ? (int) ($_REQUEST['rating']) : 0;
 
 		// Woops! check out if they missed something
-		if (empty($board_id) || empty($topic_id) || empty($msg_id) || empty($author_id)) {
+		if (empty($msg_id) || empty($author_id)) {
 			$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
@@ -64,8 +62,6 @@ class LikeUnlikePosts {
 		// All good lets proceed
 		$data = array(
 			'id_msg' => $msg_id,
-			'id_topic' => $topic_id,
-			'id_board' => $board_id,
 			'id_member_gave' => $user_info['id'],
 			'id_member_received' => $author_id,
 			'rating' => $rating,
@@ -78,7 +74,7 @@ class LikeUnlikePosts {
 		}
 
 		if ($result) {
-			$count = LikePosts::$LikePostsDB->getLikeTopicCount($board_id, $topic_id, $msg_id);
+			$count = LikePosts::$LikePostsDB->getLikeTopicCount($msg_id);
 			$new_text = !empty($rating) ? $txt['lp_unlike'] : $txt['lp_like'];
 
 			$remaining_likes = (int) ($count - 1);
