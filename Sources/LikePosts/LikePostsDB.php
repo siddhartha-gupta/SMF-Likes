@@ -624,11 +624,10 @@ class LikePostsDB {
 		// Most liked Message
 		$mostLikedMessage = array();
 		$request = $smcFunc['db_query']('', '
-			SELECT mem.real_name as member_received_name, lp.id_msg, lp.id_topic, lp.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.posts, m.smileys_enabled
+			SELECT mem.real_name as member_received_name, lp.id_msg, m.id_topic, m.id_board, lp.id_member_received, GROUP_CONCAT(CONVERT(lp.id_member_gave, CHAR(8)) SEPARATOR ",") AS id_member_gave, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar, mem.posts, m.smileys_enabled
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_received)
 			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_received)
 			WHERE {query_wanna_see_board}
 			GROUP BY lp.id_msg
@@ -666,32 +665,40 @@ class LikePostsDB {
 			);
 		} else {
 			// Lets fetch info of users who liked the message
-			$request = $smcFunc['db_query']('', '
-				SELECT mem.id_member, mem.real_name, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
-				FROM {db_prefix}members as mem
-				LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
-				WHERE mem.id_member IN ({raw:id_member_gave})',
-				array(
-					'id_member_gave' => $id_member_gave
-				)
-			);
-
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
-				$mostLikedMessage['member_liked_data'][] = array(
-					'id_member' => $row['id_member'],
-					'real_name' => $row['real_name'],
-					'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
-
-				);
-			}
-			$smcFunc['db_free_result']($request);
+			$mostLikedMessage['member_liked_data'] = $this->fetchMembers($id_member_gave);
 		}
 		return $mostLikedMessage;
 	}
 
+	private function fetchMembers($id_member_gave) {
+		global $smcFunc, $scripturl, $modSettings, $settings;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT mem.id_member, mem.real_name, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
+			FROM {db_prefix}members as mem
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			WHERE mem.id_member IN ({raw:id_member_gave})',
+			array(
+				'id_member_gave' => $id_member_gave
+			)
+		);
+
+		$members = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			$members[] = array(
+				'id_member' => $row['id_member'],
+				'real_name' => $row['real_name'],
+				'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+
+			);
+		}
+		$smcFunc['db_free_result']($request);
+		return $members;
+	}
+
 	public function getStatsMostLikedTopic() {
-		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
+		global $smcFunc, $txt;
 
 		// Most liked topic
 		$mostLikedTopic = array();
@@ -714,41 +721,50 @@ class LikePostsDB {
 			);
 		} else {
 			// Lets fetch few messages in the topic
-			$request = $smcFunc['db_query']('', '
-				SELECT m.id_msg, m.body, m.poster_time, m.smileys_enabled, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.id_member, mem.real_name, mem.avatar
-				FROM {db_prefix}messages as m
-				INNER JOIN {db_prefix}members as mem ON (mem.id_member = m.id_member)
-				LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
-				WHERE m.id_msg IN ({raw:id_msg})
-				ORDER BY m.id_msg
-				LIMIT 10',
-				array(
-					'id_msg' => $id_msg
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
-				censorText($row['body']);
-				$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
-
-				$mostLikedTopic['msg_data'][] = array(
-					'id_msg' => $row['id_msg'],
-					'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
-					'poster_time' => timeformat($row['poster_time']),
-					'member' => array(
-						'id_member' => $row['id_member'],
-						'name' => $row['real_name'],
-						'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-						'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
-					),
-				);
-			}
-			$smcFunc['db_free_result']($request);
+			$mostLikedTopic['msg_data'] = $this->fetchTopicMessages($id_msg);
 		}
 		return $mostLikedTopic;
 	}
 
+	private function fetchTopicMessages($id_msg) {
+		global $smcFunc, $scripturl, $modSettings, $settings;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT m.id_msg, m.body, m.poster_time, m.smileys_enabled, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.id_member, mem.real_name, mem.avatar
+			FROM {db_prefix}messages as m
+			INNER JOIN {db_prefix}members as mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			WHERE m.id_msg IN ({raw:id_msg})
+			ORDER BY m.id_msg
+			LIMIT 10',
+			array(
+				'id_msg' => $id_msg
+			)
+		);
+
+		$msgData = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			censorText($row['body']);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
+
+			$msgData[] = array(
+				'id_msg' => $row['id_msg'],
+				'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
+				'poster_time' => timeformat($row['poster_time']),
+				'member' => array(
+					'id_member' => $row['id_member'],
+					'name' => $row['real_name'],
+					'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+				),
+			);
+		}
+		$smcFunc['db_free_result']($request);
+		return $msgData;
+	}
+
 	public function getStatsMostLikedBoard() {
-		global $smcFunc, $scripturl, $modSettings, $settings, $txt;
+		global $smcFunc, $txt;
 
 		// Most liked board
 		$mostLikedBoard = array();
@@ -770,38 +786,47 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			// Lets fetch few topics from this board
-			$request = $smcFunc['db_query']('', '
-				SELECT t.id_topic, m.id_msg, m.body, m.poster_time, m.smileys_enabled, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.id_member, mem.real_name, mem.avatar
-				FROM {db_prefix}topics as t
-				INNER JOIN {db_prefix}messages as m ON (m.id_msg = t.id_first_msg)
-				INNER JOIN {db_prefix}members as mem ON (mem.id_member = m.id_member)
-				LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
-				WHERE t.id_topic IN ({raw:id_topics})
-				ORDER BY t.id_topic DESC',
-				array(
-					'id_topics' => $id_topics
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
-				censorText($row['body']);
-				$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
-
-				$mostLikedBoard['topic_data'][] = array(
-					'id_topic' => $row['id_topic'],
-					'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
-					'poster_time' => timeformat($row['poster_time']),
-					'member' => array(
-						'id_member' => $row['id_member'],
-						'name' => $row['real_name'],
-						'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-						'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
-					),
-				);
-			}
-			$smcFunc['db_free_result']($request);
+			$mostLikedBoard['topic_data'] = $this->fetchBoardTopics($id_topics);
 		}
 		return $mostLikedBoard;
+	}
+
+	private function fetchBoardTopics($id_topics) {
+		global $smcFunc, $scripturl, $modSettings, $settings;
+
+		// Lets fetch few topics from this board
+		$request = $smcFunc['db_query']('', '
+			SELECT t.id_topic, m.id_msg, m.body, m.poster_time, m.smileys_enabled, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.id_member, mem.real_name, mem.avatar
+			FROM {db_prefix}topics as t
+			INNER JOIN {db_prefix}messages as m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}members as mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			WHERE t.id_topic IN ({raw:id_topics})
+			ORDER BY t.id_topic DESC',
+			array(
+				'id_topics' => $id_topics
+			)
+		);
+
+		$topic_data = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			censorText($row['body']);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
+
+			$topic_data[] = array(
+				'id_topic' => $row['id_topic'],
+				'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
+				'poster_time' => timeformat($row['poster_time']),
+				'member' => array(
+					'id_member' => $row['id_member'],
+					'name' => $row['real_name'],
+					'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+				),
+			);
+		}
+		$smcFunc['db_free_result']($request);
+		return $topic_data;
 	}
 
 	public function getStatsMostLikedUser() {
