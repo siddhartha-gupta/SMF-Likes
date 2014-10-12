@@ -39,10 +39,11 @@ if (!defined('SMF')) {
 class LikePostsDB {
 	public function __construct() {}
 
+	// Functions for admin panel
 	/*
-	* Functions for admin panel
+	* to update permission settings from admin panel
+	* @param array $replaceArray
 	*/
-	// To update permission settings from admin panel
 	public function updatePermissions($replaceArray) {
 		global $smcFunc;
 
@@ -56,6 +57,7 @@ class LikePostsDB {
 	}
 
 	/**
+	 * To recount the likes and update like_count table
 	 * @param integer $startLimit
 	 * @param integer $totalWork
 	 */
@@ -138,10 +140,8 @@ class LikePostsDB {
 	}
 
 	/*
-	* Functions for like post entry/delete handling
-	*/
-	/*
-	 * To insert new likes in DB
+	* Function to add like post entry in DB
+	* @param array $data
 	*/
 	public function insertLikePost($data = array()) {
 		global $smcFunc, $user_info;
@@ -183,7 +183,8 @@ class LikePostsDB {
 	}
 
 	/*
-	 * Used when a topic is unliked
+	* Functions to delete like post entry from DB
+	* @param array $data
 	*/
 	public function deleteLikePost($data = array()) {
 		global $smcFunc, $user_info;
@@ -223,9 +224,8 @@ class LikePostsDB {
 		return true;
 	}
 
-
 	/*
-	 * To count number of like posts
+	 * To count number of posts liked
 	 * Update UI accordingly
 	*/
 	public function getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
@@ -254,9 +254,9 @@ class LikePostsDB {
 		return $count;
 	}
 
-
-
-
+	/*
+	 * Get who liked the post
+	*/
 	public function posterInfo($postersArr) {
 		global $smcFunc;
 
@@ -285,8 +285,9 @@ class LikePostsDB {
 
 		return $postersInfo;
 	}
+
 	/*
-	 * Underlying DB implementation of LP_getAllMessagesInfo
+	 * Underlying DB implementation of getAllMessagesInfo
 	*/
 	public function getAllMessagesInfo($msgsArr, $boardId = '', $topicId = '') {
 		global $smcFunc, $scripturl;
@@ -342,7 +343,7 @@ class LikePostsDB {
 	}
 
 	/*
-	 * Underlying DB implementation of LP_getMessageLikeInfo
+	 * Underlying DB implementation of getMessageLikeInfo
 	*/
 	public function getMessageLikeInfo($msg_id = 0) {
 		global $smcFunc, $scripturl, $settings, $modSettings;
@@ -380,7 +381,7 @@ class LikePostsDB {
 	}
 
 	/*
-	 * Underlying DB implementation of LP_getAllTopicsInfo
+	 * Underlying DB implementation of getAllTopicsInfo
 	*/
 	public function getAllTopicsInfo($topicsArr = array(), $boardId = 0) {
 		global $smcFunc, $scripturl;
@@ -432,7 +433,6 @@ class LikePostsDB {
 	}
 
 	// For profile section
-
 	/**
 	 * @param string $select
 	 * @param string $where
@@ -505,7 +505,6 @@ class LikePostsDB {
 		$smcFunc['db_free_result']($request);
 		return $likedData;
 	}
-
 
 	/*
 	 * To get posts of a user liked by other

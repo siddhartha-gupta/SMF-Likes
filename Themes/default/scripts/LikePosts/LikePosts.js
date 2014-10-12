@@ -404,7 +404,7 @@
 									notificationInfo += '<div class="lp_notification_body lp_all_notifications_data">';
 
 									if (data[i].length === 0) {
-										notificationInfo += '<div class="single_notify"></div>';
+										notificationInfo += '<div class="single_notify">' + textStrings.lpNoNotification + '</div>';
 									} else {
 										for (j in data[i]) {
 											if (data[i].hasOwnProperty(j)) {
