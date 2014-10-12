@@ -226,7 +226,7 @@ class LikePostsDB {
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(lp.id_msg) as count
 			FROM {db_prefix}like_post as lp
-			WHERE AND lp.id_msg = {int:id_msg}
+			WHERE lp.id_msg = {int:id_msg}
 			ORDER BY lp.id_msg',
 			array(
 				'id_msg' => $msg_id
@@ -530,14 +530,22 @@ class LikePostsDB {
 	}
 
 	public function getAllNotification() {
-		global $context, $smcFunc, $scripturl, $settings, $user_info, $modSettings;
-
 		$notificationData = array(
 			'all' => array(),
 			'mine' => array()
 		);
+
+		$notificationData['all'] = $this->getAllLikeNotification();
+		$notificationData['mine'] = $this->getMyPostNotificationData();
+		
+		return $notificationData;
+	}
+
+	private function getAllLikeNotification() {
+		global $context, $smcFunc, $scripturl, $settings, $modSettings;
+
 		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
+			SELECT lp.id_msg, m.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
@@ -551,8 +559,9 @@ class LikePostsDB {
 			)
 		);
 
+		$data = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
-			$notificationData['all'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
+			$data[$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'subject' => (!$context['utf8']) ? utf8_encode($row['subject']) : $row['subject'],
@@ -567,6 +576,11 @@ class LikePostsDB {
 			);
 		}
 		$smcFunc['db_free_result']($request);
+		return $data;
+	}
+
+	private function getMyPostNotificationData() {
+		global $context, $smcFunc, $scripturl, $settings, $user_info, $modSettings;
 
 		$request = $smcFunc['db_query']('', '
 			SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
@@ -585,8 +599,9 @@ class LikePostsDB {
 			)
 		);
 
+		$data = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
-			$notificationData['mine'][$row['id_msg'] . '-' . $row['id_member_gave']] = array(
+			$data[$row['id_msg'] . '-' . $row['id_member_gave']] = array(
 				'id' => $row['id_msg'],
 				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'subject' => (!$context['utf8']) ? utf8_encode($row['subject']) : $row['subject'],
@@ -601,7 +616,7 @@ class LikePostsDB {
 			);
 		}
 		$smcFunc['db_free_result']($request);
-		return $notificationData;
+		return $data;
 	}
 
 	public function getStatsMostLikedMessage() {

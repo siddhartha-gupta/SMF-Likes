@@ -46,7 +46,7 @@ class LikePostsData {
 		if (!is_array($topicsArr)) {
 			$topicsArr = array($topicsArr);
 		}
-		$result = LikePosts::$LikePostsDB->getAllTopicsInfo($topicsArr, $boardId);
+		$result = LikePosts::$LikePostsDB->getAllTopicsInfo($topicsArr);
 		return $result;
 	}
 
@@ -59,7 +59,7 @@ class LikePostsData {
 			$msgsArr = array($msgsArr);
 		}
 
-		$result = LikePosts::$LikePostsDB->getAllMessagesInfo($msgsArr, $boardId, $topicId);
+		$result = LikePosts::$LikePostsDB->getAllMessagesInfo($msgsArr);
 		return $result;
 	}
 
