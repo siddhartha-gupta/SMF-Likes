@@ -951,7 +951,9 @@ class LikePostsDB {
 		return $mostLikeGivingMember;
 	}
 
-	private function fetchMostLikedGivenUserPosts() {
+	private function fetchMostLikedGivenUserPosts($id_msgs) {
+		global $smcFunc;
+
 		// Lets fetch highest liked posts by this user
 		$request = $smcFunc['db_query']('', '
 			SELECT m.id_msg, m.id_topic, m.subject, m.body, m.poster_time, m.smileys_enabled
