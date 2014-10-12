@@ -97,8 +97,6 @@ class LikePostsUtils {
 			$permissions = array($permissions);
 		}
 
-		$result = true;
-
 		if ($user_info['is_guest']) {
 			$this->permToCheck = array_intersect($this->guestPermission, $permissions);
 			$result = $this->checkGuestPermission();
