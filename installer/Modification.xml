@@ -149,7 +149,7 @@
 		!empty($modSettings['lp_show_like_on_boards']) && 
 		LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
 			LikePosts::loadClass('LikePostsData');
-			$topic_liked_data = LikePosts::$LikePostsData->getAllTopicsInfo($topic_ids, $board);
+			$topic_liked_data = LikePosts::$LikePostsData->getAllTopicsInfo($topic_ids);
 			$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
 	}
 ]]></add>
