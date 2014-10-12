@@ -146,11 +146,7 @@ class LikePostsDB {
 	public function insertLikePost($data = array()) {
 		global $smcFunc, $user_info;
 
-		if ($user_info['is_guest']) {
-			return false;
-		}
-
-		if (!is_array($data)) {
+		if ($user_info['is_guest'] || !is_array($data)) {
 			return false;
 		}
 
@@ -189,11 +185,7 @@ class LikePostsDB {
 	public function deleteLikePost($data = array()) {
 		global $smcFunc, $user_info;
 
-		if ($user_info['is_guest']) {
-			return false;
-		}
-
-		if (!is_array($data)) {
+		if ($user_info['is_guest'] || !is_array($data)) {
 			return false;
 		}
 
@@ -220,7 +212,6 @@ class LikePostsDB {
 				'count' => 1,
 			)
 		);
-
 		return true;
 	}
 
@@ -231,11 +222,11 @@ class LikePostsDB {
 	public function getLikeTopicCount($boardId = 0, $topicId = 0, $msg_id = 0) {
 		global $smcFunc;
 
-		$count = 0;
 		if (empty($boardId) || empty($topicId) || empty($msg_id)) {
 			return false;
 		}
 
+		$count = 0;
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(lp.id_msg) as count
 			FROM {db_prefix}like_post as lp
