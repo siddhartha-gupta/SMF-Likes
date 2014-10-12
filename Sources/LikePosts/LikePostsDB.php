@@ -583,7 +583,7 @@ class LikePostsDB {
 		global $context, $smcFunc, $scripturl, $settings, $user_info, $modSettings;
 
 		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_msg, lp.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
+			SELECT lp.id_msg, m.id_topic, m.subject, mem.real_name, lp.id_member_gave, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.avatar
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
 			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
