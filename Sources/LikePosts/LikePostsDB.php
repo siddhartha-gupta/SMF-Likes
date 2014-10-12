@@ -666,12 +666,12 @@ class LikePostsDB {
 			);
 		} else {
 			// Lets fetch info of users who liked the message
-			$mostLikedMessage['member_liked_data'] = $this->fetchMembers($id_member_gave);
+			$mostLikedMessage['member_liked_data'] = $this->fetchMembers(array('id_member_gave' => $id_member_gave));
 		}
 		return $mostLikedMessage;
 	}
 
-	private function fetchMembers($id_member_gave) {
+	private function fetchMembers($data = array('id_member_gave' => '')) {
 		global $smcFunc, $scripturl, $modSettings, $settings;
 
 		$request = $smcFunc['db_query']('', '
@@ -680,7 +680,7 @@ class LikePostsDB {
 			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = mem.id_member)
 			WHERE mem.id_member IN ({raw:id_member_gave})',
 			array(
-				'id_member_gave' => $id_member_gave
+				'id_member_gave' => $data['id_member_gave']
 			)
 		);
 
@@ -723,12 +723,12 @@ class LikePostsDB {
 			);
 		} else {
 			// Lets fetch few messages in the topic
-			$mostLikedTopic['msg_data'] = $this->fetchTopicMessages($id_msg);
+			$mostLikedTopic['msg_data'] = $this->fetchTopicMessages(array('id_msg' => $id_msg));
 		}
 		return $mostLikedTopic;
 	}
 
-	private function fetchTopicMessages($id_msg) {
+	private function fetchTopicMessages($data = array('id_msg' => '')) {
 		global $smcFunc, $scripturl, $modSettings, $settings;
 
 		$request = $smcFunc['db_query']('', '
@@ -740,7 +740,7 @@ class LikePostsDB {
 			ORDER BY m.id_msg
 			LIMIT 10',
 			array(
-				'id_msg' => $id_msg
+				'id_msg' => $data['id_msg']
 			)
 		);
 
@@ -789,12 +789,12 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			$mostLikedBoard['topic_data'] = $this->fetchBoardTopics($id_topics);
+			$mostLikedBoard['topic_data'] = $this->fetchBoardTopics(array('id_topics' => $id_topics));
 		}
 		return $mostLikedBoard;
 	}
 
-	private function fetchBoardTopics($id_topics) {
+	private function fetchBoardTopics($data = array('id_topics' => '')) {
 		global $smcFunc, $scripturl, $modSettings, $settings;
 
 		// Lets fetch few topics from this board
@@ -807,7 +807,7 @@ class LikePostsDB {
 			WHERE t.id_topic IN ({raw:id_topics})
 			ORDER BY t.id_topic DESC',
 			array(
-				'id_topics' => $id_topics
+				'id_topics' => $data['id_topics']
 			)
 		);
 
@@ -867,12 +867,12 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			$mostLikedMember['topic_data'] = $this->fetchMostLikedUserPosts($id_member);
+			$mostLikedMember['topic_data'] = $this->fetchMostLikedUserPosts(array('id_member' => $id_member));
 		}
 		return $mostLikedMember;
 	}
 
-	private function fetchMostLikedUserPosts($id_member) {
+	private function fetchMostLikedUserPosts($data = array('id_member' => '')) {
 		global $smcFunc;
 
 		// Lets fetch highest posts of user like by others
@@ -887,16 +887,16 @@ class LikePostsDB {
 			ORDER BY like_count DESC
 			LIMIT 10',
 			array(
-				'id_member' => $id_member
+				'id_member' => $data['id_member']
 			)
 		);
 
-		$data = array();
+		$topic_data = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request)) {
 			censorText($row['body']);
 			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
 
-			$data[] = array(
+			$topic_data[] = array(
 				'id_topic' => $row['id_topic'],
 				'id_msg' => $row['id_msg'],
 				'like_count' => $row['like_count'],
@@ -906,7 +906,7 @@ class LikePostsDB {
 			);
 		}
 		$smcFunc['db_free_result']($request);
-		return $data;
+		return $topic_data;
 	}
 
 	public function getStatsMostLikesGivenUser() {
