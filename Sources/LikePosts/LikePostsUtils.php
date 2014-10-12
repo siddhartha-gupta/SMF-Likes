@@ -36,6 +36,14 @@ if (!defined('SMF'))
 
 class LikePostsUtils {
 
+	private $permToCheck = array();
+	private $guestPermission = array(
+		'lp_guest_can_view_likes_in_posts',
+		'lp_guest_can_view_likes_in_boards',
+		'lp_guest_can_view_likes_in_profiles',
+		'lp_guests_can_view_likes_stats'
+	);
+
 	public function __construct() {}
 
 	public function checkJsonEncodeDecode() {
@@ -79,7 +87,7 @@ class LikePostsUtils {
 	 * @param string[] $permissions
 	 */
 	public function isAllowedTo($permissions) {
-		global $modSettings, $user_info;
+		global $user_info;
 
 		if ($user_info['is_admin']) {
 			return true;
@@ -90,36 +98,45 @@ class LikePostsUtils {
 		}
 
 		$result = true;
-		$guestPermission = array(
-			'lp_guest_can_view_likes_in_posts',
-			'lp_guest_can_view_likes_in_boards',
-			'lp_guest_can_view_likes_in_profiles',
-			'lp_guests_can_view_likes_stats'
-		);
 
 		if ($user_info['is_guest']) {
-			$result = false;
-			$permToCheck = array_intersect($guestPermission, $permissions);
-			foreach ($permToCheck as $permission) {
-				if (isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
-					$result = true;
-				} else {
-					$result = false;
-				}
-			}
+			$this->permToCheck = array_intersect($this->guestPermission, $permissions);
+			$result = $this->checkGuestPermission();
 		} else {
-			$permToCheck = array_diff($permissions, $guestPermission);
-			foreach ($permToCheck as $permission) {
-				if (!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
-					$result = false;
-				} else {
-					$allowedGroups = explode(',', $modSettings[$permission]);
-					$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+			$this->permToCheck = array_diff($permissions, $this->guestPermission);
+			$result = $this->checkUserPermission();
+		}
+		return $result;
+	}
 
-					if (empty($groupsPassed)) {
-						$result = false;
-						break;
-					}
+	private function checkGuestPermission() {
+		global $modSettings;
+
+		$result = false;
+		foreach ($this->permToCheck as $permission) {
+			if (isset($modSettings[$permission]) && !empty($modSettings[$permission])) {
+				$result = true;
+			} else {
+				$result = false;
+			}
+		}
+		return $result;
+	}
+
+	private function checkUserPermission() {
+		global $modSettings, $user_info;
+
+		$result = true;
+		foreach ($this->permToCheck as $permission) {
+			if (!isset($modSettings[$permission]) || strlen($modSettings[$permission]) === 0) {
+				$result = false;
+			} else {
+				$allowedGroups = explode(',', $modSettings[$permission]);
+				$groupsPassed = array_intersect($allowedGroups, $user_info['groups']);
+
+				if (empty($groupsPassed)) {
+					$result = false;
+					break;
 				}
 			}
 		}
