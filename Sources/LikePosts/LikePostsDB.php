@@ -704,11 +704,12 @@ class LikePostsDB {
 		// Most liked topic
 		$mostLikedTopic = array();
 		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_topic, lp.id_board, GROUP_CONCAT(DISTINCT(CONVERT(lp.id_msg, CHAR(8))) SEPARATOR ",") AS id_msg, COUNT(lp.id_topic) AS like_count
+			SELECT t.id_topic, t.id_board, GROUP_CONCAT(DISTINCT(CONVERT(lp.id_msg, CHAR(8))) SEPARATOR ",") AS id_msg, COUNT(t.id_topic) AS like_count
 			FROM {db_prefix}like_post as lp
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = lp.id_board)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_first_msg = lp.id_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			WHERE {query_wanna_see_board}
-			GROUP BY lp.id_topic
+			GROUP BY t.id_topic
 			ORDER BY like_count DESC
 			LIMIT 1',
 			array()
@@ -770,11 +771,12 @@ class LikePostsDB {
 		// Most liked board
 		$mostLikedBoard = array();
 		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_board, b.name, b.num_topics, b.num_posts, count(DISTINCT(lp.id_topic)) AS topics_liked, count(DISTINCT(lp.id_msg)) AS msgs_liked, SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT(CONVERT(lp.id_topic, CHAR(8))) ORDER BY lp.id_topic DESC SEPARATOR ","), ",", 10) AS id_topic, COUNT(lp.id_board) AS like_count
+			SELECT t.id_board, b.name, b.num_topics, b.num_posts, count(DISTINCT(t.id_topic)) AS topics_liked, count(DISTINCT(lp.id_msg)) AS msgs_liked, SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT(CONVERT(t.id_topic, CHAR(8))) ORDER BY t.id_topic DESC SEPARATOR ","), ",", 10) AS id_topic, COUNT(t.id_board) AS like_count
 			FROM {db_prefix}like_post as lp
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = lp.id_board)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_first_msg = lp.id_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
 			WHERE {query_wanna_see_board}
-			GROUP BY lp.id_board
+			GROUP BY t.id_board
 			ORDER BY like_count DESC
 			LIMIT 1',
 			array()
@@ -865,37 +867,46 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			// Lets fetch highest liked posts by this user
-			$request = $smcFunc['db_query']('', '
-				SELECT lp.id_msg, lp.id_topic, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, m.smileys_enabled
-				FROM {db_prefix}like_post as lp
-				INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-				WHERE {query_wanna_see_board}
-				AND lp.id_member_received = {int:id_member}
-				GROUP BY lp.id_msg
-				ORDER BY like_count DESC
-				LIMIT 10',
-				array(
-					'id_member' => $id_member
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
-				censorText($row['body']);
-				$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
-
-				$mostLikedMember['topic_data'][] = array(
-					'id_topic' => $row['id_topic'],
-					'id_msg' => $row['id_msg'],
-					'like_count' => $row['like_count'],
-					'subject' => $row['subject'],
-					'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
-					'poster_time' => timeformat($row['poster_time']),
-				);
-			}
-			$smcFunc['db_free_result']($request);
+			$mostLikedMember['topic_data'] = $this->fetchMostLikedUserPosts($id_member);
 		}
 		return $mostLikedMember;
+	}
+
+	private function fetchMostLikedUserPosts($id_member) {
+		global $smcFunc;
+
+		// Lets fetch highest posts of user like by others
+		$request = $smcFunc['db_query']('', '
+			SELECT lp.id_msg, m.id_topic, COUNT(lp.id_msg) AS like_count, m.subject, m.body, m.poster_time, m.smileys_enabled
+			FROM {db_prefix}like_post as lp
+			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			WHERE {query_wanna_see_board}
+			AND lp.id_member_received = {int:id_member}
+			GROUP BY lp.id_msg
+			ORDER BY like_count DESC
+			LIMIT 10',
+			array(
+				'id_member' => $id_member
+			)
+		);
+
+		$data = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			censorText($row['body']);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
+
+			$data[] = array(
+				'id_topic' => $row['id_topic'],
+				'id_msg' => $row['id_msg'],
+				'like_count' => $row['like_count'],
+				'subject' => $row['subject'],
+				'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
+				'poster_time' => timeformat($row['poster_time']),
+			);
+		}
+		$smcFunc['db_free_result']($request);
+		return $data;
 	}
 
 	public function getStatsMostLikesGivenUser() {
@@ -904,9 +915,10 @@ class LikePostsDB {
 		// Most liked board
 		$mostLikeGivingMember = array();
 		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_member_gave, COUNT(lp.id_msg) AS like_count, GROUP_CONCAT(DISTINCT(CONVERT(lp.id_msg, CHAR(8))) ORDER BY lp.id_topic DESC SEPARATOR ",") AS id_msgs, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.real_name, mem.avatar, mem.date_registered, mem.posts
+			SELECT lp.id_member_gave, COUNT(lp.id_msg) AS like_count, GROUP_CONCAT(DISTINCT(CONVERT(lp.id_msg, CHAR(8))) ORDER BY m.id_topic DESC SEPARATOR ",") AS id_msgs, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type, mem.real_name, mem.avatar, mem.date_registered, mem.posts
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_gave)
+			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
 			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_gave)
 			GROUP BY lp.id_member_gave
 			ORDER BY like_count DESC
@@ -934,34 +946,41 @@ class LikePostsDB {
 				'noDataMessage' => $txt['lp_error_no_data']
 			);
 		} else {
-			// Lets fetch highest liked posts by this user
-			$request = $smcFunc['db_query']('', '
-				SELECT m.id_msg, m.id_topic, m.subject, m.body, m.poster_time, m.smileys_enabled
-				FROM {db_prefix}messages as m
-				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-				WHERE {query_wanna_see_board}
-				AND m.id_msg IN ({raw:id_msgs})
-				ORDER BY m.id_msg DESC
-				LIMIT 10',
-				array(
-					'id_msgs' => $id_msgs
-				)
-			);
-			while ($row = $smcFunc['db_fetch_assoc']($request)) {
-				censorText($row['body']);
-				$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
-
-				$mostLikeGivingMember['topic_data'][] = array(
-					'id_msg' => $row['id_msg'],
-					'id_topic' => $row['id_topic'],
-					'subject' => $row['subject'],
-					'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
-					'poster_time' => timeformat($row['poster_time']),
-				);
-			}
-			$smcFunc['db_free_result']($request);
+			$mostLikeGivingMember['topic_data'] = $this->fetchMostLikedGivenUserPosts($id_msgs);
 		}
 		return $mostLikeGivingMember;
+	}
+
+	private function fetchMostLikedGivenUserPosts() {
+		// Lets fetch highest liked posts by this user
+		$request = $smcFunc['db_query']('', '
+			SELECT m.id_msg, m.id_topic, m.subject, m.body, m.poster_time, m.smileys_enabled
+			FROM {db_prefix}messages as m
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+			WHERE {query_wanna_see_board}
+			AND m.id_msg IN ({raw:id_msgs})
+			ORDER BY m.id_msg DESC
+			LIMIT 10',
+			array(
+				'id_msgs' => $id_msgs
+			)
+		);
+
+		$data = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			censorText($row['body']);
+			$msgString = LikePosts::$LikePostsUtils->trimContent($row['body'], ' ', 255);
+
+			$data[] = array(
+				'id_msg' => $row['id_msg'],
+				'id_topic' => $row['id_topic'],
+				'subject' => $row['subject'],
+				'body' => parse_bbc($msgString, $row['smileys_enabled'], $row['id_msg']),
+				'poster_time' => timeformat($row['poster_time']),
+			);
+		}
+		$smcFunc['db_free_result']($request);
+		return $data;
 	}
 }
 
