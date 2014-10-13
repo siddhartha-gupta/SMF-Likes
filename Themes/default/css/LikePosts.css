@@ -402,3 +402,31 @@
 	font-size: 20px;
 	line-height: normal;
 }
+
+.cursor_pointer {
+	cursor: pointer;
+}
+
+.hide_elem {
+	display: none;
+}
+
+.lp_child_board {
+	padding-left: 20px;
+}
+
+.lp_admin_board_footer {
+	padding: 0 10px 10px;
+}
+
+.lp_admin_recount_text {
+	width: 70%;
+	float:left;
+	position:relative
+}
+
+.lp_admin_recount_btn {
+	width: 30%;
+	float:left;
+	position:relative
+}

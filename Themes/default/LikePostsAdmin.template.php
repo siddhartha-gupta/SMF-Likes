@@ -138,7 +138,7 @@ function template_lp_admin_permission_settings() {
 						$permVals = isset($modSettings[$perm]) && strlen($modSettings[$perm]) > 0 ? (explode(',', $modSettings[$perm])) : '';
 
 						echo ' <fieldset>';
-						echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_perm_' . $perm] . '</legend>';
+						echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" class="cursor_pointer">' . $txt['lp_perm_' . $perm] . '</legend>';
 					
 						foreach ($context['like_posts']['groups'] as $group) {
 							echo '
@@ -149,7 +149,7 @@ function template_lp_admin_permission_settings() {
 
 
 					echo ' <fieldset>
-						<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_guest_permissions'] . '</legend>';
+						<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" class="cursor_pointer">' . $txt['lp_guest_permissions'] . '</legend>';
 
 						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
 							echo '
@@ -187,17 +187,17 @@ function template_lp_admin_board_settings() {
 
 				foreach ($context['categories'] as $key => $category) {
 					echo ' <fieldset>';
-					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $category['name'] . '</legend>';
+					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" class="cursor_pointer">' . $category['name'] . '</legend>';
 				
 					foreach ($category['boards'] as $board) {
-						echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
+						echo '<div class="', isset($board['child_level']) && !empty($board['child_level']) ? 'lp_child_board': '' ,'">
 							<input' . (is_array($activeBoards) && in_array($board['id'], $activeBoards) ? ' checked="checked"' : '') . ' id="' . $board['id'] . '" type="checkbox" name="active_board[]" value="' . $board['id'] . '" /><label for="' . $board['name'] . '">' . $board['name'] . '</label></div>';
 					}
 					echo ' </fieldset>';
 				}
 				echo '
 				</div>
-				<div style="padding: 0 10px 10px;">
+				<div class="lp_admin_board_footer">
 					<input type="checkbox" value="0" onclick="lpObj.likePostsAdmin.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
@@ -221,11 +221,11 @@ function template_lp_admin_recount_stats() {
 				<div class="content">';
 
 	echo '
-				<fieldset><legend>Recount members total likes</legend>
-					<div style="width: 70%; float:left; position:relative">
-						Reset members account
+				<fieldset><legend>', $txt['lp_recount_total_likes'], '</legend>
+					<div class="lp_admin_recount_text">
+						', $txt['lp_reset_total_likes_received'], '
 					</div>
-					<div style="width: 30%; float:left; position:relative">
+					<div class="lp_admin_recount_btn">
 						<span class="floatright">
 							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.likePostsAdmin.recountStats(event, {}); return false;">
 						</span>
