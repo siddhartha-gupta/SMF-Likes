@@ -79,7 +79,8 @@ function routeLikePostsAdmin() {
 		'boardsettings' => 'boardsettings',
 		'saveboardsettings' => 'saveBoardsettings',
 		'recountlikestats' => 'recountLikeStats',
-		'recountlikestotal' => 'recountLikesTotal'
+		'recountlikestotal' => 'recountLikesTotal',
+		'checklikes' => 'checkLikes'
 	);
 
 	//wakey wakey, call the func you lazy

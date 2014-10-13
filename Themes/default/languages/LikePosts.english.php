@@ -75,6 +75,8 @@ $txt['lp_perm_lp_can_view_likes_stats'] = 'Can view like stats';
 $txt['lp_perm_lp_can_view_likes_notification'] = 'Can view like posts notifications';
 $txt['lp_board_settings'] = 'Board Settings';
 $txt['lp_board_settings_desc'] = 'Select on which boards you want to activate the mod';
+$txt['lp_recount_likes'] = 'Check likes table';
+$txt['lp_check_likes'] = 'Optimize and remove likes from deleted topics';
 $txt['lp_recount_total_likes'] = 'Recount members total likes';
 $txt['lp_reset_total_likes_received'] = 'Reset members total likes received';
 

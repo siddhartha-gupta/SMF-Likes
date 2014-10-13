@@ -546,7 +546,26 @@
 	function likePostsAdmin() {}
 
 	likePostsAdmin.prototype = function() {
-		var recountStats = function(event, options) {
+		var optimizeLikes = function(event, options) {
+				if (!lpObj.likePostsUtils.isNullUndefined(event)) {
+					event.preventDefault();
+				}
+
+				lpObj.jQRef.ajax({
+					type: "POST",
+					url: smf_scripturl + '?action=admin;area=likeposts;sa=checklikes',
+					dataType: "json",
+					data: {},
+					success: function(resp) {
+						recountStats(null, {});
+					},
+					error: function(err) {
+						console.log(err);
+					}
+				});
+			},
+
+			recountStats = function(event, options) {
 				if (!lpObj.likePostsUtils.isNullUndefined(event)) {
 					event.preventDefault();
 				}
@@ -640,6 +659,7 @@
 			};
 
 		return {
+			'optimizeLikes': optimizeLikes,
 			'recountStats': recountStats,
 			'selectAllBoards': selectAllBoards
 		};

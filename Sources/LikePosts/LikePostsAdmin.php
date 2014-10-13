@@ -263,6 +263,19 @@ class LikePostsAdmin {
 		$resp = array('totalWork' => (int) $result, 'endLimit' => (int) $endLimit);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}
+
+	public function checkLikes() {
+		isAllowedTo('admin_forum');
+
+		// Lets fire the bullet.
+		@set_time_limit(300);
+
+		// Result carries totalWork to do
+		$result = LikePosts::$LikePostsDB->optimizeLikes();
+
+		$resp = array('result' => true);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
 }
 
 ?>

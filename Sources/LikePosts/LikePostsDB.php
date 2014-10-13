@@ -139,6 +139,44 @@ class LikePostsDB {
 		return $totalWorkCalc;
 	}
 
+
+	/**
+	 * To clean up the likes table from delete posts
+	 * @param integer $startLimit
+	 * @param integer $totalWork
+	 */
+	public function optimizeLikes() {
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT lp.id_msg
+			FROM {db_prefix}like_post AS lp
+			LEFT JOIN {db_prefix}messages AS m ON (lp.id_msg = m.id_msg)
+			WHERE m.id_msg is null',
+			array()
+		);
+
+		$msg_id = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			$msg_id[] = $row['id_msg'];
+		}
+
+		if (count($msg_id) > 0) {
+			$msg_id_list = implode(",", $msg_id);
+
+			$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}like_post
+			WHERE id_msg IN ({raw:msg_id_list})',
+				array(
+					'msg_id_list' => $msg_id_list,
+				)
+			);
+		}
+
+		$smcFunc['db_free_result']($request);
+		return true;
+	}
+
 	/*
 	* Function to add like post entry in DB
 	* @param array $data
