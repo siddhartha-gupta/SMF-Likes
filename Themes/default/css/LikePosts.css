@@ -104,7 +104,7 @@
 	text-align: right;
 	line-height: 33px;
 	width: 0;
-	background: url(../images/progress_bar.gif) repeat-x;
+	background: url(../images/LikePosts/progress_bar.gif) repeat-x;
 	font-size: 20px;
 }
 
@@ -218,7 +218,7 @@
 	width: 100px;
 	height: 100px;
 	z-index: 101;
-	background-image: url(../images/preloader.gif);
+	background-image: url(../images/LikePosts/preloader.gif);
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;

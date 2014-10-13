@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.6.1
+* @version 2.0
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2014, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -96,7 +96,7 @@ function template_lp_stats() {
 
 	echo '<script type="text/javascript"><!-- // --><![CDATA[
 		window.onload = function() {
-			likePostStats.prototype.init({
+			lpObj.likePostStats.init({
 				onError: ' . JavaScriptEscape($context['like_post_stats_error']) . ',
 				txtStrings: {
 					topic: ' . JavaScriptEscape($txt['lp_topic']) . ',

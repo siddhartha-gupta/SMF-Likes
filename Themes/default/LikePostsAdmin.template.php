@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.6.1
+* @version 2.0
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2014, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -134,11 +134,11 @@ function template_lp_admin_permission_settings() {
 				<span class="topslice"><span></span></span>
 					<div class="content">';
 
-					foreach ($context['like_posts']['permission_settings'] as $perm) {
+					foreach ($context['like_posts']['groups_permission_settings'] as $perm) {
 						$permVals = isset($modSettings[$perm]) && strlen($modSettings[$perm]) > 0 ? (explode(',', $modSettings[$perm])) : '';
 
 						echo ' <fieldset>';
-						echo '<legend>' . $txt['lp_perm_' . $perm] . '</legend>';
+						echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_perm_' . $perm] . '</legend>';
 					
 						foreach ($context['like_posts']['groups'] as $group) {
 							echo '
@@ -149,11 +149,11 @@ function template_lp_admin_permission_settings() {
 
 
 					echo ' <fieldset>
-						<legend>' . $txt['lp_guest_permissions'] . '</legend>';
+						<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $txt['lp_guest_permissions'] . '</legend>';
 
 						foreach ($context['like_posts']['guest_permission_settings'] as $perm) {
 							echo '
-								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['lp_guest_perm_' . $perm] . '</label><br />';
+								<input' . (isset($modSettings[$perm]) && !empty($modSettings[$perm]) ? ' checked="checked"' : '') . ' type="checkbox" name="' . $perm . '" value="1" /> <label>' . $txt['lp_perm_' . $perm] . '</label><br />';
 						}
 					echo ' </fieldset>';
 
@@ -187,7 +187,7 @@ function template_lp_admin_board_settings() {
 
 				foreach ($context['categories'] as $key => $category) {
 					echo ' <fieldset>';
-					echo '<legend onclick="lpObj.selectInputByLegend(event, this)" data-allselected="false" style="cursor: pointer">' . $category['name'] . '</legend>';
+					echo '<legend onclick="lpObj.likePostsUtils.selectInputByLegend(event, this)" data-allselected="" style="cursor: pointer">' . $category['name'] . '</legend>';
 				
 					foreach ($category['boards'] as $board) {
 						echo '<div style="', isset($board['child_level']) && !empty($board['child_level']) ? 'padding-left: 20px;': '' ,'">
@@ -198,7 +198,7 @@ function template_lp_admin_board_settings() {
 				echo '
 				</div>
 				<div style="padding: 0 10px 10px;">
-					<input type="checkbox" value="0" onclick="lpObj.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
+					<input type="checkbox" value="0" onclick="lpObj.likePostsAdmin.selectAllBoards(event, this)" /><label>' . $txt['lp_select_all_boards'] . '</label><br /><br />
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					<input type="submit" name="submit" value="', $txt['lp_submit'], '" tabindex="', $context['tabindex']++, '" class="button_submit" />
 				</div>
@@ -227,7 +227,7 @@ function template_lp_admin_recount_stats() {
 					</div>
 					<div style="width: 30%; float:left; position:relative">
 						<span class="floatright">
-							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.recountStats({\'activity\': \'totallikes\'}); return false;">
+							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.likePostsAdmin.recountStats(event, {}); return false;">
 						</span>
 					</div>
 					<div class="member_count_precentage"></div>
@@ -239,112 +239,6 @@ function template_lp_admin_recount_stats() {
 		</div>
 	</div>
 	<br class="clear">';
-}
-
-function template_lp_show_own_likes() {
-	global $context, $settings, $scripturl, $txt;
-
-	echo '
-	<div class="tborder">
-		<div class="cat_bar">
-			<h3 class="catbg">', $txt['lp_like_you_gave'], '</h3>
-		</div>';
-
-		echo '
-		<table class="table_grid" width="100%" cellspacing="0">
-			<thead>
-				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">', $txt['lp_post_info'], '</th>
-					<th class="lefttext last_th" scope="col" width="20%">', $txt['lp_no_of_likes'], '</th>
-				</tr>
-			</thead>
-			<tbody>';
-
-	echo '
-		<div class="pagesection">
-			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
-		</div>';
-
-		foreach ($context['like_post']['own_like_data'] as $key => $data) {
-			echo '
-				<tr>
-					<td class="windowbg" title="', $data['id'], '">
-						<a class="some_data" href="', $data['href'] ,'">
-							', $data['subject'],'
-						</a>
-						<span style="display: none;">
-							', $data['body'],'
-						</span>
-						<br />
-						<span class="smalltext">
-							', $data['time'],'
-						</span>
-					</td>
-					<td class="windowbg2 smalltext">';
-
-				echo '
-						<span>', $data['total_likes'],'</span>';
-
-				echo '
-					</td>
-				</tr>';
-		}
-
-		echo '
-			</tbody>
-		</table>
-	</div>';
-}
-
-function template_lp_show_others_likes() {
-	global $context, $settings, $scripturl, $txt;
-
-	echo '
-	<div class="tborder">
-		<div class="cat_bar">
-			<h3 class="catbg">', $txt['lp_like_you_obtained'], '</h3>
-		</div>';
-
-		echo '
-		<table class="table_grid" width="100%" cellspacing="0">
-			<thead>
-				<tr class="titlebg">
-					<th class="lefttext first_th" scope="col" width="80%">', $txt['lp_post_info'], '</th>
-					<th class="lefttext last_th" scope="col" width="20%">', $txt['lp_no_of_likes'], '</th>
-				</tr>
-			</thead>
-			<tbody>';
-
-		echo '
-		<div class="pagesection">
-			<span>', $txt['pages'], ': ', $context['page_index'], '</span>
-		</div>';
-
-		foreach ($context['like_post']['others_like_data'] as $key => $data) {
-			echo '
-				<tr>
-					<td class="windowbg" title="', $data['id'], '">
-						<a class="some_data" href="', $data['href'] ,'" title="">
-							', $data['subject'],'
-						</a>
-						<span style="display: none;">
-							', $data['body'],'
-						</span>
-						<br />
-						<span class="smalltext">', $data['time'], '</span>
-					</td>
-					<td class="windowbg2 smalltext" onclick="lpObj.showMessageLikedInfo(', $data['id'], ');">
-						<span>
-							', $data['total_likes'], '
-						</span>
-					</td>
-				</tr>';
-		}
-
-		echo '
-			</tbody>
-		</table>
-	</div>';
 }
 
 ?>

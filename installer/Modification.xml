@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+* @package manifest file for Like Posts
+* @version 2.0
+* @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* @copyright Copyright (c) 2014, Siddhartha Gupta
+* @license http://www.mozilla.org/MPL/MPL-1.1.html
+*/
+
+/*
+* Version: MPL 1.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Initial Developer of the Original Code is
+*  Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
+* Portions created by the Initial Developer are Copyright (C) 2012
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s): Big thanks to all contributor(s)
+* emanuele45 (https://github.com/emanuele45)
+*
+*/
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>sid2varun:like_posts</id>
+	<version>2.0</version>
+
+	<file name="$themedir/Display.template.php">
+		<operation>
+			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
+			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
+				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
+				LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
+
+				$total_likes = isset($context['like_posts']['posters_data'][$message['member']['id']]) ? $context['like_posts']['posters_data'][$message['member']['id']] : 0;
+
+				echo '
+								<li class="postcount"><a href="', $scripturl ,'?action=profile;area=likeposts;sa=seeotherslikes;u=', $message['member']['id'], '">', $txt['lp_total_likes'] . ': ' . $total_likes, '</a></li>';
+			}
+
+			]]></add>
+		</operation>
+
+		<operation>
+			<search position="after"><![CDATA[// Show the member's signature?]]></search>
+			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
+			LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
+
+			$context['like_posts']['single_msg_data'] = LikePosts::$LikePostsUtils->isPostLiked($context['like_posts']['msgs_liked_data'], $message['id']);
+
+			echo '<div class="like_post_box floatleft">';
+			if(!$message['is_message_author'] && LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
+				echo '
+							<a class="', $context['like_posts']['single_msg_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event,', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
+			}
+
+			if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_posts'))) {
+				echo '
+							<a id="like_post_info_'. $message['id'] .'" href="javascript:void(0)" onclick="lpObj.likeHandler.showMessageLikedInfo(', $message['id'], ')">
+								', !empty($context['like_posts']['single_msg_data']['count']) ? '<span id="like_count_'. $message['id'] .'">('. $context['like_posts']['single_msg_data']['count_text'] .')</span>' : '', '
+							</a>';
+			}
+			echo '</div>';
+		}
+
+		]]></add>
+		</operation>
+	</file>
+
+	<file name="$themedir/MessageIndex.template.php">
+		<operation>
+			<search position="before"><![CDATA[							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a>';]]></search>
+			<add><![CDATA[
+
+			if(!empty($modSettings['lp_mod_enable'])&& 
+				!empty($modSettings['lp_show_like_on_boards']) && 
+				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
+
+				$context['like_posts']['single_topic_data'] = LikePosts::$LikePostsUtils->isTopicLiked($context['like_posts']['topics_liked_data'], $topic['id']);
+				echo '
+					<div class="like_post_box floatright">';
+
+				if($context['user']['id'] !== $topic['first_post']['member']['id'] && 
+					LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
+
+					echo '
+								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
+				}
+		
+				if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_boards'))) {
+					echo '
+								<a id="like_post_info_'. $topic['first_post']['id'] .'" href="javascript:void(0)" onclick="lpObj.likeHandler.showMessageLikedInfo(', $topic['first_post']['id'], ')">', !empty($context['like_posts']['single_topic_data']['count']) ? '<span id="like_count_'. $topic['first_post']['id'] .'">('. $context['like_posts']['single_topic_data']['count_text'] .')</span>' : '', '</a>';
+				}
+
+				echo '
+					</div>';
+			}]]></add>
+		</operation>
+	</file>
+
+    <file name="$themedir/index.template.php">
+		<operation>
+			<search position="before"><![CDATA[<li><a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a></li>';]]></search>
+			<add><![CDATA[
+
+		if(LikePosts::$LikePostsUtils->showLikeNotification()) {
+			echo '
+					<li><a href="#" class="showLikeNotification" onclick="lpObj.likePostsNotification.showLikeNotification()">', $txt['like_show_notifications'], '</a></li>';
+		}]]></add>
+		</operation>
+	</file>
+    
+	<file name="$sourcedir/Display.php">
+		<operation>
+			<search position="after"><![CDATA[// Guests can't mark topics read or for notifications, just can't sorry.]]></search>
+			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
+		LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
+
+		LikePosts::loadClass('LikePostsData');
+		$lp_posters_data = LikePosts::$LikePostsData->posterInfo($posters);
+		$context['like_posts']['posters_data'] = isset($lp_posters_data) ? $lp_posters_data : array();
+
+		$topic_liked_data = LikePosts::$LikePostsData->getAllMessagesInfo($messages);
+		$context['like_posts']['msgs_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
+	}
+
+	]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/MessageIndex.php">
+		<operation>
+			<search position="after"><![CDATA[
+	$context['jump_to'] = array(]]></search>
+			<add><![CDATA[
+	if(!empty($modSettings['lp_mod_enable']) && 
+		!empty($modSettings['lp_show_like_on_boards']) && 
+		LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board'])) {
+			LikePosts::loadClass('LikePostsData');
+			$topic_liked_data = LikePosts::$LikePostsData->getAllTopicsInfo($topic_ids);
+			$context['like_posts']['topics_liked_data'] = isset($topic_liked_data) ? $topic_liked_data : array();
+	}
+]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="after"><![CDATA[$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';]]></search>
+			<add><![CDATA[$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/css/LikePosts.css" />';
+
+	]]></add>
+		</operation>
+	</file>
+</modification>

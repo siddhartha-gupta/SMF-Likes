@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 1.6.1
+* @version 2.0
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2014, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -35,7 +35,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
 elseif (!defined('SMF'))
-	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as DIALOGO\'s index.php.');
+	exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 global $smcFunc, $db_prefix, $sourcedir;
 
@@ -57,20 +57,6 @@ $tables = array(
 				'name' => 'id_msg',
 				'type' => 'int',
 				'size' => 10,
-				'unsigned' => true,
-				'default' => '0',
-			),
-			array(
-				'name' => 'id_topic',
-				'type' => 'mediumint',
-				'size' => 8,
-				'unsigned' => true,
-				'default' => '0',
-			),
-			array(
-				'name' => 'id_board',
-				'type' => 'smallint',
-				'size' => 5,
 				'unsigned' => true,
 				'default' => '0',
 			),
@@ -158,42 +144,59 @@ function lpAddUpdateSettings() {
 	$request = $smcFunc['db_query']('', '
 		SELECT * 
 		FROM {db_prefix}settings
-		WHERE variable =  {string:like_post_mod_version}
+		WHERE variable =  {string:lp_mod_version}
 		LIMIT 1',
 		array(
-			'like_post_mod_version' => 'like_post_mod_version',
+			'lp_mod_version' => 'lp_mod_version',
 		)
 	);
 
 	if ($smcFunc['db_num_rows']($request) == 0) {
 		// For all general settings add 'like_post_' as prefix
-		updateSettings(array('like_post_mod_version' => '1.6.1', 'like_post_enable' => 1, 'like_per_profile_page' => 10, 'like_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 	} else {
 		list ($last_version) = $smcFunc['db_fetch_row']($request);
-
-		if (version_compare('1.6.1', $last_version) >= 0) {
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}settings
-				SET value = {string:current_version}
-				WHERE variable = {string:like_post_mod_version}',
-				array(
-					'current_version' => '1.6.1',
-					'like_post_mod_version' => 'like_post_mod_version'
-				)
-			);
+		if (version_compare('2.0', $last_version) >= 0) {
+			updateModVersion();
 		}
 	}
 	$smcFunc['db_free_result']($request);
 }
 
-// Add hooks and plugin the mod
-add_integration_function('integrate_pre_include', '$sourcedir/LikePostsHooks.php');
-add_integration_function('integrate_pre_include', '$sourcedir/LikePosts.php');
-add_integration_function('integrate_admin_areas', 'LP_addAdminPanel');
-add_integration_function('integrate_profile_areas', 'LP_addProfilePanel');
-add_integration_function('integrate_actions', 'LP_addAction', true);
-add_integration_function('integrate_load_theme', 'LP_includeAssets', true);
-add_integration_function('integrate_menu_buttons', 'LP_addMenu');
+function updateModVersion() {
+	global $smcFunc;
+
+	$smcFunc['db_query']('', '
+		UPDATE {db_prefix}settings
+		SET value = {string:current_version}
+		WHERE variable = {string:lp_mod_version}',
+		array(
+			'current_version' => '2.0',
+			'lp_mod_version' => 'lp_mod_version'
+		)
+	);
+}
+
+function upgrade2_0() {
+	global $smcFunc;
+
+	$like_post_permissions = array('like_post_mod_version', 'like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
+
+	$smcFunc['db_query']('', '
+		DELETE FROM {db_prefix}settings
+		WHERE variable IN ({array_string:like_post_permissions})',
+		array(
+			'like_post_permissions' => $like_post_permissions,
+		)
+	);
+
+	$smcFunc['db_query']('',
+		'ALTER TABLE {db_prefix}like_post
+		DROP COLUMN id_topic, id_board'
+	);
+
+	updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+}
 
 if (SMF == 'SSI')
 echo 'Database adaptation successful!';

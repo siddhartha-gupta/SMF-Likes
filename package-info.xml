@@ -3,49 +3,31 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>sid2varun:like_posts</id>
 	<name>Like Posts</name>
-	<version>1.6.1</version>
+	<version>2.0</version>
 	<type>modification</type>
 
 	<install for="2.0 - 2.0.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
-		<require-file name="Sources/LikePostsHooks.php" destination="$sourcedir">File to add all hooks</require-file>
-		<require-file name="Sources/LikePostsAdmin.php" destination="$sourcedir">Admin panel of mod</require-file>
-		<require-file name="Sources/LikePostsProfile.php" destination="$sourcedir">Profile panel of mod</require-file>
-		<require-file name="Sources/LikePostsStats.php" destination="$sourcedir">Stats controller of mod</require-file>
-		<require-file name="Sources/LikePosts.php" destination="$sourcedir">Controller of user interface</require-file>
-		<require-file name="Sources/Subs-LikePosts.php" destination="$sourcedir">Database handler</require-file>
-		<require-file name="Themes/default/LikePosts.template.php" destination="$themedir">View of mod</require-file>
-		<require-file name="Themes/default/LikePostsStats.template.php" destination="$themedir">Stats view of mod</require-file>
-		<require-file name="Themes/default/css/LikePosts.css" destination="$themedir/css">CSS of mod</require-file>
-		<require-file name="Themes/default/images/no_avatar.png" destination="$imagesdir">No avatar image of mod</require-file>
-        <require-file name="Themes/default/images/progress_bar.gif" destination="$imagesdir">Lovely Progress bar</require-file>
-		<require-file name="Themes/default/images/preloader.gif" destination="$imagesdir">Lovely Loding image</require-file>
-		<require-file name="Themes/default/languages/LikePosts.english.php" destination="$languagedir">All language Strings</require-file>
-		<require-file name="Themes/default/scripts/LikePosts.js" destination="$themedir/scripts">JS file of mod</require-file>
-		<require-file name="Themes/default/scripts/LikePostStats.js" destination="$themedir/scripts">JS file for stats</require-file>
-		<database>install.php</database>
-		<modification>Modification.xml</modification>
+		<require-dir name="Themes" destination="$boarddir">Theme files</require-dir>
+		<require-dir name="Sources/LikePosts" destination="$sourcedir">Source files</require-dir>
+		<database>installer/install.php</database>
+		<code>installer/installHooks.php</code>
+		<modification>installer/Modification.xml</modification>
 		<redirect url="?action=admin;area=likeposts" type="inline" timeout="2000">Please stand by while you are being redirected to this modification's configuration settings.</redirect>
 	</install>
 
 	<uninstall for="2.0 - 2.0.99">
-	    <code>uninstall.php</code>
-		<remove-file name="$sourcedir/LikePostsHooks.php" />
-		<remove-file name="$sourcedir/LikePostsAdmin.php" />
-		<remove-file name="$sourcedir/LikePostsProfile.php" />
-		<remove-file name="$sourcedir/LikePosts.php" />
-		<remove-file name="$sourcedir/LikePostsStats.php" />
-		<remove-file name="$sourcedir/Subs-LikePosts.php" />
+	    <code>installer/uninstall.php</code>
+		<remove-dir name="$sourcedir/LikePosts" />
+		<remove-dir name="$imagesdir/LikePosts" />
+		<remove-dir name="$themedir/scripts/LikePosts" />
+		<remove-dir name="$themedir/images/LikePosts" />
 		<remove-file name="$themedir/LikePosts.template.php" />
+		<remove-file name="$themedir/LikePostsAdmin.template.php" />
 		<remove-file name="$themedir/LikePostsStats.template.php" />
 		<remove-file name="$themedir/css/likeposts.css" />
-		<remove-file name="$themedir/images/no_avatar.png" />
-        <remove-file name="$themedir/images/progress_bar.gif" />
-        <remove-file name="$themedir/images/preloader.gif" />
 		<remove-file name="$languagedir/LikePosts.english.php" />
-		<remove-file name="$themedir/scripts/LikePosts.js" />
-		<remove-file name="$themedir/scripts/LikePostStats.js" />
-		<modification reverse="true">Modification.xml</modification>
+		<modification reverse="true">installer/Modification.xml</modification>
 		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />
 	</uninstall>
 </package-info>

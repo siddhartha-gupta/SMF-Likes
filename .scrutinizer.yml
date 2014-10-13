@@ -1,0 +1,67 @@
+# .scrutinizer.yml
+
+
+filter:
+    excluded_paths:
+        - Sources/LikePosts/JSON.php
+
+tools:
+    # Runs the JSHint static analysis tool (https://scrutinizer-ci.com/docs/tools/javascript/jshint/)
+    js_hint:
+        command:              ~
+        # Whether to use JSHint's native config file, .jshintrc.
+        use_native_config:    true
+        extensions:
+
+            # Default:
+            - js
+        enabled:              false
+
+        # All options that are supported by JSHint (see http://jshint.com/docs/); only available when "use_native_config" is set to "false".
+        config:
+            boss: true
+            curly: true
+            eqeqeq: true
+            eqnull: true
+            noarg: true
+            onevar: true
+            quotmark: single
+            trailing: true
+            undef: true
+            unused: true
+            browser: true
+            globals: {jQuery: false}
+
+        path_configs:
+            # Prototype
+                paths: []
+                enabled: true
+
+    # PHPLOC - PHP Lines of code
+    php_loc: true
+
+    # SensioLabs Security Checker (https://scrutinizer-ci.com/docs/tools/php/security-advisory-checker/)
+    sensiolabs_security_checker: true
+
+    # PHP Copy/Paste Detector (https://scrutinizer-ci.com/docs/tools/php/copy-paste-detector/)
+    php_cpd: true
+
+    # PHP PDepend (https://scrutinizer-ci.com/docs/tools/php/pdepend/)
+    # Analyzes the size and structure of a PHP project
+    php_pdepend: true
+
+    # PHP Analyzer (https://scrutinizer-ci.com/docs/tools/php/php-analyzer/)
+    php_analyzer: true
+
+    # External Code Coverage (https://scrutinizer-ci.com/docs/tools/external-code-coverage/)
+    # external_code_coverage: true
+
+    #The change tracking analyzer inspects your recent commits and counts how often certain classes and methods were changed, how many bug fixes were and how many features were added.
+    php_changetracking: true
+
+checks:
+    php:
+        newline_at_end_of_file: true
+        code_rating: true
+        duplication: true
+        no_trailing_whitespace: true
