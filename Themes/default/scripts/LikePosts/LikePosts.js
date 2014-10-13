@@ -198,17 +198,15 @@
 	likeHandler.prototype = function() {
 		var isLikeAjaxInProgress = false,
 
-			likeUnlikePosts = function(e, mId, tId, bId, aId) {
+			likeUnlikePosts = function(e, mId, aId) {
 				if (isLikeAjaxInProgress === true) return false;
 
 				var userRating = e.target.href.split('#')[1],
 					msgId = (mId !== undefined) ? parseInt(mId, 10) : 0,
-					topicId = (tId !== undefined) ? parseInt(tId, 10) : 0,
-					boardId = (bId !== undefined) ? parseInt(bId, 10) : 0,
 					authorId = (aId !== undefined) ? parseInt(aId, 10) : 0,
 					rating = (userRating !== undefined) ? parseInt(userRating, 10) : 0;
 
-				if (isNaN(msgId) || isNaN(topicId) || isNaN(boardId) || isNaN(authorId)) {
+				if (isNaN(msgId) || isNaN(authorId)) {
 					return false;
 				}
 
@@ -219,8 +217,6 @@
 					dataType: "json",
 					data: {
 						msg: msgId,
-						topic: topicId,
-						board: boardId,
 						rating: rating,
 						author: authorId
 					}

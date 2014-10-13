@@ -63,7 +63,7 @@
 			echo '<div class="like_post_box floatleft">';
 			if(!$message['is_message_author'] && LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
 				echo '
-							<a class="', $context['like_posts']['single_msg_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event,', $message['id'],', ',$context['current_topic'],', ',$context['current_board'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
+							<a class="', $context['like_posts']['single_msg_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$message['id'],'" href="#', $context['like_posts']['single_msg_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event,', $message['id'],', ',$message['member']['id'],'); return false;">', $context['like_posts']['single_msg_data']['text'],'</a>';
 			}
 
 			if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_posts'))) {
@@ -96,7 +96,7 @@
 					LikePosts::$LikePostsUtils->isAllowedTo('lp_can_like_posts')) {
 
 					echo '
-								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['id'],', ',$context['current_board'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
+								<a class="', $context['like_posts']['single_topic_data']['already_liked'] ? 'like_link' : 'unlike_link', '" id="like_',$topic['first_post']['id'],'" href="#', $context['like_posts']['single_topic_data']['already_liked'], '" onclick="lpObj.likeHandler.likeUnlikePosts(event, ', $topic['first_post']['id'],', ',$topic['first_post']['member']['id'],'); return false;">', $context['like_posts']['single_topic_data']['text'],'</a>';
 				}
 		
 				if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_can_view_likes', 'lp_guest_can_view_likes_in_boards'))) {
