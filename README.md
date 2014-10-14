@@ -2,7 +2,7 @@
 
 This mod provides and interface to like/unlike posts.
 
-[b][i]Features[/i][/b]
+***Features***
 - Users can like posts within a topic.
 - Whereas on message index only the first post of topic is taken into consideration. One can like first post of topic from message index also.
 - A notification system, where users can see who has liked what post in real time.
