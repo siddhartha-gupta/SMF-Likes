@@ -157,7 +157,7 @@ function lpAddUpdateSettings() {
 	} else {
 		list ($last_version) = $smcFunc['db_fetch_row']($request);
 		if (version_compare('2.0', $last_version) >= 0) {
-			updateModVersion();
+			upgrade2_0();
 		}
 	}
 	$smcFunc['db_free_result']($request);
@@ -180,6 +180,7 @@ function updateModVersion() {
 function upgrade2_0() {
 	global $smcFunc;
 
+	db_extend('packages');
 	$like_post_permissions = array('like_post_mod_version', 'like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
 
 	$smcFunc['db_query']('', '
@@ -189,11 +190,8 @@ function upgrade2_0() {
 			'like_post_permissions' => $like_post_permissions,
 		)
 	);
-
-	$smcFunc['db_query']('',
-		'ALTER TABLE {db_prefix}like_post
-		DROP COLUMN id_topic, id_board'
-	);
+	$smcFunc['db_remove_column']('{db_prefix}like_post', 'id_topic');
+	$smcFunc['db_remove_column']('{db_prefix}like_post', 'id_board');
 
 	updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
 }
