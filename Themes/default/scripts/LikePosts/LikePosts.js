@@ -551,17 +551,19 @@
 					event.preventDefault();
 				}
 
+				lpObj.jQRef('.like_posts_overlay').removeClass('hide_elem');
 				lpObj.jQRef.ajax({
 					type: "POST",
 					url: smf_scripturl + '?action=admin;area=likeposts;sa=checklikes',
 					dataType: "json",
-					data: {},
-					success: function(resp) {
-						recountStats(null, {});
-					},
-					error: function(err) {
-						console.log(err);
-					}
+					data: {}
+				}).done(function() {
+					lpObj.jQRef('.like_posts_overlay').addClass('hide_elem');
+					recountStats(null, {});
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function() {
+					console.log('optimizeLikes always called');
 				});
 			},
 
@@ -583,16 +585,15 @@
 						'totalWork': totalWork,
 						'startLimit': startLimit,
 						'endLimit': endLimit
-					},
-
-					success: function(resp) {
-						resp.increment = increment;
-						resp.startLimit = startLimit;
-						checkRecount(resp);
-					},
-					error: function(err) {
-						console.log(err);
 					}
+				}).done(function(resp) {
+					resp.increment = increment;
+					resp.startLimit = startLimit;
+					checkRecount(resp);
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function() {
+					console.log('recountStats always called');
 				});
 			},
 
@@ -753,23 +754,26 @@
 					dataType: "json",
 					data: {
 						'sa': params.url
-					},
-					success: function(resp) {
-						if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
-							genericErrorMessage({
-								errorMsg: resp.error
-							});
-						} else if (typeof(resp.data) !== 'undefined' && typeof(resp.data.noDataMessage) !== 'undefined' && resp.data.noDataMessage !== '') {
-							genericErrorMessage({
-								errorMsg: resp.data.noDataMessage
-							});
-						} else if (resp.response) {
-							tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
-							params.uiFunc();
-						} else {
-
-						}
 					}
+				}).done(function(resp) {
+					if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
+						genericErrorMessage({
+							errorMsg: resp.error
+						});
+					} else if (typeof(resp.data) !== 'undefined' && typeof(resp.data.noDataMessage) !== 'undefined' && resp.data.noDataMessage !== '') {
+						genericErrorMessage({
+							errorMsg: resp.data.noDataMessage
+						});
+					} else if (resp.response) {
+						tabsVisitedCurrentSession[currentUrlFrag] = resp.data;
+						params.uiFunc();
+					} else {
+						hideSpinnerOverlay();
+					}
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function() {
+					console.log('recountStats always called');
 				});
 			},
 

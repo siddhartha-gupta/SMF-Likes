@@ -251,6 +251,7 @@ function template_lp_admin_recount_stats() {
 			<span class="botslice"><span></span></span>
 		</div>
 	</div>
+	<div class="like_posts_overlay hide_elem"></div>
 	<br class="clear">';
 }
 
