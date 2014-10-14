@@ -412,7 +412,7 @@
 									dataLengthAll = len;
 									notificationInfo += '</div>';
 								} else if (i === 'mine') {
-									notificationInfo += '<div class="lp_notification_body lp_my_notifications_data" style="display: none">';
+									notificationInfo += '<div class="lp_notification_body lp_my_notifications_data hide_elem">';
 									if (data[i].length === 0) {
 										notificationInfo += '<div class="single_notify">' + textStrings.lpNoNotification + '</div>';
 									} else {
@@ -783,9 +783,9 @@
 					messageUrl = smf_scripturl + '?topic=' + data.id_topic + '.msg' + data.id_msg;
 
 				lpObj.jQRef('.like_post_message_data').html('');
-				htmlContent += '<a class="message_title" href="' + messageUrl + '">' + txtStrings.topic + ': ' + data.subject + '</a>' + '<span style="display: none;">' + data.body + '</span>';
+				htmlContent += '<a class="message_title" href="' + messageUrl + '">' + txtStrings.topic + ': ' + data.subject + '</a>' + '<span class="hide_elem">' + data.body + '</span>';
 
-				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '</div>';
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details big_font" href="' + data.member_received.href + '">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '</div>';
 
 				htmlContent += '<div class="users_liked">';
 				htmlContent += '<p class="title">' + data.member_liked_data.length + ' ' + txtStrings.usersWhoLiked + '</p>';
@@ -850,7 +850,7 @@
 				lpObj.jQRef('.like_post_board_data').html('');
 				htmlContent += '<a class="board_title" href="' + boardUrl + '">' + data.name + ' ' + txtStrings.mostPopularBoardHeading1 + ' ' + data.like_count + ' ' + txtStrings.genricHeading1 + '</a>';
 				htmlContent += '<p class="board_info">' + txtStrings.mostPopularBoardSubHeading1 + ' ' + data.num_topics + ' ' + txtStrings.mostPopularBoardSubHeading2 + ' ' + data.topics_liked + ' ' + txtStrings.mostPopularBoardSubHeading3 + '</p>';
-				htmlContent += '<p class="board_info" style="margin: 5px 0 20px;">' + txtStrings.mostPopularBoardSubHeading4 + ' ' + data.num_posts + ' ' + txtStrings.mostPopularBoardSubHeading5 + ' ' + data.msgs_liked + ' ' + txtStrings.mostPopularBoardSubHeading6 + '</p>';
+				htmlContent += '<p class="board_info extra_margin">' + txtStrings.mostPopularBoardSubHeading4 + ' ' + data.num_posts + ' ' + txtStrings.mostPopularBoardSubHeading5 + ' ' + data.msgs_liked + ' ' + txtStrings.mostPopularBoardSubHeading6 + '</p>';
 
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
 					var topicUrl = smf_scripturl + '?topic=' + data.topic_data[i].id_topic;
@@ -867,7 +867,7 @@
 					htmlContent = '';
 
 				lpObj.jQRef('.like_post_most_liked_user_data').html('');
-				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_received.href + '" style="font-size: 20px;">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesReceived + ': ' + data.like_count + '</div>' + '</div>';
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_received.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details big_font" href="' + data.member_received.href + '">' + data.member_received.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_received.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesReceived + ': ' + data.like_count + '</div>' + '</div>';
 
 				htmlContent += '<p class="generic_text">' + txtStrings.mostPopularUserHeading1 + '</p>';
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
@@ -885,7 +885,7 @@
 					htmlContent = '';
 
 				lpObj.jQRef('.like_post_most_likes_given_user_data').html('');
-				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_given.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details" href="' + data.member_given.href + '" style="font-size: 20px;">' + data.member_given.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_given.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesGiven + ': ' + data.like_count + '</div>' + '</div>';
+				htmlContent += '<div class="poster_avatar"><div class="avatar" style="background-image: url(' + encodeURI(data.member_given.avatar) + ')"></div></div>' + '<div class="poster_data">' + '<a class="poster_details big_font" href="' + data.member_given.href + '">' + data.member_given.name + '</a>' + '<div class="poster_details">' + txtStrings.totalPosts + ': ' + data.member_given.total_posts + '</div>' + '<div class="poster_details">' + txtStrings.totalLikesGiven + ': ' + data.like_count + '</div>' + '</div>';
 
 				htmlContent += '<p class="generic_text">' + txtStrings.mostLikeGivenUserHeading1 + '</p>';
 				for (var i = 0, len = data.topic_data.length; i < len; i++) {
