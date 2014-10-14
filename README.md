@@ -1,4 +1,4 @@
-[url=http://custom.simplemachines.org/mods/index.php?mod=3708][b]Like Posts[/b][/url]
+[Like Posts](http://custom.simplemachines.org/mods/index.php?mod=3708)
 
 This mod provides and interface to like/unlike posts.
 
