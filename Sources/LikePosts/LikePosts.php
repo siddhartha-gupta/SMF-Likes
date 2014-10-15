@@ -82,9 +82,21 @@ class LikePosts {
 
 			case 'LikePostsDB':
 				if (self::$LikePostsDB === null) {
-					require_once ($sourcedir . self::$sourceFolder . '/' . $className . '.php');
+					require_once ($sourcedir . self::$sourceFolder . '/DB/' . $className . '.php');
 					self::$LikePostsDB = new LikePostsDB();
 				}
+				break;
+
+			case 'LikePostsAdminDB':
+				require_once ($sourcedir . self::$sourceFolder . '/DB/' . $className . '.php');
+				break;
+
+			case 'LikePostsProfileDB':
+				require_once ($sourcedir . self::$sourceFolder . '/DB/' . $className . '.php');
+				break;
+
+			case 'LikePostsStatsDB':
+				require_once ($sourcedir . self::$sourceFolder . '/DB/' . $className . '.php');
 				break;
 
 			case 'LikePostsData': 

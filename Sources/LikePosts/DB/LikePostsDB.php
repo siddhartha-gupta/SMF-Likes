@@ -309,32 +309,6 @@ class LikePostsDB {
 		return $topicsLikeInfo;
 	}
 
-	// For profile section
-	/**
-	 * @param string $select
-	 * @param string $where
-	 */
-	public function getTotalResults($select, $where) {
-		global $smcFunc;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT '. $select .' as total_results
-			FROM {db_prefix}like_post as lp
-			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
-			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE {query_wanna_see_board}
-			AND ' . $where
-		);
-
-		if ($smcFunc['db_num_rows']($request) == 0)
-			return 'nothing found';
-
-		list ($total_results) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		return $total_results;
-	}
-
 	public function getAllNotification() {
 		$notificationData = array(
 			'all' => array(),

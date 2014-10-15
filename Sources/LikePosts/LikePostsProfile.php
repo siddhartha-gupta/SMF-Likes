@@ -36,14 +36,18 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 class LikePostsProfile {
-	public function __construct() {}
+	private $dbInstance;
+
+	public function __construct() {
+		$this->dbInstance = new LikePostsProfileDB();
+	}
 
 	public function getOwnLikes($memID) {
 		global $context, $scripturl, $modSettings, $txt;
 
 		$select = 'COUNT(*)';
 		$where = 'lp.id_member_gave = ' . $memID;
-		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LikePosts::$LikePostsDB->getTotalResults($select, $where);
+		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : $this->dbInstance->getTotalResults($select, $where);
 
 		$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
 		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
@@ -51,7 +55,7 @@ class LikePostsProfile {
 		// Give admin options for these
 		$context['likes_per_page'] = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
-		$context['like_post']['own_like_data'] = LikePosts::$LikePostsDB->getOwnLikes($memID, $context['start']);
+		$context['like_post']['own_like_data'] = $this->dbInstance->getOwnLikes($memID, $context['start']);
 		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeownlikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 
 		$context['sub_template'] = 'lp_show_own_likes';
@@ -63,7 +67,7 @@ class LikePostsProfile {
 
 		$select = 'COUNT(DISTINCT(lp.id_msg))';
 		$where = 'm.id_member = ' . $memID;
-		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : LikePosts::$LikePostsDB->getTotalResults($select, $where);
+		$context['total_visible_likes'] = isset($_REQUEST['total']) && !empty($_REQUEST['total']) ? (int) $_REQUEST['total'] : $this->dbInstance->getTotalResults($select, $where);
 
 		$context['start'] = isset($_REQUEST['start']) && !empty($_REQUEST['start']) ? $_REQUEST['start']: 0;
 		$context['start'] = !is_numeric($context['start']) ? 0 : $context['start'];
@@ -71,7 +75,7 @@ class LikePostsProfile {
 		// Give admin options for these
 		$context['likes_per_page'] = isset($modSettings['lp_per_profile_page']) && !empty($modSettings['lp_per_profile_page']) ? (int) $modSettings['lp_per_profile_page'] : 10;
 
-		$context['like_post']['others_like_data'] = LikePosts::$LikePostsDB->getOthersLikes($memID, $context['start']);
+		$context['like_post']['others_like_data'] = $this->dbInstance->getOthersLikes($memID, $context['start']);
 		$context['page_index'] = constructPageIndex($scripturl . '?action=profile;area=likeposts;sa=seeotherslikes;u=' . $memID .';total=' . $context['total_visible_likes'], $context['start'], $context['total_visible_likes'], $context['likes_per_page']);
 
 		$context['sub_template'] = 'lp_show_others_likes';

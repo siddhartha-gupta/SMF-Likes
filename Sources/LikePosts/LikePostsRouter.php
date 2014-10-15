@@ -41,7 +41,9 @@ function routeLikePostsAdmin() {
 	/* I can has Adminz? */
 	isAllowedTo('admin_forum');
 
+	LikePosts::loadClass('LikePostsAdminDB');
 	LikePosts::loadClass('LikePostsAdmin');
+
 	loadtemplate('LikePostsAdmin');
 
 	$context['page_title'] = $txt['lp_admin_panel'];
@@ -100,7 +102,9 @@ function routeLikePostsProfile($memID) {
 				return false;
 	}
 
+	LikePosts::loadClass('LikePostsProfileDB');
 	LikePosts::loadClass('LikePostsProfile');
+
 	loadtemplate('LikePostsProfile');
 	$defaultActionFunc = 'getOwnLikes';
 
@@ -155,7 +159,9 @@ class LikePostsRouter {
 	public function routeLikeStats() {
 		global $context, $txt;
 
+		LikePosts::loadClass('LikePostsStatsDB');
 		LikePosts::loadClass('LikePostsStats');
+
 		LikePosts::$LikePostsStats->checkStatsPermission();
 
 		loadtemplate('LikePostsStats');
@@ -194,6 +200,7 @@ class LikePostsRouter {
 	public function routeLikeStatsAjax() {
 		global $context;
 
+		LikePosts::loadClass('LikePostsStatsDB');
 		LikePosts::loadClass('LikePostsStats');
 		LikePosts::$LikePostsStats->checkStatsPermission();
 

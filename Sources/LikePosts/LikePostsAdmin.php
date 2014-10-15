@@ -36,7 +36,11 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 class LikePostsAdmin {
-	public function __construct() {}
+	private $dbInstance;
+
+	public function __construct() {
+		$this->dbInstance = new LikePostsAdminDB();
+	}
 
 	public function generalSettings($return_config = false) {
 		global $txt, $context, $sourcedir;
@@ -191,7 +195,7 @@ class LikePostsAdmin {
 				$general_settings[] = array($value, '');
 			}
 		}
-		LikePosts::$LikePostsDB->updatePermissions($general_settings);
+		$this->dbInstance->updatePermissions($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=permissionsettings');
 	}
 
@@ -233,7 +237,7 @@ class LikePostsAdmin {
 		$activeBoards = isset($activeBoards) && !empty($activeBoards) ? implode(',', $activeBoards) : '';
 		$general_settings[] = array('lp_active_boards', $activeBoards);
 
-		LikePosts::$LikePostsDB->updatePermissions($general_settings);
+		$this->dbInstance->updatePermissions($general_settings);
 		redirectexit('action=admin;area=likeposts;sa=boardsettings');
 	}
 
@@ -258,7 +262,7 @@ class LikePostsAdmin {
 		$totalWork = (int) $_REQUEST['totalWork'];
 
 		// Result carries totalWork to do
-		$result = LikePosts::$LikePostsDB->recountLikesTotal($startLimit, $totalWork);
+		$result = $this->dbInstance->recountLikesTotal($startLimit, $totalWork);
 
 		$resp = array('totalWork' => (int) $result, 'endLimit' => (int) $endLimit);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);

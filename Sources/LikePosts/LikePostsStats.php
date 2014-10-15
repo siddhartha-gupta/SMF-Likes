@@ -36,7 +36,10 @@ if (!defined('SMF')) {
 }
 
 class LikePostsStats {
+	private $dbInstance;
+
 	public function __construct() {
+		$this->dbInstance = new LikePostsStatsDB();
 	}
 
 	public function checkStatsPermission() {
@@ -55,7 +58,7 @@ class LikePostsStats {
 	public function messageStats() {
 		global $txt;
 
-		$data = LikePosts::$LikePostsDB->getStatsMostLikedMessage();
+		$data = $this->dbInstance->getStatsMostLikedMessage();
 		if($data) {
 			$resp = array('response' => true, 'data' => $data);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
@@ -68,7 +71,7 @@ class LikePostsStats {
 	public function topicStats() {
 		global $txt;
 
-		$data = LikePosts::$LikePostsDB->getStatsMostLikedTopic();
+		$data = $this->dbInstance->getStatsMostLikedTopic();
 		if($data) {
 			$resp = array('response' => true, 'data' => $data);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
@@ -81,7 +84,7 @@ class LikePostsStats {
 	public function boardStats() {
 		global $txt;
 
-		$data = LikePosts::$LikePostsDB->getStatsMostLikedBoard();
+		$data = $this->dbInstance->getStatsMostLikedBoard();
 
 		if($data) {
 			$resp = array('response' => true, 'data' => $data);
@@ -95,7 +98,7 @@ class LikePostsStats {
 	public function mostLikesReceivedUserStats() {
 		global $txt;
 
-		$data = LikePosts::$LikePostsDB->getStatsMostLikedUser();
+		$data = $this->dbInstance->getStatsMostLikedUser();
 
 		if($data) {
 			$resp = array('response' => true, 'data' => $data);
@@ -109,7 +112,7 @@ class LikePostsStats {
 	public function mostLikesGivenUserStats() {
 		global $txt;
 
-		$data = LikePosts::$LikePostsDB->getStatsMostLikesGivenUser();
+		$data = $this->dbInstance->getStatsMostLikesGivenUser();
 
 		if($data) {
 			$resp = array('response' => true, 'data' => $data);
