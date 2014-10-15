@@ -235,8 +235,6 @@ function checkVersion2_0Upgrade() {
 	$newVersion = isRunningLatestVersion('2.0');
 
 	if($newVersion) {
-		db_extend('packages');
-
 		$like_post_permissions = array('like_post_mod_version', 'like_post_enable', 'like_per_profile_page', 'like_in_notification',	'lp_show_like_on_boards', 'lp_active_boards');
 
 		$smcFunc['db_query']('', '
@@ -256,7 +254,6 @@ function checkVersion2_0Upgrade() {
 function isRunningLatestVersion($versionToCheck) {
 	global $smcFunc;
 
-	$newVersion = false;
 	$request = $smcFunc['db_query']('', '
 		SELECT * 
 		FROM {db_prefix}settings
