@@ -142,8 +142,6 @@ class LikePostsDB {
 
 	/**
 	 * To clean up the likes table from delete posts
-	 * @param integer $startLimit
-	 * @param integer $totalWork
 	 */
 	public function optimizeLikes() {
 		global $smcFunc;
