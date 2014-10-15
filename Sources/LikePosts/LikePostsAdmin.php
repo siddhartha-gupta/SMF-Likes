@@ -273,7 +273,7 @@ class LikePostsAdmin {
 
 		// Lets fire the bullet.
 		@set_time_limit(300);
-		LikePosts::$LikePostsDB->optimizeLikes();
+		$this->dbInstance->optimizeLikes();
 
 		$resp = array('result' => true);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
