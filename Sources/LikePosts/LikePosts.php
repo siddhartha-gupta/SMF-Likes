@@ -268,7 +268,7 @@ class LikePosts {
 			function loadLPScript() {
 				var js = document.createElement("script");
 				js.type = "text/javascript";
-				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePosts.js";
+				js.src = "' . $settings['default_theme_url'] . '/scripts/LikePosts/LikePosts.min.js";
 				js.onload = function() {
 					lpObj.likePostsNotification.init({
 						txtStrings: {
