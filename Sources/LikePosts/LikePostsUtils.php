@@ -282,6 +282,28 @@ class LikePostsUtils {
 		echo json_encode($resp);
 		die();
 	}
+
+	public function obtainAvatar($data) {
+		global $modSettings, $scripturl, $settings;
+
+		if(!empty($data['avatar'])) {
+			if(stristr($data['avatar'], 'http://')) {
+				$avatar = $data['avatar'];
+			} else {
+				$avatar = $modSettings['avatar_url'] . '/' . $data['avatar'];
+			}
+			
+		} elseif ($data['id_attach'] > 0) {
+			if(empty($data['attachment_type'])) {
+				$avatar = $scripturl . '?action=dlattach;attach=' . $data['id_attach'] . ';type=avatar';
+			} else {
+				$avatar = $modSettings['custom_avatar_url'] . '/' . $data['filename'];
+			}
+		} else {
+			$avatar = $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png';
+		}
+		return $avatar;
+	}
 }
 
 ?>

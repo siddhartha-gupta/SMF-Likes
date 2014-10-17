@@ -73,7 +73,12 @@ class LikePostsStatsDB {
 					'name' => $row['member_received_name'],
 					'total_posts' => $row['posts'],
 					'href' => $row['member_received_name'] != '' && !empty($row['id_member_received']) ? $scripturl . '?action=profile;u=' . $row['id_member_received'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+						'avatar' => $row['avatar'],
+						'id_attach' => $row['id_attach'],
+						'attachment_type' => $row['attachment_type'],
+						'filename' => $row['filename']
+					)),
 				),
 			);
 			$id_member_gave = $row['id_member_gave'];
@@ -110,7 +115,12 @@ class LikePostsStatsDB {
 				'id_member' => $row['id_member'],
 				'real_name' => $row['real_name'],
 				'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-				'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+				'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+					'avatar' => $row['avatar'],
+					'id_attach' => $row['id_attach'],
+					'attachment_type' => $row['attachment_type'],
+					'filename' => $row['filename']
+				)),
 
 			);
 		}
@@ -177,7 +187,12 @@ class LikePostsStatsDB {
 					'id_member' => $row['id_member'],
 					'name' => $row['real_name'],
 					'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+						'avatar' => $row['avatar'],
+						'id_attach' => $row['id_attach'],
+						'attachment_type' => $row['attachment_type'],
+						'filename' => $row['filename']
+					)),
 				),
 			);
 		}
@@ -244,7 +259,12 @@ class LikePostsStatsDB {
 					'id_member' => $row['id_member'],
 					'name' => $row['real_name'],
 					'href' => $row['real_name'] != '' && !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+						'avatar' => $row['avatar'],
+						'id_attach' => $row['id_attach'],
+						'attachment_type' => $row['attachment_type'],
+						'filename' => $row['filename']
+					)),
 				),
 			);
 		}
@@ -274,7 +294,12 @@ class LikePostsStatsDB {
 					'total_posts' => $row['posts'],
 					'date_registered' => $row['date_registered'],
 					'href' => $row['real_name'] != '' && !empty($row['id_member_received']) ? $scripturl . '?action=profile;u=' . $row['id_member_received'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+						'avatar' => $row['avatar'],
+						'id_attach' => $row['id_attach'],
+						'attachment_type' => $row['attachment_type'],
+						'filename' => $row['filename']
+					)),
 				),
 				'like_count' => $row['like_count'],
 			);
@@ -353,7 +378,12 @@ class LikePostsStatsDB {
 					'total_posts' => $row['posts'],
 					'date_registered' => $row['date_registered'],
 					'href' => $row['real_name'] != '' && !empty($row['id_member_gave']) ? $scripturl . '?action=profile;u=' . $row['id_member_gave'] : '',
-					'avatar' => $row['avatar'] == '' ? ($row['id_attach'] > 0 ? (empty($row['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $row['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $row['filename']) : $settings['default_theme_url'] . '/images/LikePosts/no_avatar.png') : (stristr($row['avatar'], 'http://') ? $row['avatar'] : $modSettings['avatar_url'] . '/' . $row['avatar']),
+					'avatar' => LikePosts::$LikePostsUtils->obtainAvatar(array(
+						'avatar' => $row['avatar'],
+						'id_attach' => $row['id_attach'],
+						'attachment_type' => $row['attachment_type'],
+						'filename' => $row['filename']
+					)),
 				),
 				'like_count' => $row['like_count'],
 			);
