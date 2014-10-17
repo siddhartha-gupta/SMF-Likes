@@ -251,6 +251,9 @@ function checkVersion2_0Upgrade() {
 	}
 }
 
+/**
+ * @param string $versionToCheck
+ */
 function isRunningLatestVersion($versionToCheck) {
 	global $smcFunc;
 
