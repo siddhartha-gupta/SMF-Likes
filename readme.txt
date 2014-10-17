@@ -40,6 +40,21 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 
 [b]Change Log[/b]
 
+[i]Version 2.0[/i]
+- PHP files converted to OOP, easy code management and readability
+- JS file converted to singleton and compressed, in layman words, its more efficient and fast
+- All inline css removed from JS and templates
+- Likes text based on number of likes, [url=http://www.simplemachines.org/community/index.php?topic=506743.msg3746658#msg3746658]reference url[/url]
+- Handling for likes data when post is deleted/merged/move, [url=http://www.simplemachines.org/community/index.php?topic=506743.msg3748949#msg3748949]reference url[/url]
+- Like posts permission based on post count group, [url=http://www.simplemachines.org/community/index.php?topic=506743.msg3749117#msg3749117]reference url[/url]
+- New permission in admin panel to disbale like stats completely
+- Permission to disbale notification for eveyone or based on user group
+- In admin panel, new feature to optimize like tabel and remove likes from delete topic
+- Some hidden/fun JS features added in admin panel
+- Permissions fixes through out the codebase
+- Tons of fixes
+
+
 [i]Version 1.6.1[/i]
 - Fixes for UTF8 encoding on notifications
 - Fixes for notification panel for smart devices
