@@ -74,37 +74,47 @@ class LikeUnlikePosts {
 		}
 
 		if ($result) {
-			$count = LikePosts::$LikePostsDB->getLikeTopicCount($msg_id);
-			$new_text = !empty($rating) ? $txt['lp_unlike'] : $txt['lp_like'];
-
-			$remaining_likes = (int) ($count - 1);
-			if(!empty($rating)) {
-				if ($remaining_likes > 0) {
-					if($remaining_likes > 1) {
-						$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_multiple_people_liked'], $remaining_likes);
-					} else {
-						$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_people_liked'], $remaining_likes);
-					}
-				} else {
-					$liked_text = $txt['lp_string_you_liked'];
-				}
-			} else {
-				$liked_text = '';
-				if(!empty($count)) {
-					if($count > 1) {
-						$liked_text = sprintf($txt['lp_string_multiple_people_liked'], $count);
-					} else {
-						$liked_text = sprintf($txt['lp_string_people_liked'], $count);
-					}
-				}
-			}
-
-			$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);
-			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+			$this->sendResponse(array(
+				'msg_id' => $msg_id,
+				'rating' => $rating,
+			));
 		} else {
 			$resp = array('response' => false, 'error' => $txt['lp_error_something_wrong']);
 			return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 		}
+	}
+
+	private function sendResponse($data) {
+		global $txt;
+
+		$count = LikePosts::$LikePostsDB->getLikeTopicCount($data['msg_id']);
+
+		$remaining_likes = (int) ($count - 1);
+		if(!empty($rating)) {
+			$new_text = $txt['lp_unlike'];
+			if ($remaining_likes > 0) {
+				if($remaining_likes > 1) {
+					$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_multiple_people_liked'], $remaining_likes);
+				} else {
+					$liked_text = $txt['lp_string_you'] . ' ' . sprintf($txt['lp_string_other_people_liked'], $remaining_likes);
+				}
+			} else {
+				$liked_text = $txt['lp_string_you_liked'];
+			}
+		} else {
+			$new_text = $txt['lp_like'];
+			$liked_text = '';
+			if(!empty($count)) {
+				if($count > 1) {
+					$liked_text = sprintf($txt['lp_string_multiple_people_liked'], $count);
+				} else {
+					$liked_text = sprintf($txt['lp_string_people_liked'], $count);
+				}
+			}
+		}
+
+		$resp = array('response' => true, 'newText' => $new_text, 'count' => $count, 'likeText' => $liked_text);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}
 }
 
