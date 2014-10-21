@@ -64,7 +64,7 @@ class LikePostsData {
 	}
 
 	public function posterInfo($postersArr = array()) {
-		if(LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
+		if(!LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 			return false;
 		}
 
