@@ -133,7 +133,7 @@ function routeLikePostsProfile($memID) {
 class LikePostsRouter {
 	public function __construct() {}
 
-	public function routeLikes() {
+	public static function routeLikes() {
 		LikePosts::loadClass('LikeUnlikePosts');
 
 		$subActions = array(
@@ -144,7 +144,7 @@ class LikePostsRouter {
 			return LikePosts::$LikeUnlikePosts->$subActions[$_REQUEST['sa']]();
 	}
 
-	public function routeLikesData() {
+	public static function routeLikesData() {
 		LikePosts::loadClass('LikePostsData');
 
 		$subActions = array(
@@ -156,7 +156,7 @@ class LikePostsRouter {
 			return LikePosts::$LikePostsData->$subActions[$_REQUEST['sa']]();
 	}
 
-	public function routeLikeStats() {
+	public static function routeLikeStats() {
 		global $context, $txt;
 
 		LikePosts::loadClass('LikePostsStatsDB');
@@ -197,7 +197,7 @@ class LikePostsRouter {
 			return LikePosts::$LikePostsData->$subActions[$_REQUEST['sa']]();
 	}
 
-	public function routeLikeStatsAjax() {
+	public static function routeLikeStatsAjax() {
 		global $context;
 
 		LikePosts::loadClass('LikePostsStatsDB');
