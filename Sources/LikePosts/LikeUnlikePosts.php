@@ -90,7 +90,7 @@ class LikeUnlikePosts {
 		$count = LikePosts::$LikePostsDB->getLikeTopicCount($data['msg_id']);
 
 		$remaining_likes = (int) ($count - 1);
-		if(!empty($rating)) {
+		if(!empty($data['rating'])) {
 			$new_text = $txt['lp_unlike'];
 			if ($remaining_likes > 0) {
 				if($remaining_likes > 1) {
