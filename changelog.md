@@ -5,6 +5,7 @@
 - Fix for method accessing issue via action hook
 - Fix for like button text not changing
 - Added admin function to remove duplicate like entries from DB
+- Fixes for upgrade cleaning out the mod settings
 
 
 **Version 2.0**
