@@ -43,7 +43,7 @@ My Community » Administration Center » Like Posts  » Recount Like stats
 
 
 [url=https://github.com/Joker-SMF/SMF-Likes]GitHub Link[/url]
-[url=https://github.com/siddhartha-gupta/SMF-Likes/blob/master/changelog.txt]Change log[/url]
+[url=https://github.com/siddhartha-gupta/SMF-Likes/blob/master/changelog.md]Change log[/url]
 
 All suggestions related to core features and UI are most welcomed.
 
