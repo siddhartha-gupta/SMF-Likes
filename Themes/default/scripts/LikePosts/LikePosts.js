@@ -546,7 +546,7 @@
 	function likePostsAdmin() {}
 
 	likePostsAdmin.prototype = function() {
-		var optimizeLikes = function(event, options) {
+		var optimizeLikes = function(event) {
 				if (!lpObj.likePostsUtils.isNullUndefined(event)) {
 					event.preventDefault();
 				}
@@ -554,7 +554,7 @@
 				lpObj.jQRef('.like_posts_overlay').removeClass('hide_elem');
 				lpObj.jQRef.ajax({
 					type: "POST",
-					url: smf_scripturl + '?action=admin;area=likeposts;sa=checklikes',
+					url: smf_scripturl + '?action=admin;area=likeposts;sa=optimizelikes',
 					dataType: "json",
 					data: {}
 				}).done(function() {
@@ -564,6 +564,27 @@
 					console.log(err);
 				}).always(function() {
 					console.log('optimizeLikes always called');
+				});
+			},
+
+			removeDupLikes = function(event) {
+				if (!lpObj.likePostsUtils.isNullUndefined(event)) {
+					event.preventDefault();
+				}
+
+				lpObj.jQRef('.like_posts_overlay').removeClass('hide_elem');
+				lpObj.jQRef.ajax({
+					type: "POST",
+					url: smf_scripturl + '?action=admin;area=likeposts;sa=removeduplikes',
+					dataType: "json",
+					data: {}
+				}).done(function() {
+					lpObj.jQRef('.like_posts_overlay').addClass('hide_elem');
+					recountStats(null, {});
+				}).fail(function(err) {
+					console.log(err);
+				}).always(function() {
+					console.log('removeDupLikes always called');
 				});
 			},
 
@@ -661,6 +682,7 @@
 
 		return {
 			'optimizeLikes': optimizeLikes,
+			'removeDupLikes': removeDupLikes,
 			'recountStats': recountStats,
 			'selectAllBoards': selectAllBoards
 		};
@@ -773,7 +795,7 @@
 				}).fail(function(err) {
 					console.log(err);
 				}).always(function() {
-					console.log('recountStats always called');
+					console.log('getDataFromServer always called');
 				});
 			},
 

@@ -251,6 +251,25 @@ class LikePostsAdmin {
 		$context['like_posts']['tab_desc'] = $txt['lp_recount_stats_desc'];
 	}
 
+	public function optimizeLikes() {
+		isAllowedTo('admin_forum');
+
+		// Lets fire the bullet.
+		@set_time_limit(300);
+		$this->dbInstance->optimizeLikes();
+
+		$resp = array('result' => true);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
+
+	public function removeDupLikes() {
+		isAllowedTo('admin_forum');
+
+		$this->dbInstance->removeDupLikes();
+		$resp = array('result' => true);
+		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
+	}
+
 	public function recountLikesTotal() {
 		isAllowedTo('admin_forum');
 
@@ -265,17 +284,6 @@ class LikePostsAdmin {
 		$result = $this->dbInstance->recountLikesTotal($startLimit, $totalWork);
 
 		$resp = array('totalWork' => (int) $result, 'endLimit' => (int) $endLimit);
-		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
-	}
-
-	public function checkLikes() {
-		isAllowedTo('admin_forum');
-
-		// Lets fire the bullet.
-		@set_time_limit(300);
-		$this->dbInstance->optimizeLikes();
-
-		$resp = array('result' => true);
 		return LikePosts::$LikePostsUtils->sendJSONResponse($resp);
 	}
 }

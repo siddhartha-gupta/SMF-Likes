@@ -57,6 +57,57 @@ class LikePostsAdminDB {
 	}
 
 	/**
+	 * To clean up the likes table from delete posts
+	 */
+	public function optimizeLikes() {
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT lp.id_msg
+			FROM {db_prefix}like_post AS lp
+			LEFT JOIN {db_prefix}messages AS m ON (lp.id_msg = m.id_msg)
+			WHERE m.id_msg is null',
+			array()
+		);
+
+		$msg_id = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request)) {
+			$msg_id[] = $row['id_msg'];
+		}
+
+		if (count($msg_id) > 0) {
+			$msg_id_list = implode(",", $msg_id);
+
+			$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}like_post
+			WHERE id_msg IN ({raw:msg_id_list})',
+				array(
+					'msg_id_list' => $msg_id_list,
+				)
+			);
+		}
+
+		$smcFunc['db_free_result']($request);
+		return true;
+	}
+
+	/**
+	 * To clean up duplicate likes from like_post table
+	 */
+	public function removeDupLikes() {
+		global $smcFunc;
+
+		$smcFunc['db_query']('', '
+			DELETE lp1
+			FROM {db_prefix}like_post lp1, {db_prefix}like_post lp2
+			WHERE lp1.id_msg = lp2.id_msg
+			AND lp1.id_member_gave = lp2.id_member_gave
+			AND lp1.id_like < lp2.id_like',
+			array()
+		);		
+	}
+
+	/**
 	 * To recount the likes and update like_count table
 	 * @param integer $startLimit
 	 * @param integer $totalWork
@@ -137,41 +188,6 @@ class LikePostsAdminDB {
 		}
 
 		return $totalWorkCalc;
-	}
-
-	/**
-	 * To clean up the likes table from delete posts
-	 */
-	public function optimizeLikes() {
-		global $smcFunc;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT lp.id_msg
-			FROM {db_prefix}like_post AS lp
-			LEFT JOIN {db_prefix}messages AS m ON (lp.id_msg = m.id_msg)
-			WHERE m.id_msg is null',
-			array()
-		);
-
-		$msg_id = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request)) {
-			$msg_id[] = $row['id_msg'];
-		}
-
-		if (count($msg_id) > 0) {
-			$msg_id_list = implode(",", $msg_id);
-
-			$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}like_post
-			WHERE id_msg IN ({raw:msg_id_list})',
-				array(
-					'msg_id_list' => $msg_id_list,
-				)
-			);
-		}
-
-		$smcFunc['db_free_result']($request);
-		return true;
 	}
 }
 
