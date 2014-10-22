@@ -258,7 +258,7 @@ function isRunningLatestVersion($versionToCheck) {
 	global $smcFunc;
 
 	$request = $smcFunc['db_query']('', '
-		SELECT * 
+		SELECT value
 		FROM {db_prefix}settings
 		WHERE variable =  {string:lp_mod_version}
 		LIMIT 1',
