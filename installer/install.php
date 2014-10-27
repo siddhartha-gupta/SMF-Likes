@@ -137,8 +137,11 @@ checkVersion1_5Upgrade();
 // Changes made in v2.0
 checkVersion2_0Upgrade();
 
+// Changes made in v2.0.2
+checkVersion2_0_2Upgrade();
+
 // at last just update the mod version
-updateModVersion('2.0.1');
+updateModVersion('2.0.2');
 
 function checkVersion1_2Upgrade() {
 	global $smcFunc;
@@ -248,6 +251,16 @@ function checkVersion2_0Upgrade() {
 		$smcFunc['db_remove_column']('{db_prefix}like_post', 'id_board');
 
 		updateSettings(array('lp_mod_version' => '2.0', 'lp_mod_enable' => 1, 'lp_stats_enable' => 1, 'lp_notification_enable' => 1, 'lp_per_profile_page' => 10, 'lp_in_notification' => 10, 'lp_show_like_on_boards' => 1, 'lp_active_boards' => ''));
+	}
+}
+
+function checkVersion2_0_2Upgrade() {
+	global $smcFunc;
+
+	$newVersion = isRunningLatestVersion('2.0.2');
+
+	if($newVersion) {
+		updateSettings(array('lp_show_total_like_in_posts' => 1));
 	}
 }
 
