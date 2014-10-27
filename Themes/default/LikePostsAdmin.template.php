@@ -253,7 +253,7 @@ function template_lp_admin_recount_stats() {
 					</div>
 					<div class="lp_admin_recount_btn">
 						<span class="floatright">
-							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.likePostsAdmin.recountStats(event); return false;">
+							<input type="submit" value="Run task now" class="button_submit" onclick="lpObj.likePostsAdmin.recountStats(event, {}); return false;">
 						</span>
 					</div>
 					<div class="member_count_precentage"></div>

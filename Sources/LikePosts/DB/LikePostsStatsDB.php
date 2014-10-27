@@ -49,6 +49,7 @@ class LikePostsStatsDB {
 			FROM {db_prefix}like_post as lp
 			INNER JOIN {db_prefix}members as mem ON (mem.id_member = lp.id_member_received)
 			INNER JOIN {db_prefix}messages as m ON (m.id_msg = lp.id_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = lp.id_member_received)
 			WHERE {query_wanna_see_board}
 			GROUP BY lp.id_msg
