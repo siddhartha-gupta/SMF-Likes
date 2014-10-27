@@ -11,6 +11,8 @@ This mod provides and interface to like/unlike posts.
 - A complete dedicated admin interface, to control various features of mods
 - Interface to see various stats related with the mod. The section can be accessed using the 'Like stats' button provided in the website navgation
 
+
+
 [b][i]Admin interface[/i][/b]
 
 [i]General Settings[/i]
@@ -20,6 +22,8 @@ This mod provides and interface to like/unlike posts.
 - Number of likes to show at once in user profiles
 - Number of likes to show at once in notification panel
 - Whether to show like button on message index or not
+- Show total likes in posts under user avatar
+
 
 [i]Permission Settings[/i]
 - Enable the permission "Can like posts" for those groups who can like the posts.
@@ -29,12 +33,15 @@ This mod provides and interface to like/unlike posts.
 - Enable the permission "Can view notifications of liked posts" for those groups who can view like posts notifications
 - Enable the permissions for guests about where they can see likes i.e in posts/topics, boards, profiles & whether or not they can see the liked posts stats
 
+
 [i]Board Settings[/i]
 - Select on which boards you want to enable the mod
 - If you want to select all boards in a category, just click on the category name
 
+
 [i]Recount Like Stats[/i]
 - To remove the deleted messages from likes count and stats
+- Removes duplicate entries from like table
 - To recount the total likes user has received so far. One should run this once a month at least.
 
 
