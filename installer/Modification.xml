@@ -41,6 +41,7 @@
 		<operation>
 			<search position="after"><![CDATA[// Is karma display enabled?  Total or +/-?]]></search>
 			<add><![CDATA[if(!empty($modSettings['lp_mod_enable']) && 
+				!empty($modSettings['lp_show_total_like_in_posts']) && 
 				LikePosts::$LikePostsUtils->isBoardIncluded($context['current_board']) && 
 				LikePosts::$LikePostsUtils->isAllowedTo(array('lp_guest_can_view_likes_in_posts', 'lp_can_view_likes'))) {
 

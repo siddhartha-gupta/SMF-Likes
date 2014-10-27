@@ -53,6 +53,7 @@ class LikePostsAdmin {
 			array('text', 'lp_per_profile_page', 'subtext' => $txt['lp_per_profile_page_desc']),
 			array('text', 'lp_in_notification', 'subtext' => $txt['lp_in_notification_desc']),
 			array('check', 'lp_show_like_on_boards', 'subtext' => $txt['lp_show_like_on_boards_desc']),
+			array('check', 'lp_show_total_like_in_posts', 'subtext' => $txt['lp_show_total_like_in_posts_desc']),
 		);
 
 		$context['page_title'] = $txt['lp_admin_panel'];
@@ -76,6 +77,7 @@ class LikePostsAdmin {
 			array('text', 'lp_per_profile_page'),
 			array('text', 'lp_in_notification'),
 			array('check', 'lp_show_like_on_boards'),
+			array('check', 'lp_show_total_like_in_posts'),
 		);
 
 		require_once($sourcedir . '/ManageServer.php');
