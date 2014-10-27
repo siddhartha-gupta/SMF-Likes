@@ -1,6 +1,13 @@
 **Change Log**
 
-**Version 2.0.1**
+
+*Version 2.0.1*
+- Fix for like stats not showing for regular groups
+- Fix for recount like stats not working
+- Added option to show/hide total likes in posts
+
+
+*Version 2.0.1*
 - Fix for total likes not appearing
 - Fix for method accessing issue via action hook
 - Fix for like button text not changing
@@ -8,7 +15,7 @@
 - Fixes for upgrade cleaning out the mod settings
 
 
-**Version 2.0**
+*Version 2.0*
 - PHP files converted to OOP, easy code management and readability
 - JS file converted to singleton and compressed, in layman words, its more efficient and fast
 - All inline css removed from JS and templates
