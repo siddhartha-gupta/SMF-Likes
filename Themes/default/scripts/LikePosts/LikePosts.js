@@ -39,6 +39,15 @@
 	}
 
 	lpObj.jQRef(document).ready(function() {
+		lpObj.jQRef('.like_post_box').each(function() {
+			if (lpObj.jQRef(this).parent().parent().hasClass('stickybg2')) {
+				lpObj.jQRef(this).css({
+					'margin-right': '30px'
+				});
+			}
+			lpObj.jQRef(this).show();
+		});
+
 		lpObj.jQRef(".some_data").on('mouseenter', function(e) {
 			e.preventDefault();
 			var currText = lpObj.jQRef(this).next().html();

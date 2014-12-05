@@ -52,6 +52,7 @@
 .like_post_box {
 	line-height: 22px;
 	position: relative;
+	display: none;
 }
 
 .like_link {
