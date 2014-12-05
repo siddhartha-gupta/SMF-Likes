@@ -27,6 +27,7 @@
 		<remove-file name="$themedir/LikePostsStats.template.php" />
 		<remove-file name="$themedir/css/likeposts.css" />
 		<remove-file name="$languagedir/LikePosts.english.php" />
+		<remove-file name="$languagedir/LikePosts.russian-utf8.php" />
 		<modification reverse="true">installer/Modification.xml</modification>
 		<redirect url="$scripturl?action=admin;area=packages;sa=browse" timeout="1000" />
 	</uninstall>
