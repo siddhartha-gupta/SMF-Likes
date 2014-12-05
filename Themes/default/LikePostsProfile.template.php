@@ -59,7 +59,7 @@ function template_lp_show_own_likes() {
 			echo '
 				<tr>
 					<td class="windowbg" title="', $data['id'], '">
-						<a class="some_data" href="', $data['href'] ,'">
+						<a class="subject_heading" href="', $data['href'] ,'">
 							', $data['subject'],'
 						</a>
 						<span class="hide_elem">
@@ -114,7 +114,7 @@ function template_lp_show_others_likes() {
 			echo '
 				<tr>
 					<td class="windowbg" title="', $data['id'], '">
-						<a class="some_data" href="', $data['href'] ,'" title="">
+						<a class="subject_heading" href="', $data['href'] ,'" title="">
 							', $data['subject'],'
 						</a>
 						<span class="hide_elem">

@@ -48,7 +48,7 @@
 			lpObj.jQRef(this).show();
 		});
 
-		lpObj.jQRef(".some_data").on('mouseenter', function(e) {
+		lpObj.jQRef(".subject_heading").on('mouseenter', function(e) {
 			e.preventDefault();
 			var currText = lpObj.jQRef(this).next().html();
 
