@@ -410,7 +410,7 @@
 										for (j in data[i]) {
 											if (data[i].hasOwnProperty(j)) {
 												len++;
-												notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][j].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
+												notificationInfo += '<div class="single_notify"><div class="avatar" style="background-image: url(' + data[i][j].member.avatar.href + ')"></div><div class="like_post_notify_data"><a href="' + data[i][j].member.href + '"><strong>' + data[i][j].member.name + '</strong></a> liked ' + '<a href="' + data[i][j].href + '">' + data[i][j].subject + '</a></div></div>';
 											}
 										}
 									}
@@ -424,7 +424,7 @@
 										for (k in data[i]) {
 											if (data[i].hasOwnProperty(k)) {
 												len++;
-												notificationInfo += '<div class="single_notify"><img class="avatar" src="' + data[i][k].member.avatar.href + '" /><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
+												notificationInfo += '<div class="single_notify"><div class="avatar" style="background-image: url(' + data[i][k].member.avatar.href + ')"></div><div class="like_post_notify_data"><a href="' + data[i][k].member.href + '"><strong>' + data[i][k].member.name + '</strong></a> liked ' + '<a href="' + data[i][k].href + '">' + data[i][k].subject + '</a></div></div>';
 											}
 										}
 									}

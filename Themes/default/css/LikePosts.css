@@ -112,7 +112,7 @@
 .like_posts_notification {
 	position: absolute;
 	background: #FFF8DC;
-	min-width: 35%;
+	max-width: 60%;
 	padding: 0;
 	margin: 0;
 	z-index: 1000;
@@ -170,15 +170,19 @@
 
 .like_posts_notification .lp_notification_body .single_notify .avatar {
 	width: 30px;
+	height: 30px;
 	box-shadow: 1px 1px 5px #000;
 	float: left;
 	position: relative;
+	background-size: auto 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+	overflow: hidden;
 }
 
 .like_posts_notification .lp_notification_body .single_notify .like_post_notify_data {
-	float: left;
-	position: relative;
 	padding-left: 10px;
+	overflow: hidden;
 }
 
 
