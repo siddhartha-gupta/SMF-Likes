@@ -267,16 +267,12 @@
 					likeButtonRef.removeClass('like_link').addClass('unlike_link');
 				}
 
-				if (likeText.indexOf('&amp;') > 0) {
-					likeText = likeText.replace(/&amp;/g, '&');
-				}
-
 				lpObj.jQRef(likeButtonRef).attr('href', newLink);
 				lpObj.jQRef(likeButtonRef).animate({
 					left: '-40px',
 					opacity: 'toggle'
 				}, 1000, '', function() {
-					lpObj.jQRef(likeButtonRef).text(params.newText);
+					lpObj.jQRef(likeButtonRef).html(params.newText);
 
 					lpObj.jQRef(likeButtonRef).animate({
 						left: '0px',
@@ -289,7 +285,7 @@
 						lpObj.jQRef('#like_count_' + params.msgId).fadeOut(2000).remove();
 					} else {
 						lpObj.jQRef('#like_count_' + params.msgId).fadeOut(1000, function() {
-							lpObj.jQRef(this).text('(' + likeText + ')').fadeIn(1000);
+							lpObj.jQRef(this).html('(' + likeText + ')').fadeIn(1000);
 						});
 					}
 				} else {
