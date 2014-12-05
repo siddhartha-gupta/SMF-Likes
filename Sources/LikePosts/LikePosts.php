@@ -223,7 +223,7 @@ class LikePosts {
 					inConflict = true;
 				}
 
-				loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+				loadJquery("https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
 					if (typeof(jQuery) !=="undefined") {
 						console.log("directly loaded with version: " + jQuery.fn.jquery);
 						lp_jquery2_0_3 = jQuery.noConflict(true);
@@ -243,7 +243,7 @@ class LikePosts {
 							break;
 
 						case 2:
-							loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							loadJquery("https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
 								if (typeof(jQuery) !=="undefined") {
 									console.log("after version check loaded with version: " + jQuery.fn.jquery);
 									lp_jquery2_0_3 = jQuery.noConflict(true);
@@ -253,7 +253,7 @@ class LikePosts {
 							break;
 
 						default:
-							loadJquery("http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
+							loadJquery("https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js", function() {
 								if (typeof(jQuery) !=="undefined") {
 									console.log("default version check loaded with version: " + jQuery.fn.jquery);
 									lp_jquery2_0_3 = jQuery.noConflict(true);
