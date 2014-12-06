@@ -1,7 +1,16 @@
 **Change Log**
 
 
-*Version 2.0.1*
+*Version 2.0.3*
+- UI issue of likes button with pinned topics - https://github.com/siddhartha-gupta/SMF-Likes/issues/36
+- Issue with jquery loading on https forum - https://github.com/siddhartha-gupta/SMF-Likes/issues/35
+- HTML special char parsing - https://github.com/siddhartha-gupta/SMF-Likes/issues/34
+- Like info pops z-index issue - https://github.com/siddhartha-gupta/SMF-Likes/issues/33
+- Add russian translations - https://github.com/siddhartha-gupta/SMF-Likes/issues/32
+- Likes notification position - https://github.com/siddhartha-gupta/SMF-Likes/issues/31
+
+
+*Version 2.0.2*
 - Fix for like stats not showing for regular groups
 - Fix for recount like stats not working
 - Added option to show/hide total likes in posts

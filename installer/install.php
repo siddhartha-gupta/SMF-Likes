@@ -2,7 +2,7 @@
 
 /**
 * @package manifest file for Like Posts
-* @version 2.0.2
+* @version 2.0.3
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2014, Siddhartha Gupta
 * @license http://www.mozilla.org/MPL/MPL-1.1.html
@@ -141,7 +141,7 @@ checkVersion2_0Upgrade();
 checkVersion2_0_2Upgrade();
 
 // at last just update the mod version
-updateModVersion('2.0.2');
+updateModVersion('2.0.3');
 
 function checkVersion1_2Upgrade() {
 	global $smcFunc;
