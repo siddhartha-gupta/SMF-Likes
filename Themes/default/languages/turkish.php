@@ -161,6 +161,6 @@ $txt['lp_error_no_data'] = 'Üzgünüm, şu an gösterilecek bir şey yok!';
 // Related to notification
 $txt['lp_all_notification'] = 'Tüm Bildirimler';
 $txt['lp_my_posts'] = 'İletilerim';
-$txt['lp_no_notification'] = 'Şu an da gösterilecek bir şey yok';
+$txt['lp_no_notification'] = 'Şu anda gösterilecek bir şey yok';
 
 ?>
