@@ -1,7 +1,7 @@
 <?php
 
 /**
-* @package manifest file for Restrict Boards per post
+* @package manifest file for Like Posts
 * @version 2.0.3
 * @author Joker (http://www.simplemachines.org/community/index.php?action=profile;u=226111)
 * @copyright Copyright (c) 2014, Siddhartha Gupta
