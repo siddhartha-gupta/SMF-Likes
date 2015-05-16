@@ -39,14 +39,7 @@
 	}
 
 	lpObj.jQRef(document).ready(function() {
-		lpObj.jQRef('.like_post_box').each(function() {
-			if (lpObj.jQRef(this).parent().parent().hasClass('stickybg2')) {
-				lpObj.jQRef(this).css({
-					'margin-right': '30px'
-				});
-			}
-			lpObj.jQRef(this).show();
-		});
+		lpObj.jQRef('.like_post_box').show();
 
 		lpObj.jQRef(".subject_heading").on('mouseenter', function(e) {
 			e.preventDefault();

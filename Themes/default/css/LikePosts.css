@@ -55,6 +55,10 @@
 	display: none;
 }
 
+.stickybg2 .like_post_box {
+    margin-right: 30px;
+}
+
 .like_link {
 	background: #C44E19;
 	padding: 1px 5px;
