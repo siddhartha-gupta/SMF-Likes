@@ -87,15 +87,17 @@
 
 	likePostsUtils.prototype = function() {
 		var removeOverlay = function(e) {
-				if (typeof(e) === 'undefined' && lpObj.timeoutTimer === null) return false;
-
-				else if (lpObj.timeoutTimer !== null || ((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click')) {
+				if (isNullUndefined(e) && lpObj.timeoutTimer === null) {
+					return false;
+				} else if (lpObj.timeoutTimer !== null ||
+					((e.type == 'keyup' && e.keyCode == 27) || e.type == 'click' || e.type == 'touchstart')) {
 					clearTimeout(lpObj.timeoutTimer);
 					lpObj.timeoutTimer = null;
 					lpObj.jQRef('.like_posts_overlay').remove();
-					lpObj.jQRef('.like_posts_overlay').unbind('click');
-					lpObj.jQRef(document).unbind('click', lpObj.likePostsUtils.removeOverlay);
-					lpObj.jQRef(document).unbind('keyup', lpObj.likePostsUtils.removeOverlay);
+					lpObj.jQRef('.like_posts_overlay').off('click');
+					lpObj.jQRef(document).off('click', lpObj.likePostsUtils.removeOverlay);
+					lpObj.jQRef(document).off('keyup', lpObj.likePostsUtils.removeOverlay);
+					lpObj.jQRef(document).off('touchstart', lpObj.likePostsUtils.removeOverlay);
 				}
 			},
 
@@ -343,7 +345,7 @@
 							});
 						}, 50);
 
-						lpObj.jQRef(document).one('click keyup', lpObj.likePostsUtils.removeOverlay);
+						lpObj.jQRef(document).one('click keyup touchstart', lpObj.likePostsUtils.removeOverlay);
 						lpObj.jQRef('.like_posts_member_info_box').click(function(e) {
 							e.stopPropagation();
 						});
@@ -659,7 +661,7 @@
 				} else {
 					percentage = 100;
 					percentageText = 'Done';
-					lpObj.jQRef(document).one('click keyup', lpObj.likePostsUtils.removeOverlay);
+					lpObj.jQRef(document).one('click keyup touchstart', lpObj.likePostsUtils.removeOverlay);
 				}
 
 				lpObj.jQRef('.recount_stats').find('div').animate({
