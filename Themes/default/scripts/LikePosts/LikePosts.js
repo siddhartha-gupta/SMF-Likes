@@ -74,7 +74,6 @@
 	});
 })(window);
 
-
 (function() {
 	function likePostsUtils() {}
 
@@ -744,9 +743,9 @@
 				showSpinnerOverlay();
 
 				lpObj.jQRef(".message_title").off('mouseenter mousemove mouseout');
-				if (typeof(url) === 'undefined' || url === '') {
+				if (lpObj.likePostsUtils.isNullUndefined(url)) {
 					var currentHref = window.location.href.split('#');
-					currentUrlFrag = (typeof(currentHref[1]) !== 'undefined') ? currentHref[1] : defaultHash;
+					currentUrlFrag = (!lpObj.likePostsUtils.isNullUndefined(currentHref[1])) ? currentHref[1] : defaultHash;
 				} else {
 					currentUrlFrag = url;
 				}
@@ -778,11 +777,11 @@
 						'sa': params.url
 					}
 				}).done(function(resp) {
-					if (typeof(resp.error) !== 'undefined' && resp.error !== '') {
+					if (!lpObj.likePostsUtils.isNullUndefined(resp.error) && resp.error !== '') {
 						genericErrorMessage({
 							errorMsg: resp.error
 						});
-					} else if (typeof(resp.data) !== 'undefined' && typeof(resp.data.noDataMessage) !== 'undefined' && resp.data.noDataMessage !== '') {
+					} else if (!lpObj.likePostsUtils.isNullUndefined(resp.data) && !lpObj.likePostsUtils.isNullUndefined(resp.data.noDataMessage) && resp.data.noDataMessage !== '') {
 						genericErrorMessage({
 							errorMsg: resp.data.noDataMessage
 						});
