@@ -238,7 +238,7 @@ class LikePosts {
 					switch(result) {
 						case false:
 						case 1:
-							lp_jquery2_0_3 = jQuery.noConflict(true);
+							lp_jquery2_0_3 = jQuery;
 							loadLPScript();
 							break;
 
@@ -306,6 +306,7 @@ class LikePosts {
 					'title' => $txt['lp_stats'],
 					'href' => $scripturl . '?action=likepostsstats',
 					'show' => true,
+					'sub_buttons'=> ''
 				),
 			),
 			array_slice($menu_buttons, $initPos, count($menu_buttons) - $initPos)
