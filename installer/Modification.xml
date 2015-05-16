@@ -118,7 +118,7 @@
 
 		if(LikePosts::$LikePostsUtils->showLikeNotification()) {
 			echo '
-					<li><a href="#" class="showLikeNotification" onclick="lpObj.likePostsNotification.showLikeNotification()">', $txt['like_show_notifications'], '</a></li>';
+					<li><span class="showLikeNotification" onclick="lpObj.likePostsNotification.showLikeNotification()">', $txt['like_show_notifications'], '</span></li>';
 		}]]></add>
 		</operation>
 	</file>

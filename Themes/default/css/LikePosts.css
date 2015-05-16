@@ -471,3 +471,8 @@ a.poster_details.big_font {
 	float:left;
 	position:relative
 }
+
+.showLikeNotification:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
