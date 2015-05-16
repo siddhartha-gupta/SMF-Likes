@@ -389,7 +389,7 @@
 							dataLengthMine = 0,
 							completeString = '';
 
-						notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">' + textStrings.lpAllNotification + '</div><div class="lp_notification_tabs" id="lp_my_notifications">' + textStrings.lpMyPosts + '</div><div class="lp_notification_tabs close_btn" id="close_notifications">X</div></div>';
+						notificationInfo += '<div class="lp_notification_header"><div class="lp_notification_tabs" id="lp_all_notifications">' + textStrings.lpAllNotification + '</div><div class="lp_notification_tabs" id="lp_my_notifications">' + textStrings.lpMyPosts + '</div><div class="lp_notification_tabs close_btn" id="close_notifications">x</div></div>';
 
 						for (i in data) {
 							var len = 0;
