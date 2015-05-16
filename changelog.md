@@ -1,13 +1,23 @@
 **Change Log**
 
 
+*Version 2.0.4*
+- Not pretty url friendly - https://github.com/siddhartha-gupta/SMF-Likes/issues/41
+- Issue with reseller theme - https://github.com/siddhartha-gupta/SMF-Likes/issues/43
+- Issue on iPad for overlays - https://github.com/siddhartha-gupta/SMF-Likes/issues/40
+- Issue with SMF Quiz mod - https://github.com/siddhartha-gupta/SMF-Likes/issues/42
+- Use isNullUndefined instead of typeof - https://github.com/siddhartha-gupta/SMF-Likes/issues/44
+- Added Turkish translations - https://github.com/siddhartha-gupta/SMF-Likes/pull/37
+- Few css changes for like posts notification box
+
+
 *Version 2.0.3*
 - UI issue of likes button with pinned topics - https://github.com/siddhartha-gupta/SMF-Likes/issues/36
 - Issue with jquery loading on https forum - https://github.com/siddhartha-gupta/SMF-Likes/issues/35
 - HTML special char parsing - https://github.com/siddhartha-gupta/SMF-Likes/issues/34
 - Like info pops z-index issue - https://github.com/siddhartha-gupta/SMF-Likes/issues/33
-- Add russian translations - https://github.com/siddhartha-gupta/SMF-Likes/issues/32
 - Likes notification position - https://github.com/siddhartha-gupta/SMF-Likes/issues/31
+- Added russian translations - https://github.com/siddhartha-gupta/SMF-Likes/issues/32
 
 
 *Version 2.0.2*
