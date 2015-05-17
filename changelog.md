@@ -1,6 +1,10 @@
 **Change Log**
 
 
+*Version 2.0.5*
+- Update min JS File
+
+
 *Version 2.0.4*
 - Not pretty url friendly - https://github.com/siddhartha-gupta/SMF-Likes/issues/41
 - Issue with reseller theme - https://github.com/siddhartha-gupta/SMF-Likes/issues/43
